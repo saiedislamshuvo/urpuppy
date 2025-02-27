@@ -10,7 +10,7 @@ import Slider from '@/Components/Slider'
 import Button from '@/Components/ui/Button'
 import VideoPlayer from '@/Components/VideoPlayer'
 import Layout from '@/Layouts/Layout'
-import { Head } from '@inertiajs/react'
+import { Head, Link } from '@inertiajs/react'
 import React from 'react'
 
 const Show = ({breeder, puppies} : {
@@ -37,6 +37,11 @@ const Show = ({breeder, puppies} : {
 
     <section className="golden-retriever py-7 py-md-5 py-xl-9">
       <div className="container">
+
+                        <div className="mb-2">
+        <Link href="/breeders" className="text-primary">Back</Link>
+
+</div>
         <div className="row">
           <div className="col-lg-8 col-xl-9">
             <div className="card border">

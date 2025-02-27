@@ -178,6 +178,8 @@ onChange={(e: any) => setData('phone', e)}
                 <MapInput
                         initialAddress={user.address ?? ""}
                         onLocationSelect={setSelectedGMap} />
+
+                    {errors.gmap_payload && <InputError message={errors.gmap_payload} /> }
               </div>
                     </> }
               <div className="puppy-details border-bottom mb-4">

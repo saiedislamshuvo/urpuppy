@@ -38,6 +38,10 @@ const Show = ({ related_puppies, puppy, siblings }: {
 
     <section className="golden-retriever py-7 py-md-5 py-xl-9">
       <div className="container">
+                        <div className="mb-2">
+        <Link href="/puppies" className="text-primary">Back</Link>
+
+</div>
         <div className="row">
           <div className="col-lg-8 col-xl-9">
             <div className="card border">

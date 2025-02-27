@@ -34,7 +34,9 @@ const Show = ({breed} : {
             <div className="row">
               <div className="col-lg-5">
                 <div className="information-img position-relative overflow-hidden rounded-1 mb-4 mb-lg-0">
-                  <img src={breed.image} alt="" className="object-fit-cover w-100 h-100" />
+                  <img style={{
+                                                    height: '535px',
+                                                }}  src={breed.image} alt="" className="object-fit-cover w-100" />
                 </div>
               </div>
               <div className="col-lg-7">
