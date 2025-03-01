@@ -11,6 +11,10 @@ class Subscription extends CashierSubscription
         'trial_ends',
     ];
 
+    protected $fillable = [
+        'card_fingerprint',
+    ];
+
     public function plan()
     {
         return $this->belongsTo(Plan::class, 'stripe_price', 'stripe_plan_id');

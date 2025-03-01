@@ -37,52 +37,49 @@ class CheckoutController extends Controller
     }
 
     public function complete(Request $request)
-    {
-        $request->validate([
-            'plan_id' => 'required|exists:plans,id',
-            'paymentMethod' => 'required',
-        ]);
+{
+    Stripe::setApiKey(config('services.stripe.secret'));
 
-        $plan = Plan::find($request->plan_id);
+    $request->validate([
+        'plan_id' => 'required|exists:plans,id',
+        'paymentMethod' => 'required',
+    ]);
 
-        if (!$plan) {
-            return response()->json(['message' => 'Plan not found'], 404);
-        }
+    $paymentMethod = PaymentMethod::retrieve($request->paymentMethod);
+    $cardFingerprint = $paymentMethod->card->fingerprint;
 
-        /* try { */
-            $user = $request->user();
+    $plan = Plan::find($request->plan_id);
 
-            // Create the subscription
-            $subscription = $this->createSubscription($user, $plan, $request->paymentMethod);
-
-            // Handle payment authentication if required
-        //
-            /* if ($subscription->latest_invoice && $subscription->latest_invoice->payment_intent) { */
-            /*     $paymentIntent = PaymentIntent::retrieve($subscription->latest_invoice->payment_intent); */
-
-            /*     if (in_array($paymentIntent->status, ['requires_action', 'requires_payment_method'])) { */
-            /*         return redirect()->route('billing.confirm', [ */
-            /*             'payment_intent' => $paymentIntent->id, */
-            /*             'client_secret' => $paymentIntent->client_secret, */
-            /*         ]); */
-            /*     } */
-            /* } */
-
-            // Update user roles based on the plan type
-            $this->updateUserRoles($user, $plan, $subscription);
-
-
-            return success('profile.edit', 'Successfully subscribed to ' . $plan->type . ' plan');
-
-        /* } catch (\Exception $e) { */
-        /*     Log::error('Subscription Error: ' . $e->getMessage()); */
-
-        /*     return redirect()->back()->with([ */
-        /*         'tab' => 'My Subscription', */
-        /*         'error' => 'Payment failed: ' . $e->getMessage(), */
-        /*     ]); */
-        /* } */
+    if (!$plan) {
+            session()->flash('message.error', 'Plan not founded');
+            return redirect()->back();
     }
+
+    $user = $request->user();
+
+    $existingSubscription = Subscription::where('card_fingerprint', $cardFingerprint)
+        ->whereNotNull('trial_ends_at')
+        ->where('type',  'free')
+        ->exists();
+
+    if ($existingSubscription && $plan->type == 'free') {
+      session()->flash('message.error', 'You cannot use this card for free trial');
+        return redirect()->back();
+    }
+
+    $subscription = $this->createSubscription($user, $plan, $request->paymentMethod);
+
+    $subscription->update([
+        'card_fingerprint' => $cardFingerprint
+    ]);
+
+    // Update user roles based on the plan type
+    $this->updateUserRoles($user, $plan, $subscription);
+
+    return success('profile.edit', 'Successfully subscribed to ' . $plan->type . ' plan');
+}
+
+
 
     public function confirm(Request $request)
     {
@@ -116,7 +113,7 @@ class CheckoutController extends Controller
                 $plan = Plan::find($plan_id);
 
                 if (!$plan) {
-                    return response()->json(['message' => 'Plan not found'], 404);
+                    return redirect()->back()->with('message.error', 'Plan not founded.');
                 }
 
                 try {
@@ -142,6 +139,7 @@ class CheckoutController extends Controller
         $plan = Plan::find($plan_id);
 
         if (!$plan) {
+            return error('profile.edit', 'Plan not found.');
             return response()->json(['message' => 'Plan not found'], 404);
         }
 
