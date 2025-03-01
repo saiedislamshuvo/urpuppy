@@ -19,20 +19,17 @@ class ProfileUpdateRequest extends FormRequest
         $rules = [
             'first_name' => [ 'string', 'max:40'],
             'last_name' => [ 'string', 'max:40'],
-            'state_id' => [''],
             'avatar' => ['nullable', 'max:4096'],
             'current_password' => ['nullable',  'current_password'],
             'new_password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'city' => [''],
-            'zip_code' => [''],
 
-            'social_fb' => [''],
+            'social_fb' => ['', 'max:100'],
             'enable_notification' => [''],
-            'social_ig' => [''],
-            'social_tiktok' => [''],
-            'social_x' => [''],
+            'social_ig' => ['', 'max:100'],
+            'social_tiktok' => ['', 'max:100'],
+            'social_x' => ['', 'max:100'],
             'gmap_payload' => [''],
-            'phone' => [''],
+            'phone' => ['', 'max:20'],
             'email' => [
                 'string',
                 'email',
@@ -44,16 +41,11 @@ class ProfileUpdateRequest extends FormRequest
         $user = $request->user();
 
         if ($user?->roles()->where('name', 'breeder')->exists()) {
-            $rules['kennel_name'] = ['required', 'string', 'max:100'];
-            /* $rules['company_zip_code'] = ['required']; */
-            $rules['company_email_address'] = ['required'];
-            $rules['company_name'] = ['required'];
-            $rules['company_about'] = ['required', 'string', 'max:255', 'min:40'];
-            /* $rules['company_state'] = ['required']; */
-            /* $rules['company_city'] = ['required']; */
+            $rules['kennel_name'] = ['required', 'string', 'max:100', 'blasp_check'];
+            $rules['company_email_address'] = ['required', 'max:100'];
+            $rules['company_name'] = ['required', 'max:100', 'blasp_check'];
+            $rules['company_about'] = ['required', 'string', 'max:255', 'min:40', 'blasp_check'];
             $rules['has_usda_registration'] = [''];
-            /* $rules['company_city_id'] = ['']; */
-            /* $rules['company_address'] = ['required']; */
             $rules['company_established_on'] = ['required'];
             $rules['company_logo'] = [''];
         }

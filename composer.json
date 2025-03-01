@@ -13,6 +13,7 @@
         "andrew/filament-blog": "dev-main",
         "anhskohbo/no-captcha": "^3.6",
         "bezhansalleh/filament-shield": "^3.3",
+        "blaspsoft/blasp": "^2.1",
         "cknow/laravel-money": "^8.1",
         "cms-multi/filament-clear-cache": "^2.0",
         "cviebrock/eloquent-sluggable": "^11.0",

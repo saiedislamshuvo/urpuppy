@@ -23,8 +23,8 @@ class BreederRegistrationRequest extends FormRequest
         public function rules(): array
     {
         $rules =  [
-            'fullname' => ['required', 'string', 'max:100'],
-            'kennel_name' => ['required', 'string', 'max:100'],
+            'fullname' => ['required', 'string', 'max:100', 'blasp_check'],
+            'kennel_name' => ['required', 'string', 'max:100', 'blasp_check'],
             'gmap_payload' => ['required'],
             'company_phone' => ['required', 'string', 'max:20'], // Phone number validation
             /* 'company_address' => ['required', 'string', 'max:255'], */
@@ -35,7 +35,7 @@ class BreederRegistrationRequest extends FormRequest
             'breeds' => ['required', 'array', 'max:4'], // Limit breeds to a maximum of 4
             /* 'breeds.*' => ['exists:breeds,id'], // Ensure each breed exists in the breeds table */
             'established_date' => ['required', 'date', 'before_or_equal:today'], // Validate date format
-            'about_company' => ['required', 'string', 'max:255', 'min:40'],
+            'about_company' => ['required', 'string', 'max:255', 'min:40', 'blasp_check'],
 
             'has_usda_registration' => ['nullable'], // Optional boolean field
             'company_logo' =>  ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:12048'],

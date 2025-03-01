@@ -23,7 +23,16 @@ class CommentRequest extends FormRequest
     {
         return [
             'rating' => 'required|integer|min:1|max:5',
-            'body' => 'required|string|max:255',
+            'body' => 'required|string|max:255|blasp_check',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'body.blasp_check' => 'The comment is not allowed',
+            'rating.required' => 'Please select a rating',
+            'rating.min' => 'Please select a rating',
         ];
     }
 }

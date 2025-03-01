@@ -6,7 +6,7 @@ import { Link, useForm, usePage } from '@inertiajs/react'
 const ReviewForm = ({breeder_id}: {breeder_id: number}) => {
     // const [value, setValue] = React.useState(0)
 
-    const {data, setData, post, reset} = useForm({
+    const {data, setData, post, reset, errors} = useForm({
         rating: 0,
         body: '',
     })
@@ -29,8 +29,12 @@ const ReviewForm = ({breeder_id}: {breeder_id: number}) => {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        post(`/comment/${breeder_id}`);
-        reset()
+        post(`/comment/${breeder_id}`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                reset()
+            }
+        });
     }
 
   return user ? (
@@ -50,12 +54,16 @@ const ReviewForm = ({breeder_id}: {breeder_id: number}) => {
                     <Rating
                     itemStyles={myStyles}
                     style={{ maxWidth: 125 }} onChange={(value: any) => setData('rating', value) } value={data.rating}/>
+
                 </div>
 
+        {errors.rating && <div className="mb-3">  <span className="text-danger">{errors.rating}</span> </div>}
+
                   <div className="mb-3">
-                    <textarea onChange={(e) => setData('body', e.target.value)} className="form-control" id="exampleFormControlTextarea1"
+                    <textarea value={data.body} onChange={(e) => setData('body', e.target.value)} className="form-control" id="exampleFormControlTextarea1"
                       placeholder="Write a review"></textarea>
                   </div>
+        {errors.body && <span className="text-danger">{errors.body}</span>}
                   <div className="text-end">
                     <button className="btn btn-primary d-inline-flex align-items-center gap-2" >Submit a Review <img
                         src="/images/svgs/icon-plus.svg" alt=""/></button>

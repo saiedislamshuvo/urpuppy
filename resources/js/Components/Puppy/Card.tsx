@@ -72,7 +72,7 @@ const PuppyCard = ({puppy, className="col-md-6 col-lg-4 col-xl-3 mb-4", height="
                 </div>
                 <div className="p-3 border-top d-flex align-items-center justify-content-between">
                   <h6 className="fs-5 font-work-sans">{puppy.formatted_price}</h6>
-                  <Link preserveScroll={false}   href={`/puppies/${puppy.slug}`} className="btn btn-primary d-flex align-items-center gap-2" >
+                  <Link prefetch preserveScroll={false}   href={`/puppies/${puppy.slug}`} className="btn btn-primary d-flex align-items-center gap-2" >
                     <img loading="lazy" src="/images/svgs/icon-paws.svg" alt="" />
                     View more
                   </Link>
