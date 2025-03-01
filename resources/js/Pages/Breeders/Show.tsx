@@ -111,7 +111,7 @@ const Show = ({breeder, puppies} : {
                   <div className="owl-carousel owl-theme">
                                                 <ReviewSlider children={
                                                     breeder.comments?.map((comment: App.Data.CommentData, index: number) => (
-                                                        <ReviewCard comment={comment} />
+                                                        <ReviewCard key={index} comment={comment} />
                                                     ))
                                                 }
                                                 />

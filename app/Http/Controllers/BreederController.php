@@ -218,7 +218,7 @@ class BreederController extends Controller
             /* }, */
         ])->find($userId);
 
-        if ($breeder->breeder_plan === null) {
+        if ($breeder?->breeder_plan === null) {
             return redirect()->back()->with([
                 'message.error' => 'This user is not a breeder'
             ]);

@@ -12,6 +12,7 @@ import { PaginatedCollection } from '@/types/global';
 import SavedSearchCard from '@/Components/SavedSearchCard';
 import { useEffect, useState } from 'react';
 import AlertDismissible from '@/Components/AlertDismissible';
+import Button from '@/Components/ui/Button';
 
 const NavigationSettings = [
     {  name: 'Account Settings', href: '#pills-account-settings', id: 'pills-account-settings-tab', logo: '../images/svgs/icon-user-dark.svg' },
@@ -161,6 +162,17 @@ export default function Edit({
                                     <>
               <div className={` tab-pane fade ${currentTab == 'My Subscription' ? 'show active' : ''} `}  id="pills-my-subscription" role="tabpanel"
                 aria-labelledby="pills-my-subscription-tab" tabIndex={0}>
+                                                        {
+                                                            (plan || breeder_plan) &&
+                <div className="card border">
+                  <div className="card-body">
+
+                                                                        <Button href="/billing" variant="secondary">Go to stripe settings</Button>
+
+
+                    </div>
+                    </div>
+}
                     {plan && <SubscriptionCard key="plan" next_billing={plan_next_billing} cancel_at={plan_cancel_at}  plan={plan}/> }
                     {breeder_plan && <SubscriptionCard key="breeder_plan" next_billing={breeder_next_billing} cancel_at={breeder_cancel_at}  plan={breeder_plan}/> }
 

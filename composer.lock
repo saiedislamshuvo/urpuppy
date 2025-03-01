@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2bd1e07c7cf3aac1a2808b9692fe00ae",
+    "content-hash": "2f71fc8a98af19a04e722b549edf6201",
     "packages": [
         {
             "name": "amphp/amp",
@@ -1047,75 +1047,6 @@
             "time": "2025-01-27T15:13:13+00:00"
         },
         {
-            "name": "austintoddj/canvas",
-            "version": "v6.0.54",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/austintoddj/canvas.git",
-                "reference": "b98cda42ff983da3e89006db7c577120ae444042"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/austintoddj/canvas/zipball/b98cda42ff983da3e89006db7c577120ae444042",
-                "reference": "b98cda42ff983da3e89006db7c577120ae444042",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "laravel/framework": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
-                "php": "^7.3|^8.0"
-            },
-            "require-dev": {
-                "laravel/legacy-factories": "^1.0",
-                "mockery/mockery": "^1.4",
-                "orchestra/testbench": "^4.0|^5.0|^6.0|^7.0|^8.0|^9.0",
-                "phpunit/phpunit": "^9.0|^10.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Canvas\\CanvasServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Canvas\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Todd Austin",
-                    "email": "austin.todd.j@gmail.com"
-                }
-            ],
-            "description": "A Laravel publishing platform",
-            "homepage": "https://trycanvas.app",
-            "keywords": [
-                "blog",
-                "canvas",
-                "laravel",
-                "platform",
-                "publishing"
-            ],
-            "support": {
-                "issues": "https://github.com/austintoddj/canvas/issues",
-                "source": "https://github.com/austintoddj/canvas"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/austintoddj",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-03-12T19:37:19+00:00"
-        },
-        {
             "name": "aws/aws-crt-php",
             "version": "v1.2.7",
             "source": {
@@ -1265,69 +1196,6 @@
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.339.17"
             },
             "time": "2025-02-19T19:10:53+00:00"
-        },
-        {
-            "name": "based/momentum-modal",
-            "version": "v0.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lepikhinb/momentum-modal.git",
-                "reference": "a196f179449e4951d95fa9edbb7c02d0da12a162"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lepikhinb/momentum-modal/zipball/a196f179449e4951d95fa9edbb7c02d0da12a162",
-                "reference": "a196f179449e4951d95fa9edbb7c02d0da12a162",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "^8.24|^9.0|^10.0|^11.0",
-                "inertiajs/inertia-laravel": "^0.6|^1.0|^2.0",
-                "php": "^8.0"
-            },
-            "require-dev": {
-                "laravel/pint": "^0.1.3|^1.13",
-                "nunomaduro/larastan": "^1.0|^2.0",
-                "orchestra/testbench": "^6.9|^7.0|^8.0|^9.0",
-                "pestphp/pest": "^1.2|^2.34",
-                "pestphp/pest-plugin-laravel": "^1.0|^2.3"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Momentum\\Modal\\ModalServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Momentum\\Modal\\": "src/",
-                    "Momentum\\Modal\\Tests\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Boris Lepikhin",
-                    "email": "boris@lepikhin.com"
-                }
-            ],
-            "description": "Build dynamic modal dialogs for your Inertia-powered Laravel apps",
-            "support": {
-                "issues": "https://github.com/lepikhinb/momentum-modal/issues",
-                "source": "https://github.com/lepikhinb/momentum-modal/tree/v0.4.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/lepikhinb",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-12-20T22:43:54+00:00"
         },
         {
             "name": "bezhansalleh/filament-shield",
@@ -5283,87 +5151,6 @@
             "time": "2025-01-26T19:34:36+00:00"
         },
         {
-            "name": "laravel/scout",
-            "version": "v10.13.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/scout.git",
-                "reference": "577535cd93474e4c915e7469cbfa597c41aef8e2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/scout/zipball/577535cd93474e4c915e7469cbfa597c41aef8e2",
-                "reference": "577535cd93474e4c915e7469cbfa597c41aef8e2",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/bus": "^9.0|^10.0|^11.0|^12.0",
-                "illuminate/contracts": "^9.0|^10.0|^11.0|^12.0",
-                "illuminate/database": "^9.0|^10.0|^11.0|^12.0",
-                "illuminate/http": "^9.0|^10.0|^11.0|^12.0",
-                "illuminate/pagination": "^9.0|^10.0|^11.0|^12.0",
-                "illuminate/queue": "^9.0|^10.0|^11.0|^12.0",
-                "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
-                "php": "^8.0",
-                "symfony/console": "^6.0|^7.0"
-            },
-            "conflict": {
-                "algolia/algoliasearch-client-php": "<3.2.0|>=5.0.0"
-            },
-            "require-dev": {
-                "algolia/algoliasearch-client-php": "^3.2|^4.0",
-                "meilisearch/meilisearch-php": "^1.0",
-                "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^7.31|^8.11|^9.0|^10.0",
-                "php-http/guzzle7-adapter": "^1.0",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^9.3|^10.4",
-                "typesense/typesense-php": "^4.9.3"
-            },
-            "suggest": {
-                "algolia/algoliasearch-client-php": "Required to use the Algolia engine (^3.2).",
-                "meilisearch/meilisearch-php": "Required to use the Meilisearch engine (^1.0).",
-                "typesense/typesense-php": "Required to use the Typesense engine (^4.9)."
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Laravel\\Scout\\ScoutServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-master": "10.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laravel\\Scout\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "Laravel Scout provides a driver based solution to searching your Eloquent models.",
-            "keywords": [
-                "algolia",
-                "laravel",
-                "search"
-            ],
-            "support": {
-                "issues": "https://github.com/laravel/scout/issues",
-                "source": "https://github.com/laravel/scout"
-            },
-            "time": "2025-02-18T18:39:33+00:00"
-        },
-        {
             "name": "laravel/serializable-closure",
             "version": "v2.0.3",
             "source": {
@@ -9099,6 +8886,141 @@
                 }
             ],
             "time": "2025-01-14T10:10:32+00:00"
+        },
+        {
+            "name": "rollbar/rollbar",
+            "version": "v4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rollbar/rollbar-php.git",
+                "reference": "3dc630adbaa1fc85fb6c97aba5bd71f4893745e0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rollbar/rollbar-php/zipball/3dc630adbaa1fc85fb6c97aba5bd71f4893745e0",
+                "reference": "3dc630adbaa1fc85fb6c97aba5bd71f4893745e0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "monolog/monolog": "^2 || ^3",
+                "php": ">=8.1.0 <9.0",
+                "psr/log": "^1 || ^2 || ^3"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.5.1",
+                "phpmd/phpmd": "^2.13",
+                "phpunit/phpunit": "^9.6 || ^10.1",
+                "squizlabs/php_codesniffer": "^3.7",
+                "vimeo/psalm": "^5.9"
+            },
+            "suggest": {
+                "fluent/logger": "Needed to use the 'fluent' handler for fluentd support"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Rollbar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rollbar, Inc.",
+                    "email": "support@rollbar.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Monitors errors and exceptions and reports them to Rollbar",
+            "homepage": "https://github.com/rollbar/rollbar-php",
+            "keywords": [
+                "debugging",
+                "errors",
+                "exceptions",
+                "logging",
+                "monitoring"
+            ],
+            "support": {
+                "email": "support@rollbar.com",
+                "issues": "https://github.com/rollbar/rollbar-php/issues",
+                "source": "https://github.com/rollbar/rollbar-php/tree/v4.1.0"
+            },
+            "time": "2025-02-16T19:30:06+00:00"
+        },
+        {
+            "name": "rollbar/rollbar-laravel",
+            "version": "v8.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rollbar/rollbar-php-laravel.git",
+                "reference": "69ecc7c19b54b1d88bf8a2bdfa56277500cc41f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rollbar/rollbar-php-laravel/zipball/69ecc7c19b54b1d88bf8a2bdfa56277500cc41f6",
+                "reference": "69ecc7c19b54b1d88bf8a2bdfa56277500cc41f6",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^10.0|^11.0",
+                "php": "^8.1",
+                "rollbar/rollbar": "^4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1",
+                "orchestra/testbench": "^8.0",
+                "php-coveralls/php-coveralls": "^2.2",
+                "phpunit/phpunit": "^8|^9.1",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Rollbar": "Rollbar\\Laravel\\Facades\\Rollbar"
+                    },
+                    "providers": [
+                        "Rollbar\\Laravel\\RollbarServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Rollbar\\Laravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jens Segers",
+                    "homepage": "https://jenssegers.com"
+                },
+                {
+                    "name": "Artur Moczulski",
+                    "email": "artur.moczulski@gmail.com",
+                    "role": "Contractor @ Rollbar, Inc."
+                }
+            ],
+            "description": "Rollbar error monitoring integration for Laravel projects",
+            "homepage": "https://github.com/rollbar/rollbar-php-laravel",
+            "keywords": [
+                "error",
+                "laravel",
+                "logging",
+                "monitoring",
+                "rollbar"
+            ],
+            "support": {
+                "issues": "https://github.com/rollbar/rollbar-php-laravel/issues",
+                "source": "https://github.com/rollbar/rollbar-php-laravel/tree/v8.0.1"
+            },
+            "time": "2024-02-13T21:58:17+00:00"
         },
         {
             "name": "ryangjchandler/blade-capture-directive",

@@ -47,7 +47,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PROD }}
 
-      - name: Run Command on VPS
-        run: ssh -o StrictHostKeyChecking=no ec2-user@urpuppy.com "cd /home/ec2-user/production && make rollout"
+      #  - name: Run Command on VPS
+        #        run: ssh -o StrictHostKeyChecking=no ec2-user@urpuppy.com "cd /home/ec2-user/production && make rollout"
 
 
