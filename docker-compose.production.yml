@@ -199,7 +199,22 @@ services:
       traefik.enable: false
       docker-volume-backup.stop-during-backup: true
       docker-volume-backup.archive-pre: /bin/sh -c 'pg_dump -U ${DB_USERNAME} -F t ${DB_DATABASE} > /backup/${DB_DATABASE}-database.tar'
-  glances:
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    networks:
+      - stack
+    labels:
+       traefik.enable: true
+       traefik.http.routers.prometheus.rule: Host(`${PROMETHEUS_DOMAIN}`)
+       traefik.http.routers.prometheus.entrypoints: app-secure
+       traefik.http.services.prometheus.loadbalancer.server.port: 9090
+    glances:
       profiles: [administration]
       image: nicolargo/glances:latest-full
       pid: host

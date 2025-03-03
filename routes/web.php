@@ -50,8 +50,7 @@ Route::group(['prefix' => 'posts'], function () {
 });
 
 Route::get('awe', function () {
-
-    dd('wew sherupak');
+    dd('karminolly');
 });
 
 Route::post('/create-intent', function (Request $request) {
