@@ -22,8 +22,18 @@ function FileUpload({
   const [isLoading, setIsLoading] = useState(false);
   const [initializedUrls, setInitializedUrls] = useState<string[]>([]);
 
+  // Function to check if a file is within the size limit
+  const isFileSizeValid = (file: File): boolean => {
+    const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+    return file.size <= maxSize;
+  };
+
   // Function to convert a URL to a File object
   const urlToFile = async (url: string): Promise<File> => {
+    if (typeof url !== 'string' || url.trim() === '') {
+      throw new Error('Invalid URL: URL must be a non-empty string.');
+    }
+
     try {
       const response = await fetch(url);
       const blob = await response.blob();
@@ -38,7 +48,8 @@ function FileUpload({
 
   // Initialize files from URLs only once
   useEffect(() => {
-    const newUrls = defaultUrls.filter(url => !initializedUrls.includes(url));
+    const validDefaultUrls = defaultUrls.filter(url => typeof url === 'string' && url.trim() !== '');
+    const newUrls = validDefaultUrls.filter(url => !initializedUrls.includes(url));
     if (newUrls.length === 0) return;
 
     const loadUrlFiles = async () => {
@@ -75,7 +86,14 @@ function FileUpload({
 
   const onDrop = useCallback(
     (incomingFiles: File[]) => {
-      const newFiles = [...files, ...incomingFiles];
+      const validFiles = incomingFiles.filter(file => isFileSizeValid(file));
+
+      // Notify the user if any files were rejected due to size
+      if (validFiles.length !== incomingFiles.length) {
+        alert('Some files were rejected because they exceed the 50MB size limit.');
+      }
+
+      const newFiles = [...files, ...validFiles];
       setFiles(newFiles);
       setData(name, newFiles);
 
@@ -93,6 +111,10 @@ function FileUpload({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: true,
+    maxSize: 50 * 1024 * 1024, // 50MB in bytes
+    onDropRejected: (rejectedFiles) => {
+      alert('Some files were rejected because they exceed the 50MB size limit.');
+    },
   });
 
   const handleRemove = useCallback(
@@ -114,7 +136,7 @@ function FileUpload({
   );
 
   const handleAddMoreClick = (e: any) => {
-     e.preventDefault();
+    e.preventDefault();
     if (hiddenInputRef.current) {
       hiddenInputRef.current.click();
     }
@@ -159,14 +181,8 @@ function FileUpload({
                     )}
                   </div>
                   <div className="dz-details">
-                    <div className="dz-filename">
-                      <span>{file.name}</span>
-                    </div>
-                    <div className="dz-size">
-                      <span>{(file.size / 1024).toFixed(1)} KB</span>
-                    </div>
                     {fileError && (
-                      <div className="text-danger" style={{ color: 'red', marginTop: '5px' }}>
+                      <div className="text-danger" style={{ color: 'red', marginTop: '5px', padding: '5px' }}>
                         {fileError}
                       </div>
                     )}
@@ -186,14 +202,11 @@ function FileUpload({
         )}
       </div>
 
-
-    {
-                files.length > 0 &&
-      <Button type="button" onClick={handleAddMoreClick} style={{ marginTop: '20px' }}>
-        Add More Files
-      </Button>
-            }
-
+      {files.length > 0 && (
+        <Button type="button" onClick={handleAddMoreClick} style={{ marginTop: '20px' }}>
+          Add More Files
+        </Button>
+      )}
 
       <style>{`
         .dropzone {
@@ -259,7 +272,6 @@ function FileUpload({
         }
 
         .dz-details {
-          padding: 8px;
           font-size: 13px;
         }
 
@@ -317,4 +329,3 @@ function FileUpload({
 }
 
 export default FileUpload;
-

@@ -34,6 +34,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Inertia\EncryptHistoryMiddleware;
 use Inertia\Inertia;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
@@ -154,7 +155,7 @@ Route::group(['prefix' => 'breeders'], function () {
     Route::post('/', [BreederController::class, 'store'])->name('breeders.store');
     /* Route::post('/{id?}', [BreederController::class, 'store'])->name('breeders.create'); */
     Route::get('/', [BreederController::class, 'index'])->name('breeders.index');
-    Route::get('create', [BreederController::class, 'create'])->name('breeders.create');
+    Route::get('create', [BreederController::class, 'create'])->name('breeders.create')->middleware([EncryptHistoryMiddleware::class]);
     Route::get('/{slug}', [BreederController::class, 'show'])->name('breeders.show');
 });
 
@@ -184,7 +185,7 @@ Route::get('/about-us', [AboutController::class, 'index'])->name('about.index');
 Route::get('/billing/confirm', [CheckoutController::class, 'confirm'])->name('billing.confirm');
 Route::get('/billing', function (Request $request) {
 
-    return $request->user()->redirectToBillingPortal(route('dashboard'));
+    return $request->user()->redirectToBillingPortal(route('profile.edit'));
 
 })->middleware(['auth'])->name('billing');
 /* Route::get('') */
@@ -206,7 +207,7 @@ Route::get('/all-puppies/{slug}', [SellerController::class, 'show'])->name('sell
 
 
 Route::group(['prefix' => 'seller'], function () {
-    Route::get('create/{id?}', [SellerController::class, 'create'])->name('seller.create');
+    Route::get('create/{id?}', [SellerController::class, 'create'])->name('seller.create')->middleware([EncryptHistoryMiddleware::class]);
     Route::delete('delete/{id?}', [SellerController::class, 'destroy'])->name('seller.delete')->middleware('auth');
     Route::post('store', [SellerController::class, 'store'])->name('seller.store')->middleware('auth');
     Route::post('update/{id}', [SellerController::class, 'update'])->name('seller.update')->middleware('auth');

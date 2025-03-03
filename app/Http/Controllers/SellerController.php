@@ -169,6 +169,8 @@ class SellerController extends Controller
                 $created_puppy->addMedia($image)->toMediaCollection('puppy_files');
             });
 
+            inertia()->clearHistory();
+
             // Final check for plan subscription
             if (
                 !$user->breeder_plan &&
@@ -272,6 +274,9 @@ class SellerController extends Controller
                 $update_puppy->addMedia($image)->toMediaCollection('puppy_files');
             });
         }
+
+
+        inertia()->clearHistory();
 
         // Commit the transaction
         /* DB::commit(); */

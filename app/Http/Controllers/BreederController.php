@@ -181,6 +181,8 @@ class BreederController extends Controller
             'message' => 'You have a new breeder application. Please go to admin page to review',
         ]));
 
+        inertia()->clearHistory();
+
         /* if (!$request->user()->is_subscribed && $request->user()->puppies()->count() == 1) { */
         /* return redirect()->to(route('plans.index'))->with([ */
         /*     'message.success' => 'Subscribe to any plan to activate your listing' */

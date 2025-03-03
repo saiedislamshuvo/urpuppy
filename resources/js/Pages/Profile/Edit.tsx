@@ -167,7 +167,7 @@ export default function Edit({
                 <div className="card border">
                   <div className="card-body">
 
-                                                                        <Button href="/billing" variant="secondary">Go to stripe settings</Button>
+                                                                        <a className="btn btn-secondary" href="/billing" >Manage subscription</a>
 
 
                     </div>
