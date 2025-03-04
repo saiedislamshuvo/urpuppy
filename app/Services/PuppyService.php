@@ -27,10 +27,9 @@ class PuppyService
             ])
             ->with([
                 'breeds:id,name,slug',
-                'seller:id,first_name,email,phone,last_name,state_id,city,created_at,slug,is_breeder',
+                'seller:id,first_name,email,phone,last_name,short_state,city,created_at,slug,is_breeder',
                 'favorites',
-                'media',
-                'seller.state:id,name,abbreviation',
+                'media'
             ])
             ->allowedFilters([
                 AllowedFilter::custom('breed', new FilterBreeds),
