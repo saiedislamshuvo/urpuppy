@@ -6,6 +6,7 @@ use App\Data\BreedData;
 use App\Data\BreederData;
 use App\Data\BreederFullData;
 use App\Data\BreedOptionData;
+use App\Data\PuppyCardData;
 use App\Http\Requests\BreederRegistrationRequest;
 use App\Jobs\GenerateVideoThumbnail;
 use App\Mail\AdminNotifyMail;
@@ -242,13 +243,13 @@ class BreederController extends Controller
         }
         /* dd($breeder->attr); */
 
-        $puppies = $breeder->puppies()->with(['breeds:id,name,slug','seller', 'media', 'favorites'])->get();
+        $puppies = $breeder->puppies()->with(['breeds:id,name,slug','seller', 'media', 'favorites'])->take(4)->get();
 
         return inertia('Breeders/Show', [
             'rating_count' => $breeder->comments->count(),
             'rating_average' => $breeder->comments->pluck('rating')->avg(),
             'breeder' => BreederFullData::from($breeder),
-            'puppies' => $puppies,
+            'puppies' => PuppyCardData::collect($puppies),
         ]);
             /* ->title('Breeder: '.$breeder->name) */
             /* ->description('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */

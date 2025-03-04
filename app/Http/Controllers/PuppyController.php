@@ -55,7 +55,6 @@ public function index(Request $request, PuppyService $puppyService)
             /* 'attributes', */
             'seller',
             /* 'breeder.attributes', */
-            'seller.state',
             'puppy_colors',
             'puppy_traits',
             'siblings',
