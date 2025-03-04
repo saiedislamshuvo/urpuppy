@@ -35,7 +35,7 @@ class SellerRegistrationRequest extends FormRequest
             'social_x' => ['nullable', 'string', 'max:100', 'url'],
             /* 'city' => ['nullable', 'string', 'max:100'], */
             /* 'state_id' => ['nullable', 'exists:states,id'], // Ensuring state_id exists in states table */
-            'gmap_payload' => ['required'],
+            /* 'gmap_payload' => ['required'], */
             'zip_code' => ['nullable', 'string', 'max:20'],
             'puppy_name' => ['required', 'string', 'max:100'],
             'puppy_price' => ['required', 'numeric', 'min:0'], // Ensuring the price is a positive number
@@ -56,6 +56,10 @@ class SellerRegistrationRequest extends FormRequest
             'videos' => ['nullable', 'array'],
             'videos.*' => ['mimes:mpeg,mp4,ogg,webm', 'max:50512'],
         ];
+
+        if (!$request->user()->profile_completed) {
+            $rules['gmap_payload'] = ['required'];
+        }
 
         // Check the user's puppies count
         $puppies_count = $request->user()?->puppies()?->count() ?? 0;

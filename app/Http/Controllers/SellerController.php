@@ -45,6 +45,15 @@ class SellerController extends Controller
     public function create(Request $request, $id = null)
     {
         if (!$request->user()?->breeder_plan && $request->user()?->roles?->contains('breeder')) {
+
+            if ($request->user()->breeder_requests()->latest()->first()->status != 'approved') {
+                return error('profile.edit', 'Your request has not been approved yet');
+            }
+
+            if (!empty($request->user()->kennel_name)) {
+                return error('plans.breeder', 'Please subscribe to a plan');
+            }
+
             return error('breeders.create', 'Register as a breeder to create puppies');
         }
 

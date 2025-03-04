@@ -24,11 +24,18 @@ class HomeController extends Controller
     public function index(Request $request)
     {
 
-    $top_picks = Puppy::with('breeds', 'seller')->hasSubscribedUsers()->inRandomOrder()->first();
+    $top_picks = Cache::remember('top_picks', now()->addHours(2), function () {
+        return Puppy::with('breeds', 'seller')->hasSubscribedUsers()->inRandomOrder()->first();
+    });
 
-    $spotlights = PuppyData::collect(Puppy::with('breeds', 'seller')->hasSubscribedUsers()->inRandomOrder()->take(4)->get());
 
-    $new = PuppyData::collect(Puppy::with('breeds:name,slug', 'seller')->hasSubscribedUsers()->newArrivals()->orderByDesc('id')->take(4)->get());
+    $spotlights = Cache::remember('spotlights', now()->addHours(2), function () {
+        return PuppyData::collect(Puppy::with('breeds', 'seller')->hasSubscribedUsers()->inRandomOrder()->take(4)->get());
+    });
+
+    $new = Cache::remember('new', now()->addHours(2), function () {
+        return PuppyData::collect(Puppy::with('breeds:name,slug', 'seller')->hasSubscribedUsers()->newArrivals()->orderByDesc('id')->take(4)->get());
+    });
 
     if ( auth()->user()) {
         $user_favorites = auth()->user()->favorites()->pluck('favoriteable_id');

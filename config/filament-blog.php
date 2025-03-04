@@ -17,7 +17,7 @@ return [
     'banner' => [
         'disk' => 's3',
         'directory' => 'blog',
-        'maxSize' => 5120,
+        'maxSize' => 51120,
         'cropAspectRatio' => '16:9',
     ],
 

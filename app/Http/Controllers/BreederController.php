@@ -115,7 +115,7 @@ class BreederController extends Controller
 
             'company_about' => $data['about_company'],
             'has_usda_registration' => $data['has_usda_registration'] == 'yes' ? true : false,
-            'profile_completed' => true,
+            'breeder_profile_completed' => true,
 
 
             'company_address' => @$data['gmap_payload']['address'],
