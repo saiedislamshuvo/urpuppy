@@ -51,6 +51,7 @@ const ImageSlider = ({
                         <SwiperSlide key={index} className=" puppy-spotlight-img  position-relative overflow-hidden rounded-1">
 
                                 <img
+                                    loading="lazy"
                                     src={file}
                                     alt={`Media ${index + 1}`}
                                     className=" w-100 h-100 object-fit-cover rounded-1 "
@@ -109,6 +110,7 @@ const ImageSlider = ({
                         {images?.map((file, index) => (
                             <SwiperSlide key={index} className="thumbnail overflow-hidden">
                                 <img
+                                    loading="lazy"
                                     className=" slide"
                                     src={file}
                                     alt={`Thumbnail ${index + 1}`}
@@ -133,6 +135,7 @@ const ImageSlider = ({
                                     background: 'var(--bs-secondary)',
 
                                     }}
+                                                loading="lazy"
 
   src="../images/svgs/icon-play.svg" alt="" width="15" height="15" />
                             </SwiperSlide>

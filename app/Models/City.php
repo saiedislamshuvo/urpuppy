@@ -13,7 +13,7 @@ use Nnjeim\World\Models\City as ModelsCity;
 class City extends ModelsCity
 {
     use Sluggable;
-    use Searchable;
+    /* use Searchable; */
 
     public function toSearchableArray()
     {

@@ -30,22 +30,23 @@ class ProfileController extends Controller
     public function edit(Request $request): Response
 {
     $user = $request->user();
-    $countryState = Country::where('iso2', 'US')->first()?->states();
+    /* $countryState = Country::where('iso2', 'US')->first()?->states(); */
 
-    $states = $countryState?->select('id', 'name')->get()->map(fn($state) => [
-        'value' => $state->id,
-        'label' => ucwords($state->name),
-    ]) ?? [];
+    /* $states = $countryState?->select('id', 'name')->get()->map(fn($state) => [ */
+    /*     'value' => $state->id, */
+    /*     'label' => ucwords($state->name), */
+    /* ]) ?? []; */
 
-    $selectedStateId = request('state_id') ?: $user->state_id ?? $countryState?->first()?->id;
-    $stateCities = $countryState?->where('id', $selectedStateId)?->first();
+    /* $selectedStateId = request('state_id') ?: $user->state_id ?? $countryState?->first()?->id; */
+    /*     dd($selectedStateId); */
+    /* $stateCities = $countryState?->where('id', $selectedStateId)?->first(); */
 
-    $cities = $stateCities?->cities()->exists()
-        ? $stateCities->cities()->select('id', 'name')->get()->map(fn($city) => [
-            'value' => $city->id,
-            'label' => ucwords($city->name),
-        ])
-        : [];
+    /* $cities = $stateCities?->cities()->exists() */
+    /*     ? $stateCities->cities()->select('id', 'name')->get()->map(fn($city) => [ */
+    /*         'value' => $city->id, */
+    /*         'label' => ucwords($city->name), */
+    /*     ]) */
+    /*     : []; */
 
     $breeds = BreedResource::collection(Breed::select('id', 'name')->orderBy('name')->get());
 
@@ -64,8 +65,8 @@ class ProfileController extends Controller
         'breeder_requests' => $user->breeder_requests()->latest()->first(),
         'tab' => $request->tab ?? 'Account Settings',
         'breeds' => $breeds,
-        'states' => $states,
-        'cities' => $cities,
+        /* 'states' => $states, */
+        /* 'cities' => $cities, */
     ]);
 }
 

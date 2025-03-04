@@ -51,6 +51,7 @@ public function index(Request $request, PuppyService $puppyService)
         try {
 
         $puppy = Puppy::with([
+            'media',
             'breeds',
             /* 'attributes', */
             'seller',

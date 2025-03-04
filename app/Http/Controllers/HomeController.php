@@ -60,6 +60,9 @@ class HomeController extends Controller
 
     }
 
+    $featured_breeds = Cache::remember('featured_breeds', now()->addDay(), function () {
+        return Breed::with('media')->inRandomOrder()->take(8)->get();
+    });
 
     return Inertia::render('Home/Index', [
         'breed_filter_list' => inertia()->optional(fn () =>
@@ -77,7 +80,7 @@ class HomeController extends Controller
         'videos' => get_videos(),
         'trusted_breeders' => BreederFullData::collect(User::with(['breeds' => fn ($q) => $q->select('name') ])->breeders()->take(4)->inRandomOrder()->get()),
         'new_arrivals' => $new,
-        'featured_breeds' => BreedData::collect(Breed::with('media')->inRandomOrder()->take(8)->get()),
+        'featured_breeds' => BreedData::collect($featured_breeds),
         'post_data' => PostData::collect(Post::with(['category', 'author'])->orderBy('created_at', 'desc')->take(4)->get()),
 
         /* 'canLogin' => Route::has('login'), */
