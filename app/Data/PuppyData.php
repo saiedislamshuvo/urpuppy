@@ -31,7 +31,7 @@ class PuppyData extends Data
         public string $formatted_price,
         public string $patterns,
         public int $view_count,
-        public bool $is_new,
+        public ?bool $is_new = false,
         public string $age,
         public BreederData $seller,
         /** @var \App\Data\PuppyColorData[] */

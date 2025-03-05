@@ -40,15 +40,9 @@ class WishlistMail extends Mailable
   public function content(): Content
 {
 
-         $supportEmail = "support@urpuppy.com";
+    $supportEmail = "support@urpuppy.com";
 
-    // Sample data for the loop (replace with dynamic data)
-    $items = [
-        ['title' => 'Item 1', 'description' => 'Description 1', 'image' => 'https://s3.urpuppy.com/urpuppy/578/conversions/new-arrivals-img-1-grid.jpg', 'breed' => 'Zens', 'puppy_name' => 'Adrian', 'address' => 'Cal Burat', 'birthdate' => '2020-10', 'gender' => 'Male', 'price' => '200', 'url' => 'burasing.com', 'views' => '2000'],
-        ['title' => 'Item 1', 'description' => 'Description 1', 'image' => 'https://s3.urpuppy.com/urpuppy/578/conversions/new-arrivals-img-1-grid.jpg', 'breed' => 'Zens', 'puppy_name' => 'Adrian', 'address' => 'Cal Burat', 'birthdate' => '2020-10', 'gender' => 'Male', 'price' => '200', 'url' => 'burasing.com', 'views' => '2000'],
-    ];
-
-        $puppies = PuppyData::collect($this->puppies);
+    $puppies = PuppyData::collect($this->puppies);
 
     return new Content(view: 'emails.wish', with: [
         'items' => $puppies,

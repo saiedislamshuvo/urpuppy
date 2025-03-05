@@ -81,25 +81,30 @@ class PuppyService
             ])->hasSubscribedUsers();
 
 
-        if ($filters['breed'] != 'All' && $filters['breed'] != 0) {
-            $puppies->whereHas('breeds', fn($query) => $query->where('name', $filters['breed']));
-        }
+        if (!empty($filters)) {
 
-        if ($filters['state'] != 'All' && $filters['state'] != 0) {
-            $puppies->whereHas('seller', fn($query) => $query->whereHas('state', fn($q) => $q->where('name', $filters['state'])));
-        }
+            if (@$filters['breed'] != 'All' && $filters['breed'] != 0) {
+                $puppies->whereHas('breeds', fn($query) => $query->where('name', $filters['breed']));
+            }
 
-        if ($filters['gender'] != 'All' && $filters['gender'] != 0) {
-            $puppies->where('gender', $filters['gender']);
-        }
+            if (@$filters['state'] != 'All' && $filters['state'] != 0) {
+                $puppies->whereHas('seller', fn($query) => $query->whereHas('state', fn($q) => $q->where('name', $filters['state'])));
+            }
 
-        if ($filters['price'] != 'All' && $filters['price'] != 0) {
-            $puppies->whereBetween('price', $filters['price']);
-        }
+            if (@$filters['gender'] != 'All' && $filters['gender'] != 0) {
+                $puppies->where('gender', $filters['gender']);
+            }
 
-        if ($filters['age'] != 'All' && $filters['age'] != 0) {
-           $back = now()->subWeeks($filters['age'] === '0' ? 100000 : $filters['age']);
-            $puppies->whereBetween('birth_date', [$back,  now()]);
+            if (@$filters['price'] != 'All' && $filters['price'] != 0) {
+                $puppies->whereBetween('price', $filters['price']);
+            }
+
+            if (@$filters['age'] != 'All' && $filters['age'] != 0) {
+               $back = now()->subWeeks($filters['age'] === '0' ? 100000 : $filters['age']);
+                $puppies->whereBetween('birth_date', [$back,  now()]);
+            }
+
+
         }
 
         return $puppies;

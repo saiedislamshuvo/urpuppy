@@ -28,7 +28,6 @@ class PremiumAccountMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        \Log::info($this->user->email);
         return new Envelope(
             subject: 'Welcome to Premium Membership – Enjoy Unlimited Benefits!',
             to: [$this->user->email],
