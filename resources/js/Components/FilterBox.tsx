@@ -140,8 +140,7 @@ const FilterBox = () => {
 
     return (
         <>
-            {renderDesktopFilters()}
-            {renderMobileFilters()}
+            {isMobile ? renderMobileFilters() : renderDesktopFilters()}
         </>
     );
 };

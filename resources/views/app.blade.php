@@ -5,6 +5,8 @@
         <meta name="author" content="UrPuppy.com">
         <meta name="robots" content="index, follow">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link fetchpriority="high" rel="preload" href="{{ asset('banner-bg.webp') }}">
         <link rel="icon" type="image/x-icon" href="../images/logos/favicon.png">
 
         <!-- Scripts -->

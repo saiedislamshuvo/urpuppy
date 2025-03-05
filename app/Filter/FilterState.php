@@ -14,7 +14,7 @@ class FilterState implements Filter
         } else {
 
         $query->whereHas('seller', function ($query) use ($value) {
-                $query->whereHas('state', fn ($q) => $q->where('name', $value));
+                $query->where('state', $value);
         });
         }
 
