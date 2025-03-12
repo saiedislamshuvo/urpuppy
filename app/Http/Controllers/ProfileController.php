@@ -30,6 +30,8 @@ class ProfileController extends Controller
     public function edit(Request $request): Response
 {
     $user = $request->user();
+        /* dd($user->subscriptions()->active()->first()); */
+
     /* $countryState = Country::where('iso2', 'US')->first()?->states(); */
 
     /* $states = $countryState?->select('id', 'name')->get()->map(fn($state) => [ */

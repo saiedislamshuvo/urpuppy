@@ -1,0 +1,35 @@
+import Breadcrumb from '@/Components/Breadcrumb'
+import CheckoutV2Form from '@/Components/CheckoutV2Form'
+import SellerRegistrationForm from '@/Components/Forms/SellerRegistrationForm'
+import Heading from '@/Components/Heading'
+import MetaTags from '@/Components/MetaTags'
+import PlanCard from '@/Components/PlanCard'
+import PlanUpgradeCard from '@/Components/PlanUpgradeCard'
+import Layout from '@/Layouts/Layout'
+import React from 'react'
+
+const CheckoutUpgrade = ({plan_id, intent, plan}: {
+    plan_id: number,
+    intent: any,
+    plan: App.Data.PlanData
+}) => {
+  return (
+  <Layout navType="secondary">
+    <MetaTags title="Checkout" />
+    <div className="page-wrapper position-relative overflow-hidden">
+    <section className="information pt-4 pb-8 pb-lg-9">
+                  <div className="container">
+                        <Breadcrumb links={[{label: 'Plan', link: '/plans'}, {label: 'Change Plan', link: '/checkout'}]} />
+                        <div className="space-y-4">
+                        <PlanUpgradeCard button={false} plan={plan} />
+                        <Heading title="Checkout" description="Checkout now" />
+                        <CheckoutV2Form type="change" clientSecret={intent.client_secret}  plan_id={plan_id}/>
+                  </div>
+                  </div>
+    </section>
+    </div>
+</Layout>
+  )
+}
+
+export default CheckoutUpgrade

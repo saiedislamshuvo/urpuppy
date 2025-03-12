@@ -39,6 +39,13 @@ const SubscriptionCard = ({plan, next_billing, cancel_at, trial_ends_at} : {
 
                       </div>
                       <div>
+
+                        <Link as="button"
+className="btn btn-primary border btn-white text-white d-block mb-2"
+                            href="/upgrade">
+                            Change Plan
+                        </Link>
+
                         {!cancel_at &&
                             <>
                                 <Link

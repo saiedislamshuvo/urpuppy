@@ -4,7 +4,7 @@ import { usePage, router } from "@inertiajs/react";
 import Button from "./ui/Button";
 const stripePromise = loadStripe("pk_test_51QCFB5B0xRl9Df0eV4ta5t579Iw9aI8EZmIZD9hXiExP7hibkAneNzoUbglZnjnZ7QoZfbYnk7cazjMTXNX261As00vAyhQqED");
 
-const CheckoutV2Form = ({ clientSecret, plan_id }: any) => {
+const CheckoutV2Form = ({ clientSecret, plan_id, type = 'new' }: any) => {
     const [elements, setElements] = useState(null);
     const [stripe, setStripe] = useState<any>(null);
     const [message, setMessage] = useState("");
@@ -120,6 +120,7 @@ const handleSubmit = async (e: any) => {
             // Payment succeeded, submit the data to your backend
             const data = {
                 paymentMethod: setupIntent.payment_method,
+                type: type,
                 plan_id,
                 _token: csrf,
             };

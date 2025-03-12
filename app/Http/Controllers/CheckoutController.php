@@ -12,6 +12,7 @@ use Stripe\PaymentIntent;
 use Stripe\PaymentMethod;
 use Laravel\Cashier\Subscription;
 use Illuminate\Support\Facades\Log;
+use Stripe\Invoice;
 
 class CheckoutController extends Controller
 {
@@ -36,13 +37,15 @@ class CheckoutController extends Controller
         }
     }
 
+
     public function complete(Request $request)
 {
     Stripe::setApiKey(config('services.stripe.secret'));
 
-    $request->validate([
+    $data = $request->validate([
         'plan_id' => 'required|exists:plans,id',
         'paymentMethod' => 'required',
+        'type' => 'required|in:new,change', // Ensure type is either 'new' or 'change'
     ]);
 
     $paymentMethod = PaymentMethod::retrieve($request->paymentMethod);
@@ -51,35 +54,78 @@ class CheckoutController extends Controller
     $plan = Plan::find($request->plan_id);
 
     if (!$plan) {
-            session()->flash('message.error', 'Plan not founded');
-            return redirect()->back();
+        session()->flash('message.error', 'Plan not found');
+        return redirect()->back();
     }
 
     $user = $request->user();
 
     $existingSubscription = Subscription::where('card_fingerprint', $cardFingerprint)
         ->whereNotNull('trial_ends_at')
-        ->where('type',  'free')
+        ->where('type', 'free')
         ->exists();
 
     if ($existingSubscription && $plan->type == 'free') {
-      session()->flash('message.error', 'You cannot use this card for free trial');
-        return redirect()->back();
+        session()->flash('message.error', 'You cannot use this card for a free trial');
+        /* return redirect()->back(); */
     }
 
-    $subscription = $this->createSubscription($user, $plan, $request->paymentMethod);
+    if ($request->type === 'new') {
+        $subscription = $this->createSubscription($user, $plan, $request->paymentMethod);
+    } else if ($request->type === 'change') {
+        $subscription = $this->swapSubscription($user, $plan, $request->paymentMethod);
+    }
+
 
     $subscription->update([
-        'card_fingerprint' => $cardFingerprint
+        'card_fingerprint' => $cardFingerprint,
+        'type' => $plan->type
     ]);
 
-    // Update user roles based on the plan type
     $this->updateUserRoles($user, $plan, $subscription);
 
     return success('profile.edit', 'Successfully subscribed to ' . $plan->type . ' plan');
 }
 
 
+    protected function swapSubscription($user, $plan, $paymentMethod)
+{
+    // Retrieve the user's current subscription
+    $currentSubscription = $user->subscription('free') ?? $user->subscription('premium');
+
+    if (!$currentSubscription) {
+        session()->flash('message.error', 'No active subscription found to swap');
+        return null; // Return null to indicate an error
+    }
+
+    // Swap the subscription to the new plan without proration
+    /* $currentSubscription->swap($plan->stripe_plan_id, [ */
+    /*     'skip_proration' => true, // Ensure the user pays the full price of the new plan */
+    /* ]); */
+
+    $vernigu = $currentSubscription->noProrate()->skipTrial()->swapAndInvoice($plan->stripe_plan_id);
+    /* dd($vernigu); */
+
+    $user->updateDefaultPaymentMethod($paymentMethod);
+
+            /* $invoice = $user->invoice(); */
+
+            /* $stripeInvoice = Invoice::retrieve($invoice->asStripeInvoice()->id); */
+    /* $stripeInvoice->finalizeInvoice(); */
+
+    // Pay the invoice immediately
+    /* $stripeInvoice->pay(); */
+
+
+          /* $invoice = $user->createInvoice(); */
+    /* $invoice->finalizeInvoice(); // Finalize the invoice */
+    /* $invoice->pay(); // Pay the invoice immediately */
+    // Create an invoice and pay it immediately
+    /* $invoice = $user->invoice(); */
+    /* $invoice->payNow(); // Ensure the invoice is paid immediately */
+
+    return $currentSubscription;
+}
 
     public function confirm(Request $request)
     {

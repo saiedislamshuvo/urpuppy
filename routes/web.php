@@ -24,6 +24,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PuppyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SavedSearchController;
+use App\Http\Controllers\UpgradeCheckoutController;
+use App\Http\Controllers\UpgradePlanController;
 use App\Models\Breed;
 use App\Models\Plan;
 use App\Models\Puppy;
@@ -90,6 +92,16 @@ Route::post('/breeder/request/retry', function (Request $request) {
     return success('profile.edit', 'Your request has been resubmitted.');
 });
 
+/* Route::middleware(['role:seller'])->group(function () { */
+
+
+
+/* }); */
+
+
+
+
+
 Route::get('/saved-search/{id}', [SavedSearchController::class, 'destroy']);
 Route::get('/saved-search', [SavedSearchController::class, 'show']);
 Route::post('/saved-search', [SavedSearchController::class, 'store']);
@@ -133,7 +145,13 @@ Route::group(['prefix' => 'puppies'], function () {
 });
 
 
+
 Route::middleware('auth', 'verified')->group(function () {
+
+
+Route::get('/upgrade', [UpgradePlanController::class, 'index']);
+/* Route::get('/upgrade/{plan_id}', UpgradePlanController::class); */
+
 
 Route::group(['prefix' => 'plans'], function () {
     Route::get('/', [PlanController::class, 'index'])->name('plans.index');
@@ -141,7 +159,6 @@ Route::group(['prefix' => 'plans'], function () {
 });
 
 });
-
 
 
 
@@ -191,16 +208,25 @@ Route::get('/billing', function (Request $request) {
 
 
 Route::group(['prefix' => 'checkout', 'middleware' => ['auth', 'verified']], function () {
-
     Route::get('success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('{plan_id}', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::get('/', CheckoutController::class)->name('checkout.pay');
     Route::post('/complete', [CheckoutController::class, 'complete']);
     Route::get('/payment-methods', [CheckoutController::class, 'payment_methods'])->name('checkout.payment_methods');
-
     Route::get('subscription/success', [CheckoutController::class, 'success'])->name('subscription.success');
 
+
+    Route::group(['prefix' => 'change'], function () {
+        Route::get('{plan_id}', [UpgradeCheckoutController::class, 'index'])->name('checkout.upgrade.index');
+        /* Route::get('create/{id?}', [SellerController::class, 'create'])->name('seller.create')->middleware([EncryptHistoryMiddleware::class]); */
+        /* Route::delete('delete/{id?}', [SellerController::class, 'destroy'])->name('seller.delete')->middleware('auth'); */
+        /* Route::post('store', [SellerController::class, 'store'])->name('seller.store')->middleware('auth'); */
+        /* Route::post('update/{id}', [SellerController::class, 'update'])->name('seller.update')->middleware('auth'); */
+    });
+
 });
+
+
 
 Route::get('/all-puppies/{slug}', [SellerController::class, 'show'])->name('seller.show');
 
