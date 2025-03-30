@@ -277,6 +277,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile/avatar', [ProfileController::class, 'destroyAvatar'])->name('profile.destroy.avatar');
 });
 
+Route::get('durigma', function () {
+    dd('test');
+});
+
 require __DIR__.'/auth.php';
 
 /* Auth::routes(); */
