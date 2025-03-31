@@ -51,10 +51,6 @@ Route::group(['prefix' => 'posts'], function () {
 
 });
 
-Route::get('awe', function () {
-    dd('karminolly');
-});
-
 Route::post('/create-intent', function (Request $request) {
     try {
         // Retrieve the user and the selected plan
@@ -79,11 +75,6 @@ Route::post('/create-intent', function (Request $request) {
             'error' => $e->getMessage(),
         ], 500);
     }
-});
-
-Route::get('adi', function () {
-
-    dd('kamlon boy');
 });
 
 Route::post('/breeder/request/retry', function (Request $request) {
@@ -277,9 +268,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile/avatar', [ProfileController::class, 'destroyAvatar'])->name('profile.destroy.avatar');
 });
 
-Route::get('durigma', function () {
-    dd('test');
-});
 
 require __DIR__.'/auth.php';
 

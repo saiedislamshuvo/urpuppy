@@ -41,4 +41,9 @@ return [
         'secret' => env('STRIPE_SECRET', ""),
     ],
 
+    'google' => [
+        'maps_key' => env('GOOGLE_MAPS_KEY'),
+        'maps_daily_limit' => env('GOOGLE_MAPS_DAILY_LIMIT', 1000),
+    ],
+
 ];

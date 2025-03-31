@@ -138,6 +138,7 @@ const UserProfile = () => {
 
                         </div>
                       </div>
+                    { !user?.roles?.includes('buyer') &&
                       <div className="pb-4 mb-4 border-bottom">
                         <h5 className="mb-4 fs-7">Location Details</h5>
                         <div className="row">
@@ -148,6 +149,7 @@ const UserProfile = () => {
                             </div>
                         </div>
                       </div>
+}
                     {
                         user?.roles?.includes('breeder') && <>
                       <div className="pb-4 mb-4 border-bottom">

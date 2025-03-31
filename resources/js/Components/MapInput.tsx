@@ -76,18 +76,17 @@ const MapInput: React.FC<GoogleMapComponentProps> = ({ onLocationSelect,  initia
   }
 }, [initialAddress]);
 
-const fetchCoordinates = async (address: string) => {
+
+    const fetchCoordinates = async (address: string) => {
   try {
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyAouIjqr5Keqg40KQm9LT0uY-wZUAcT7oc`
-    );
+    const response = await fetch(`/api/geocode?address=${encodeURIComponent(address)}`);
     const data = await response.json();
 
     if (data.results.length > 0) {
       const location = data.results[0].geometry.location;
       const newLocation: Location = { lat: location.lat, lng: location.lng };
       setMarker(newLocation);
-      fetchAddress(newLocation); // Fetch and set the address details
+      fetchAddress(newLocation);
     }
   } catch (error) {
     console.error("Error fetching coordinates:", error);
@@ -95,39 +94,26 @@ const fetchCoordinates = async (address: string) => {
   }
 };
 
-    useEffect(() => {
-  if (initialAddress && inputRef.current) {
-    inputRef.current.value = initialAddress;
-  }
-}, []);
+const fetchAddress = async ({ lat, lng }: Location) => {
+  try {
+    const response = await fetch(`/api/reverse-geocode?lat=${lat}&lng=${lng}`);
+    const data = await response.json();
 
-  // Fetch address from coordinates
-  const fetchAddress = async ({ lat, lng}: Location) => {
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyAouIjqr5Keqg40KQm9LT0uY-wZUAcT7oc`
-      );
-      const data = await response.json();
+    if (data.results.length > 0) {
+      const formattedAddress = data.results[0].formatted_address;
+      setAddress(formattedAddress);
+      if (inputRef.current) {
+        inputRef.current.value = formattedAddress;
+      }
 
-      if (data.results.length > 0) {
-        const formattedAddress = data.results[0].formatted_address;
-        setAddress(formattedAddress);
-        if (inputRef.current) {
-          inputRef.current.value = formattedAddress; // Update the input field
-        }
-
-        // Log the full payload
-        // console.log("Google Maps Address Payload:", data.results[0]);
-
-        // Extract specific address components
-        const addressComponents = data.results[0].address_components;
-        const addressDetails: AddressDetails = {
-          street: "",
-          city: "",
-          state: "",
-          shortState: "",
-          zipCode: "",
-        };
+      const addressComponents = data.results[0].address_components;
+      const addressDetails: AddressDetails = {
+        street: "",
+        city: "",
+        state: "",
+        shortState: "",
+        zipCode: "",
+      };
 
         addressComponents.forEach((component: any) => {
           if (component.types.includes("street_number")) {
@@ -148,15 +134,12 @@ const fetchCoordinates = async (address: string) => {
           }
         });
 
-        // console.log("Parsed Address Details:", addressDetails);
-
-        onLocationSelect({ address: formattedAddress, lat, lng, ...addressDetails });
-      }
-    } catch (error) {
-      // console.error("Error fetching address:", error);
-      setError("Failed to fetch address. Please try again.");
+      onLocationSelect({ address: formattedAddress, lat, lng, ...addressDetails });
     }
-  };
+  } catch (error) {
+    setError("Failed to fetch address. Please try again.");
+  }
+};
 
   // Get current location using Geolocation API
   const getCurrentLocation = (e: any) => {
