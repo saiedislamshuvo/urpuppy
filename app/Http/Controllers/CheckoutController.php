@@ -67,7 +67,7 @@ class CheckoutController extends Controller
 
     if ($existingSubscription && $plan->type == 'free') {
         session()->flash('message.error', 'You cannot use this card for a free trial');
-        /* return redirect()->back(); */
+        return redirect()->back();
     }
 
     if ($request->type === 'new') {
