@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `$cloudfront-url: '${env.VITE_CLOUDFRONT_URL || 'https://totnak.com'}';`
+          additionalData: `$cloudfront-url: '${env.VITE_CLOUDFRONT_URL || 'https://d1ycq56gu6gk7x.cloudfront.net'}';`
         }
       }
     },
