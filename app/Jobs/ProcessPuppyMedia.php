@@ -8,6 +8,7 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,10 +38,15 @@ class ProcessPuppyMedia implements ShouldQueue
 
                 $path = parse_url($url, PHP_URL_PATH);
                 Storage::disk('s3')->delete(ltrim($path, '/'));
+
             } catch (\Exception $e) {
                 Log::error("Media processing failed: {$e->getMessage()}");
             }
         }
+
+        Cache::forget('topics');
+        Cache::forget('spotlights');
+        Cache::forget('new');
     }
 
 }
