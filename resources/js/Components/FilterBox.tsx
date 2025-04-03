@@ -77,7 +77,7 @@ const FilterBox = () => {
                     <AgeFilter setAge={setFilter} defaultValue={filter.age} />
                 </div>
                 <div className="price-range d-flex gap-2 border-end flex-shrink-0">
-                    <PriceFilter setPrice={setFilter} />
+                    <PriceFilter setPrice={setFilter as any}  />
                 </div>
                 <div className="state d-flex gap-2">
                     <StateFilter setState={setFilter} defaultValue={filter.state} />
@@ -129,7 +129,7 @@ const renderMobileFilters = React.useCallback(() => (
                     <AgeFilter setAge={setFilter} defaultValue={filter.age} />
                 </div>
                 <div className="price-range d-flex gap-2 border-bottom py-6">
-                    <PriceFilter setPrice={setFilter} />
+                    <PriceFilter setPrice={setFilter as any} />
                 </div>
                 <div className="state d-flex gap-2 py-6">
                     <StateFilter setState={setFilter} defaultValue={filter.state} />
