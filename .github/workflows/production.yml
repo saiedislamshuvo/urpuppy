@@ -47,7 +47,15 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PROD }}
 
-      - name: Run Command on VPS
-        run: ssh -o StrictHostKeyChecking=no ec2-user@urpuppy.com "cd /home/ec2-user/production && make rollout"
-
-
+      - name: Execute Deployment with Full Cleanup
+      run: |
+        ssh -o StrictHostKeyChecking=no ec2-user@urpuppy.com << 'EOF'
+        cd /home/ec2-user/production
+        docker system prune -f --filter "until=14h"  # Only remove old images
+        docker builder prune -f
+        sudo swapoff -a && sudo swapon -a
+        sync && echo 3 | sudo tee /proc/sys/vm/drop_caches
+        docker pull ghcr.io/andrewperoramas/urpuppyv2:production
+        docker rollout --env-file ./.env.production -t 180 app
+        docker container prune -f --filter "until=1h"
+        EOF
