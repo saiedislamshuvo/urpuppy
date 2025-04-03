@@ -88,7 +88,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="border-top   border-white border-opacity-10 py-3 d-md-flex align-items-center justify-content-center">
-        <p className="d-flex align-items-center gap-2  mb-md-0 text-white fw-normal  opacity-50"><span> ©2025 Urpuppy.com, LLC. All Right Reserved </span>
+        <p className="d-flex align-items-center gap-2  mb-md-0 text-white fw-normal  opacity-50"><span> ©2025 Urpuppy.com, LLC. All Rights Reserved </span>
 
 
                     </p>
