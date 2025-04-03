@@ -8,6 +8,11 @@ use Hashids\Hashids;
 
 class BreedObserver
 {
+    public function deleting(Breed $breed)
+    {
+        $breed->users()->detach();
+    }
+
     public function saved(Breed $breed)
     {
         cache()->flush();

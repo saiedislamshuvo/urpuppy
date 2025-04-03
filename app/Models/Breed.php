@@ -50,6 +50,8 @@ class Breed extends Model implements HasMedia, Sitemapable
     {
         $this->addMediaConversion('thumbnail')
             ->width(480)
+            ->format('webp')
+            ->quality(70)
             ->height(480)->performOnCollections('media');
     }
 

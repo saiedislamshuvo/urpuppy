@@ -37,7 +37,13 @@ class HandleInertiaRequests extends Middleware
 
 
     $min = Puppy::min('price') ?? 1;
+
     $max = Puppy::max('price') ?? 500;
+
+    if ($min == $max) {
+        $min = 0;
+    }
+
     $agent = new Agent();
 
 
