@@ -12,8 +12,7 @@ const FooterVideos = ({videos} : { videos: App.Data.VideoData[] }) => {
         <div className="row">
                     {
                         videos.map((video: App.Data.VideoData) => (
-
-          <div className="col-lg-4">
+          <div className="col-lg-4" key={video.url}>
             <div className="bringing-through-puppies-blog position-relative overflow-hidden rounded-1 mb-4 mb-lg-0 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
               <img loading="lazy" src={video.video_thumbnail ?? ""} alt=""/>
               <div className="d-flex align-items-center gap-3 position-relative z-1 position-absolute bottom-0 start-0 w-100 p-4 pt-0">

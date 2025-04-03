@@ -54,7 +54,7 @@ class ReportResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('puppy.name')
-                    ->url(fn (Report $record): string => route('puppies.show', $record->puppy->slug))
+                    ->url(fn (Report $record): string => route('puppies.show', $record?->puppy?->slug ?? 'none'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.full_name')
