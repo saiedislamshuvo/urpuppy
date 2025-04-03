@@ -278,19 +278,19 @@ try {
             ->quality(75)
             ->sharpen(3);
 
-        $this->addMediaConversion('gallery')
+        $this->addMediaConversion('thumbnail')
             ->fit(Fit::Contain, 150, 150)  // Reduced from 1280x720 to 800x450 (same aspect ratio)
             ->nonQueued()
-            ->performOnCollections('thumbnail')
+            ->performOnCollections('gallery')
             ->optimize()
             ->format('webp')
             ->quality(75)
             ->sharpen(3);
 
-        $this->addMediaConversion('gallery')
+        $this->addMediaConversion('preview')
             ->fit(Fit::Contain, 800, 450)  // Reduced from 1280x720 to 800x450 (same aspect ratio)
             ->nonQueued()
-            ->performOnCollections('preview')
+            ->performOnCollections('gallery')
             ->optimize()
             ->format('webp')
             ->quality(75)
