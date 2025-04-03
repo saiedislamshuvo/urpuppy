@@ -28,6 +28,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Cog\Contracts\Love\Reacterable\Models\Reacterable as ReacterableInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Lab404\Impersonate\Models\Impersonate;
+use Spatie\Image\Enums\Fit;
 use Spatie\Sitemap\Contracts\Sitemapable;
 use Spatie\Sitemap\Tags\Url;
 
@@ -191,7 +192,7 @@ try {
     public function getGalleryAttribute()
     {
         return $this->getMedia('gallery')->sortBy('order_column')->map(function ($media) {
-            return $media->getUrl();
+            return $media->getUrl('preview');
         });
     }
 
@@ -203,7 +204,7 @@ try {
         // Check for 'grid' URL, then 'preview', then return null
         if ($mediaItem) {
             try {
-                return $mediaItem->getUrl() ?? asset('paw.svg') ;
+                return $mediaItem->getUrl('thumbnail') ?? asset('paw.svg') ;
             } catch (\Spatie\MediaLibrary\Exceptions\ConversionDoesNotExist $e) {
                 // Handle the case where the conversion does not exist
                 return  asset('paw.svg'); // or handle as needed
@@ -267,6 +268,33 @@ try {
             ->width(100)
             ->height(100)
             ->sharpen(10);
+
+        $this->addMediaConversion('thumbnail')
+            ->fit(Fit::Contain, 800, 450)  // Reduced from 1280x720 to 800x450 (same aspect ratio)
+            ->nonQueued()
+            ->optimize()
+            ->format('webp')
+            ->performOnCollections('company_logo')
+            ->quality(75)
+            ->sharpen(3);
+
+        $this->addMediaConversion('gallery')
+            ->fit(Fit::Contain, 150, 150)  // Reduced from 1280x720 to 800x450 (same aspect ratio)
+            ->nonQueued()
+            ->performOnCollections('thumbnail')
+            ->optimize()
+            ->format('webp')
+            ->quality(75)
+            ->sharpen(3);
+
+        $this->addMediaConversion('gallery')
+            ->fit(Fit::Contain, 800, 450)  // Reduced from 1280x720 to 800x450 (same aspect ratio)
+            ->nonQueued()
+            ->performOnCollections('preview')
+            ->optimize()
+            ->format('webp')
+            ->quality(75)
+            ->sharpen(3);
     }
 
     public function getFilamentName(): string

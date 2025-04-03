@@ -112,10 +112,11 @@ class Puppy extends Model implements HasMedia, Sitemapable
             ->sharpen(5);
 
         $this->addMediaConversion('preview')
-            ->fit(Fit::Contain, 1280, 720)
+            ->fit(Fit::Contain, 800, 450)  // Reduced from 1280x720 to 800x450 (same aspect ratio)
             ->nonQueued()
             ->optimize()
-            ->quality(80)
+            ->format('webp')
+            ->quality(75)
             ->sharpen(3);
     }
 
