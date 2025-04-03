@@ -90,7 +90,6 @@ class Puppy extends Model implements HasMedia, Sitemapable
     public function registerMediaConversions(?Media $media = null): void
     {
         $thumbnailconversion = $this->addmediaconversion('thumb')
-            ->nonQueued()
             /* ->crop('crop-center', 50, 50) */
             ->format('webp')
             ->width(125)
@@ -103,7 +102,6 @@ class Puppy extends Model implements HasMedia, Sitemapable
         }
 
         $this->addMediaConversion('grid')
-            ->nonQueued()
             ->width(400)
             ->fit(Fit::Contain, desiredWidth: 400, desiredHeight: 500)
             ->format('webp')
@@ -113,7 +111,6 @@ class Puppy extends Model implements HasMedia, Sitemapable
 
         $this->addMediaConversion('preview')
             ->fit(Fit::Contain, 800, 450)  // Reduced from 1280x720 to 800x450 (same aspect ratio)
-            ->nonQueued()
             ->optimize()
             ->format('webp')
             ->quality(75)

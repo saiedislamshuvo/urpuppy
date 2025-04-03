@@ -12,6 +12,7 @@ use App\Data\SiblingData;
 use App\Http\Requests\PuppyUpdateRequest;
 use App\Http\Requests\SellerRegistrationRequest;
 use App\Jobs\GenerateVideoThumbnail;
+use App\Jobs\ProcessPuppyMedia;
 use App\Models\Breed;
 use App\Models\Puppy;
 use App\Models\PuppyColor;
@@ -21,6 +22,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SellerController extends Controller
 {
@@ -46,7 +48,7 @@ class SellerController extends Controller
     {
         if (!$request->user()?->breeder_plan && $request->user()?->roles?->contains('breeder')) {
 
-            if ($request->user()->breeder_requests()->latest()->first()->status != 'approved') {
+            if ($request->user()->breeder_requests()->latest()->first()?->status != 'approved') {
                 return error('profile.edit', 'Your request has not been approved yet');
             }
 
@@ -162,21 +164,47 @@ class SellerController extends Controller
 
             // Process videos
             if (isset($data['videos'])) {
-                collect($data['videos'])->each(function ($video) use ($created_puppy) {
+                /* collect($data['videos'])->each(function ($video) use ($created_puppy) { */
                     try {
-                        $media = $created_puppy->addMedia($video)->toMediaCollection('video');
-                        GenerateVideoThumbnail::dispatch($media);
+                        /* $media = $created_puppy->addMedia($video)->toMediaCollection('video'); */
+                        ProcessPuppyMedia::dispatch($created_puppy, $data['videos'], 'video');
+                        /* GenerateVideoThumbnail::dispatch($media); */
                     } catch (\Exception $e) {
                         Log::error('Error adding media: ' . $e->getMessage());
                         throw $e; // Re-throw the exception to trigger a rollback
                     }
-                });
+                /* }); */
             }
 
             // Process images
-            collect($data['images'])->each(function ($image) use ($created_puppy) {
-                $created_puppy->addMedia($image)->toMediaCollection('puppy_files');
-            });
+            /* collect($data['images'])->each(function ($image) use ($created_puppy) { */
+            /*     $created_puppy->addMedia($image)->toMediaCollection('puppy_files'); */
+            /* }); */
+
+            /* ProcessPuppyMedia::dispatch($created_puppy, $data['images'], 'puppy_files'); */
+                    try {
+         DB::transaction(function () use ($request, $data, $created_puppy) {
+        $created_puppy->clearMediaCollection('puppy_files');
+
+            // Store files temporarily and pass paths to the job
+            $filePaths = [];
+            if (isset($data['images'])) {
+                $filePaths = collect($data['images'])->map(function ($image) {
+                    $path = $image->store('temp/uploads', 'public');
+                    return storage_path('app/public/' . $path);
+                })->toArray();
+            }
+
+            if (!empty($filePaths)) {
+                ProcessPuppyMedia::dispatch($created_puppy, $filePaths, 'puppy_files');
+            }
+
+        });
+    } catch (\Exception $e) {
+        Log::error('Error in store method: ' . $e->getMessage());
+        return error('home', 'An error occurred while creating the puppy. Please try again.');
+    }
+
 
             inertia()->clearHistory();
 
@@ -279,9 +307,23 @@ class SellerController extends Controller
         // Update images
         if (isset($data['images'])) {
             $update_puppy->clearMediaCollection('puppy_files');
-            collect($data['images'])->each(function ($image) use ($update_puppy) {
-                $update_puppy->addMedia($image)->toMediaCollection('puppy_files');
-            });
+            DB::transaction(function () use ($request, $data, $update_puppy) {
+        $update_puppy->clearMediaCollection('puppy_files');
+
+            // Store files temporarily and pass paths to the job
+            $filePaths = [];
+            if (isset($data['images'])) {
+                $filePaths = collect($data['images'])->map(function ($image) {
+                       $path = $image->store('temp/uploads', 's3');
+                        return Storage::disk('s3')->path($path);
+                })->toArray();
+            }
+
+            if (!empty($filePaths)) {
+                ProcessPuppyMedia::dispatch($update_puppy, $filePaths, 'puppy_files');
+            }
+
+        });
         }
 
 

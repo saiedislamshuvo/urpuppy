@@ -271,7 +271,6 @@ try {
 
         $this->addMediaConversion('thumbnail')
             ->fit(Fit::Contain, 800, 450)  // Reduced from 1280x720 to 800x450 (same aspect ratio)
-            ->nonQueued()
             ->optimize()
             ->format('webp')
             ->performOnCollections('company_logo')
@@ -280,7 +279,6 @@ try {
 
         $this->addMediaConversion('thumbnail')
             ->fit(Fit::Contain, 150, 150)  // Reduced from 1280x720 to 800x450 (same aspect ratio)
-            ->nonQueued()
             ->performOnCollections('gallery')
             ->optimize()
             ->format('webp')
@@ -289,7 +287,6 @@ try {
 
         $this->addMediaConversion('preview')
             ->fit(Fit::Contain, 800, 450)  // Reduced from 1280x720 to 800x450 (same aspect ratio)
-            ->nonQueued()
             ->performOnCollections('gallery')
             ->optimize()
             ->format('webp')
