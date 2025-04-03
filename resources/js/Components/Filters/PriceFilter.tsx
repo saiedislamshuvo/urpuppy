@@ -37,7 +37,6 @@ const PriceFilter: React.FC<AgeFilterProps> = ( {setPrice, range = [1, 10000] })
                         <span>e.g. (   ${priceRange[0] } - ${priceRange[1] }   )</span>
                       </button>
                       <div className="dropdown-menu p-3">
-        <WhenVisible data="price_filter_range" fallback={<div></div>}>
     <div
       className="mx-2"
       style={{
@@ -135,7 +134,6 @@ const PriceFilter: React.FC<AgeFilterProps> = ( {setPrice, range = [1, 10000] })
         {priceRange[1].toLocaleString()}
       </div>
     </div>
-    </WhenVisible>
                       </div>
                     </div>
                   </div>

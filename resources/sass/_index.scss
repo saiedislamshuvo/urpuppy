@@ -1,7 +1,7 @@
 // Hero
 .hero-section {
     padding: 200px 0 150px;
-    background-image: url(/banner-bg.webp);
+    background-image: url('#{$cloudfront-url}/assets/output.webp');
     background-repeat: no-repeat;
     background-size: cover;
 
