@@ -33,7 +33,7 @@ class ResetDatabase extends Command
     public function handle()
     {
         Puppy::truncate();
-        User::where('email', '!=', 'admin@urpuppy.com')->delete();
+        User::where('email', '!=', 'admin@urpuppy.com')->forceDelete();
         Artisan::call('optimize:clear');
         Report::truncate();
         Contact::truncate();
