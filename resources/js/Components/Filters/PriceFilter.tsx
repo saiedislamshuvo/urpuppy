@@ -1,7 +1,7 @@
 import React from "react";
 import { getTrackBackground, Range } from "react-range";
 import { FilterBoxProps } from "../FilterBox";
-import { usePage, WhenVisible } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 
 interface AgeFilterProps {
   setPrice: React.Dispatch<React.SetStateAction<FilterBoxProps>>;

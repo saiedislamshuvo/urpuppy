@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FilterBoxProps } from '../FilterBox';
-import { usePage, WhenVisible } from '@inertiajs/react';
+import { usePage  } from '@inertiajs/react';
 import { AsyncPaginate } from 'react-select-async-paginate';
 import { filterStyles } from '../SelectFilterInput';
 import GenericModal from '../Modals/GenericModal';

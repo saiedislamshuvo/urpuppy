@@ -24,13 +24,15 @@ const FilterBox = () => {
     const { props } = usePage();
     const { payload, isMobile } = props as any;
 
-    const initialFilters: FilterBoxProps = {
+
+   const initialFilters = React.useMemo(() => ({
         breed: { label: payload?.filter?.breed ?? "e.g. (Breed)", value: payload?.filter?.breed ?? "All" },
         gender: { label: payload?.filter?.gender ?? "e.g. (Male)", value: payload?.filter?.gender ?? "All" },
         age: { label: "1 week", value: payload?.filter?.age ?? "0" },
         price: { label: "$1 - $2,500", value: [1, 250000] },
         state: { label: payload?.filter?.state ?? "e.g. (New York)", value: payload?.filter?.state ?? "All" },
-    };
+    }), [payload?.filter]) as FilterBoxProps;
+
 
     const [filter, setFilter] = useState<FilterBoxProps>(initialFilters);
 
@@ -51,18 +53,18 @@ const FilterBox = () => {
         });
     };
 
-    const renderFilterLabel = () => {
-        return Object.entries(filter)
-            .filter(([key]) => key !== 'state' && key !== 'price')
-            .map(([key, item], index, array) => (
-                <React.Fragment key={key}>
-                    {item.label}
-                    {index < array.length - 1 && ' ・'}
-                </React.Fragment>
-            ));
-    };
+    const renderFilterLabel = React.useCallback(() => {
+    return Object.entries(filter)
+        .filter(([key]) => key !== 'state' && key !== 'price')
+        .map(([key, item], index, array) => (
+            <React.Fragment key={key}>
+                {item.label}
+                {index < array.length - 1 && ' ・'}
+            </React.Fragment>
+        ));
+}, [filter]);
 
-    const renderDesktopFilters = () => (
+    const renderDesktopFilters = React.useCallback(() => (
         <div className="grid-filter d-none d-lg-block">
             <div className="d-flex align-items-center justify-content-between">
                 <div className="breed d-flex gap-2 border-end">
@@ -88,9 +90,10 @@ const FilterBox = () => {
                 </a>
             </div>
         </div>
-    );
 
-    const renderMobileFilters = () => (
+), [filter, setFilter, handleSearch]);
+
+const renderMobileFilters = React.useCallback(() => (
         <div className="grid-filter-mobile aos-init aos-animate dropdown d-grid d-lg-none" data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000">
             <button
                 type="button"
@@ -136,7 +139,8 @@ const FilterBox = () => {
                 </a>
             </div>
         </div>
-    );
+
+), [filter, setFilter, handleSearch, renderFilterLabel]);
 
     return (
         <>
