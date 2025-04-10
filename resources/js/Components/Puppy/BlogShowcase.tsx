@@ -1,7 +1,6 @@
 import React from 'react'
 import PuppyCard from './Card'
 import { Link } from '@inertiajs/react'
-import { Adsense } from '@ctrl/react-adsense'
 import Card from '../Post/Card'
 
 const BlogShowcase = ({post_data}: { post_data: App.Data.PostData[] }) => {

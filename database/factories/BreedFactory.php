@@ -58,6 +58,7 @@ class BreedFactory extends Factory
     {
         return [
             'name' => $this->faker->firstName(),
+            'slug' => $this->faker->slug(),
             'description' => fake()->paragraph(3, true),
             'history_description' => fake()->paragraph(3, true),
             'size_description' => fake()->paragraph(3, true),

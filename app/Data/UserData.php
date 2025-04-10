@@ -29,7 +29,7 @@ class UserData extends Data
         /* public ?StateData $state, */
         public ?string $zip_code,
         public ?string $address,
-        public string $short_address,
+        public ?string $short_address,
         public string $initial_name,
         public ?string $email_verified_at,
         public string $member_since,

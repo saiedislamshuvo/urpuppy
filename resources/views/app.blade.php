@@ -22,5 +22,15 @@
 
         <script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"LocalBusiness","name":"Urpuppy.com","email":"admin@urpuppy.com","contactPoint":{"@type":"ContactPoint","areaServed":"US"},"image":"https:\/\/urpuppy.com\/logo.png"}</script>
 
+        <noscript>
+    <style>
+        [data-aos] {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+    </style>
+</noscript>
+
+
     </body>
 </html>

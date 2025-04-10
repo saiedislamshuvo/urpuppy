@@ -1,18 +1,14 @@
-"use client"
-
 import { useEffect } from 'react'
-import 'aos/dist/aos.css';
-import AOS from "aos";
+import AOS from "aos"
+import 'aos/dist/aos.css'
 
 export const AOSInit = () => {
   useEffect(() => {
-            if (typeof window !== "undefined") {
     AOS.init({
-          once: true
-        });
-        }
+      once: true,
+    });
+  }, []);
 
-  }, [])
-
-  return null
+  return null;
 }
+

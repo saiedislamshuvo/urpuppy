@@ -1,7 +1,6 @@
 import React from 'react'
 import PuppyCard from './Card'
 import { Link } from '@inertiajs/react'
-import { Adsense } from '@ctrl/react-adsense'
 
 const NewArrivals = ({new_arrivals}: { new_arrivals: App.Data.PuppyData[] }) => {
   return (
@@ -16,18 +15,6 @@ const NewArrivals = ({new_arrivals}: { new_arrivals: App.Data.PuppyData[] }) => 
             {new_arrivals.map((puppy: App.Data.PuppyData, index) => (
                 <PuppyCard location="new-arrivals"  key={puppy.slug} className="col-md-6 col-xl-3 mb-4 mb-xl-0" puppy={puppy} height="310px" />
             ))}
-
-            <div className="col-md-6 col-xl-3 mb-4 mb-xl-0">
-                <Adsense
-                  client="ca-pub-2165217194424630"
-                  slot="1030827901"
-                  style={{ display: 'block' }}
-                  layout="in-article"
-                  format="fluid"
-                />
-        </div>
-
-
 
         </div>
         <Link className="btn btn-outline-extralight btn-white bg-white border text-dark d-flex d-md-none align-items-center justify-content-center gap-2"
