@@ -190,8 +190,8 @@ class SellerController extends Controller
             $filePaths = [];
             if (isset($data['images'])) {
                 $filePaths = collect($data['images'])->map(function ($image) {
-                    $path = $image->store('temp/uploads', 'public');
-                    return storage_path('app/public/' . $path);
+                      $path = $image->store('temp/uploads', 's3');
+                      return Storage::disk('s3')->url($path);
                 })->toArray();
             }
 
