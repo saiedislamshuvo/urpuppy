@@ -22,7 +22,6 @@ class ReportResource extends Resource
         return 'Messages'; // This will group the resource under "Content"
     }
 
-
     public static function canCreate(): bool
     {
         return false;
@@ -91,10 +90,10 @@ class ReportResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                            Tables\Actions\BulkActionGroup::make([
-                                Tables\Actions\DeleteBulkAction::make(),
-                            ]),
-                        ]);
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getRelations(): array

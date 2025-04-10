@@ -28,10 +28,11 @@ class HandleSubscriptionEnded
         }
 
         // Ensure the event is not a duplicate using `canceled_at`
-        $cacheKey = 'subscription-canceled-' . $subscription['id'] . '-' . $subscription['canceled_at'];
+        $cacheKey = 'subscription-canceled-'.$subscription['id'].'-'.$subscription['canceled_at'];
 
         if (Cache::has($cacheKey)) {
             Log::info('Duplicate cancellation event ignored.', ['subscription_id' => $subscription['id']]);
+
             return;
         }
 
@@ -40,7 +41,6 @@ class HandleSubscriptionEnded
 
         // Fetch the user associated with the subscription
         $user = $this->getUser($subscription['customer']);
-
 
         if ($user) {
 
@@ -66,4 +66,3 @@ class HandleSubscriptionEnded
         return Cashier::findBillable($stripeId);
     }
 }
-

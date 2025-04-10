@@ -4289,13 +4289,13 @@ class BreedSeeder extends Seeder
                     'female_weight_max' => $breed->female_weight_max ?? null, // Corrected
                     'hypoallergenic' => $breed->hypoallergenic ?? false,
                     'content' => null,
-                'description' => fake()->paragraph(3, true),
-                'history_description' => fake()->paragraph(3, true),
-                'size_description' => fake()->paragraph(3, true),
-                'coat_description' => fake()->paragraph(3, true),
-                'temperament_description' => fake()->paragraph(3, true),
-                'lifestyle_description' => fake()->paragraph(3, true),
-                'activities_description' => fake()->paragraph(3, true),
+                    'description' => fake()->paragraph(3, true),
+                    'history_description' => fake()->paragraph(3, true),
+                    'size_description' => fake()->paragraph(3, true),
+                    'coat_description' => fake()->paragraph(3, true),
+                    'temperament_description' => fake()->paragraph(3, true),
+                    'lifestyle_description' => fake()->paragraph(3, true),
+                    'activities_description' => fake()->paragraph(3, true),
                 ]
             );
 
@@ -4304,7 +4304,7 @@ class BreedSeeder extends Seeder
                     ->preservingOriginal()
                     ->toMediaCollection('media');
             } catch (\Exception $e) {
-                \Log::error('Failed to add media: ' . $e->getMessage());
+                \Log::error('Failed to add media: '.$e->getMessage());
             }
 
         }

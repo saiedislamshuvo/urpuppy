@@ -31,38 +31,37 @@ class UserFactory extends Factory
         try {
 
             return $this->afterCreating(function (User $user) {
-    $avatars = File::files(base_path('tests/test-avatars'));
+                $avatars = File::files(base_path('tests/test-avatars'));
 
-    if (!empty($avatars) && config('app.env') != 'testing') {
-        $avatar = $avatars[array_rand($avatars)];
-        $user->addMedia($avatar->getPathname())
-             ->preservingOriginal()
-             ->toMediaCollection('avatars');
-    }
+                if (! empty($avatars) && config('app.env') != 'testing') {
+                    $avatar = $avatars[array_rand($avatars)];
+                    $user->addMedia($avatar->getPathname())
+                        ->preservingOriginal()
+                        ->toMediaCollection('avatars');
+                }
 
-    $breeds = Breed::inRandomOrder()->limit(4)->get();
-    $user->breeds()->saveMany($breeds);
+                $breeds = Breed::inRandomOrder()->limit(4)->get();
+                $user->breeds()->saveMany($breeds);
 
-    $initial = rand(2, 3);
+                $initial = rand(2, 3);
 
-    if (config('app.env') != 'testing') {
+                if (config('app.env') != 'testing') {
 
-    for ($count = 0; $count < $initial; $count++) {
-        $comment = $user->comments()->make([
-            'rating' => rand(1, 5),
-            'body' => fake()->paragraphs(2, true),
-        ]);
+                    for ($count = 0; $count < $initial; $count++) {
+                        $comment = $user->comments()->make([
+                            'rating' => rand(1, 5),
+                            'body' => fake()->paragraphs(2, true),
+                        ]);
 
-        $reviewer = User::inRandomOrder()->where('id', '!=', $user->id)->first();
-        if ($reviewer != null) {
-            $comment->reviewer()->associate($reviewer);
-            $comment->save();
-        }
+                        $reviewer = User::inRandomOrder()->where('id', '!=', $user->id)->first();
+                        if ($reviewer != null) {
+                            $comment->reviewer()->associate($reviewer);
+                            $comment->save();
+                        }
 
-    }
-    }
-    });
-
+                    }
+                }
+            });
 
         } catch (Exception $e) {
 
@@ -76,9 +75,9 @@ class UserFactory extends Factory
     {
         /* $country = Country::query()->where('iso2', 'US')->first(); */
         /* if ($country == null) { */
-            /* $country = Country::factory()->create([ */
-            /*     'name' => 'united states', */
-            /* ]); */
+        /* $country = Country::factory()->create([ */
+        /*     'name' => 'united states', */
+        /* ]); */
         /* } */
         /* $state = State::query()->where('country_id', $country->id)->inRandomOrder()->first(); */
 
@@ -91,7 +90,7 @@ class UserFactory extends Factory
 
         $state = State::query()->inRandomOrder()->first();
         $city = City::query()->inRandomOrder()->where('state_id', $state?->id)->first();
-        while(!$state?->cities()->count() && $city == null) {
+        while (! $state?->cities()->count() && $city == null) {
 
             $state = State::query()->inRandomOrder()->first();
             $city = City::query()->inRandomOrder()->where('state_id', $state?->id)->first();
@@ -106,8 +105,6 @@ class UserFactory extends Factory
                 /* ]); */
             }
 
-
-
         }
 
         /* if ($state->cities()->count()) { */
@@ -116,7 +113,6 @@ class UserFactory extends Factory
         /* while ($city != null) { */
         /*     $city = $city */
         /* } */
-
 
         return [
             /* 'id' => rand(10000, 20000), */

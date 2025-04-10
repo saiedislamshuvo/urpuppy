@@ -1,8 +1,6 @@
 <?php
 
-use App\Models\City;
 use App\Models\PuppyPattern;
-use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -27,7 +25,7 @@ test('seller registration page work if logged in', function () {
         ->assertInertia(function (Assert $page) {
             $page->component('Seller/Registration');
 
-    });
+        });
 });
 
 test('seller can register', function () {
@@ -79,10 +77,10 @@ test('seller can register', function () {
         'video' => $mockedVideo,
     ]);
 
-    $post->assertSessionHas('success' , 'Puppy created successfully');
+    $post->assertSessionHas('success', 'Puppy created successfully');
     $puppy = $user->puppies->first();
 
     assertEquals($puppy->images->count(), 5);
-    assertContains('video.mp4', explode('/', $puppy->video ) );
+    assertContains('video.mp4', explode('/', $puppy->video));
     assertEquals($puppy->name, 'Puppy Test');
 });

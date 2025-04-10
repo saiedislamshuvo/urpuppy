@@ -2,19 +2,13 @@
 
 namespace App\Data;
 
-use App\PuppyStatus;
-use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
-
-
-
 #[TypeScript]
 class BreederData extends Data
 {
-
     public function __construct(
         public int $id,
         public string $full_name,
@@ -24,7 +18,7 @@ class BreederData extends Data
         public ?string $phone,
         public ?string $phone_formatted,
         public ?string $address,
-        public ?string $short_address = "",
+        public ?string $short_address,
         public string $member_since,
         /** @var \App\Data\BreedDataCollection[] */
         public ?DataCollection $breeds,
@@ -40,9 +34,5 @@ class BreederData extends Data
         public ?string $company_address,
         public ?string $company_established_on_label,
         public ?string $company_logo
-    ) {
-
-
-    }
+    ) {}
 }
-

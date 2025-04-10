@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('comments', function (Blueprint $table) {
-                $table->integer('rating')->default(0)->nullable()->change();
+            $table->integer('rating')->default(0)->nullable()->change();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('comments', function (Blueprint $table) {
-                $table->integer('rating')->change();
+            $table->integer('rating')->change();
         });
     }
 };

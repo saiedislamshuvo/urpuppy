@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Plan;
 use App\Models\PuppyTrait;
 use Illuminate\Database\Seeder;
 
@@ -15,47 +14,47 @@ class CharacteristicsSeeder extends Seeder
     {
         PuppyTrait::create([
             'name' => 'Champion Sired',
-            'tooltip' => 'Champion Sired'
+            'tooltip' => 'Champion Sired',
         ]);
 
         PuppyTrait::create([
             'name' => 'Show Quality',
-            'tooltip' => 'Show Quality'
+            'tooltip' => 'Show Quality',
         ]);
 
         PuppyTrait::create([
             'name' => 'Champion Bloodline',
-            'tooltip' => 'Champion Bloodline'
+            'tooltip' => 'Champion Bloodline',
         ]);
 
         PuppyTrait::create([
             'name' => 'Registered',
-            'tooltip' => 'Registered'
+            'tooltip' => 'Registered',
         ]);
 
         PuppyTrait::create([
             'name' => 'Registrable',
-            'tooltip' => 'Registrable'
+            'tooltip' => 'Registrable',
         ]);
 
         PuppyTrait::create([
             'name' => 'Current Vaccinations',
-            'tooltip' => 'Current Vaccinations'
+            'tooltip' => 'Current Vaccinations',
         ]);
 
         PuppyTrait::create([
             'name' => 'Veterinary Exam',
-            'tooltip' => 'Veterinary Exam'
+            'tooltip' => 'Veterinary Exam',
         ]);
 
         PuppyTrait::create([
             'name' => 'Health Guarantee',
-            'tooltip' => 'Health Guarantee'
+            'tooltip' => 'Health Guarantee',
         ]);
 
         PuppyTrait::create([
             'name' => 'Pedigree',
-            'tooltip' => 'Pedigree'
+            'tooltip' => 'Pedigree',
         ]);
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class ProfileBreedsController extends Controller
 {
-    //update
+    // update
     public function update(Request $request)
     {
         $breeds = $request->validate([

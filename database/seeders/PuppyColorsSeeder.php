@@ -48,4 +48,3 @@ class PuppyColorsSeeder extends Seeder
         }
     }
 }
-

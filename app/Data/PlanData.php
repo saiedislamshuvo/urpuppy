@@ -2,8 +2,6 @@
 
 namespace App\Data;
 
-use App\PuppyStatus;
-use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -11,7 +9,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[TypeScript]
 class PlanData extends Data
 {
-
     public function __construct(
         public int $id,
         public string $name,
@@ -26,15 +23,11 @@ class PlanData extends Data
         public ?string $logo,
         public int $interval_count,
         /** @var \App\Data\PlanDetail[] */
-        public ?DataCollection  $details,
+        public ?DataCollection $details,
         /** @var string[] */
         public array $features,
 
         public ?string $badge_color,
         public ?string $badge_title,
-    ) {
-
-
-    }
+    ) {}
 }
-

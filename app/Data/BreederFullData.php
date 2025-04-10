@@ -2,7 +2,6 @@
 
 namespace App\Data;
 
-use App\PuppyStatus;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
@@ -11,7 +10,6 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[TypeScript]
 class BreederFullData extends Data
 {
-
     public function __construct(
         public int $id,
         public string $full_name,
@@ -24,7 +22,6 @@ class BreederFullData extends Data
         public ?string $company_logo,
         public ?string $video,
         public string $member_since,
-
 
         public ?string $company_name,
         public ?string $company_address,
@@ -57,9 +54,5 @@ class BreederFullData extends Data
 
         /** @var \App\Data\CommentData[] */
         public ?DataCollection $comments
-    ) {
-
-
-    }
+    ) {}
 }
-

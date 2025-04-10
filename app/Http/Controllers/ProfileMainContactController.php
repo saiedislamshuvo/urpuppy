@@ -30,7 +30,7 @@ class ProfileMainContactController extends Controller
         }
 
         if (@$input['public_mobile']) {
-           $test =  $user->attachAttribute('public_mobile', @$input['public_mobile']);
+            $test = $user->attachAttribute('public_mobile', @$input['public_mobile']);
         }
 
         if (@$input['website']) {

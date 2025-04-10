@@ -10,5 +10,3 @@ it('shows the plans page', function () {
         $page->component('Plan/Index');
     });
 });
-
-

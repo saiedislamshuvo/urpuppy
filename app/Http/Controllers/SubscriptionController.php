@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subscription;
 use Carbon\Carbon;
 use Cknow\Money\Money;
 use Illuminate\Http\Request;

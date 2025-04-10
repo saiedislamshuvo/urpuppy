@@ -216,7 +216,7 @@ return [
                         [
                             'name' => 'name',
                             'type' => 'string',
-                        ]
+                        ],
                     ],
                 ],
                 'search-parameters' => [
@@ -233,13 +233,13 @@ return [
                         [
                             'name' => 'name',
                             'type' => 'string',
-                        ]
+                        ],
                     ],
                 ],
                 'search-parameters' => [
                     'query_by' => 'name',
                 ],
-            ]
+            ],
 
         ],
     ],

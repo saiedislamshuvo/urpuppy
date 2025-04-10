@@ -16,7 +16,7 @@ class BreedController extends Controller
         // Apply search filter if 'search' parameter is provided
         if ($request->filled('search')) {
             $searchTerm = strtolower($request->search);
-            $breedsQuery->whereRaw('LOWER(name) LIKE ?', ['%' . $searchTerm . '%']);
+            $breedsQuery->whereRaw('LOWER(name) LIKE ?', ['%'.$searchTerm.'%']);
         }
 
         // Apply sorting by name

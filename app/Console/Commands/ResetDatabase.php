@@ -9,7 +9,6 @@ use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Stripe\SubscriptionItem;
 
 class ResetDatabase extends Command
 {

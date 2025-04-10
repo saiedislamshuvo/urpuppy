@@ -12,11 +12,11 @@ class FavoriteController extends Controller
     {
         $user = $request->user();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->to(route('login'))->with('message.error', 'You must be logged in to add to favorites');
         }
 
-        if (!$user?->email_verified_at) {
+        if (! $user?->email_verified_at) {
             return redirect()->to(route('verification.notice'))->with('message.error', 'Please verify your email first');
         }
 
@@ -37,7 +37,6 @@ class FavoriteController extends Controller
         /* $user = $user->attachFavoriteStatus($puppy); */
         /* $user->save(); */
 
-
         /* $cacheKeys = Cache::getRedis()->keys('*'); */
         return redirect()->back()->with('message.success', $message);
 
@@ -55,23 +54,22 @@ class FavoriteController extends Controller
     {
         $favorites = $request->user()->getFavoriteItems(Puppy::class)->with('breeds', 'seller')->paginate(12);
 
-
         if (auth()->user()) {
-    $user_favorites = auth()->user()->favorites()->pluck('favoriteable_id');
-}
-
-    $favorites->getCollection()->transform(function ($puppy) use ($user_favorites) {
-        if (isset($user_favorites) && $user_favorites->contains($puppy->id)) {
-            $puppy->is_favorite = true;
+            $user_favorites = auth()->user()->favorites()->pluck('favoriteable_id');
         }
-        return $puppy;
-    });
 
+        $favorites->getCollection()->transform(function ($puppy) use ($user_favorites) {
+            if (isset($user_favorites) && $user_favorites->contains($puppy->id)) {
+                $puppy->is_favorite = true;
+            }
+
+            return $puppy;
+        });
 
         return inertia()->render('Favorite/Index', [
             'favorite_puppies' => $favorites,
         ]);
-            /* ->title('Your favorites'); */
+        /* ->title('Your favorites'); */
     }
 
     protected function clearPuppiesCache()

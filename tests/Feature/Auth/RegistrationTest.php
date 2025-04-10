@@ -1,6 +1,5 @@
 <?php
 
-use App\Data\PuppyData;
 use App\Models\Puppy;
 
 test('registration screen can be rendered', function () {

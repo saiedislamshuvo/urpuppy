@@ -2,7 +2,6 @@
 
 namespace App\Data;
 
-use App\PuppyStatus;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -14,8 +13,5 @@ class PostCategoryData extends Data
         public string $slug,
         public string $description,
         public bool $is_visible,
-    ) {
-
-
-    }
+    ) {}
 }

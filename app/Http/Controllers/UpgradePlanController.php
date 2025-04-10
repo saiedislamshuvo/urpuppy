@@ -4,15 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Data\PlanData;
 use App\Models\Plan;
-use Illuminate\Http\Request;
 
 class UpgradePlanController extends Controller
 {
-
     public function index()
     {
 
-        if (!auth()->user()?->roles->contains('seller')) {
+        if (! auth()->user()?->roles->contains('seller')) {
             return error('profile.edit', 'You are not a seller.');
         }
 
@@ -21,7 +19,7 @@ class UpgradePlanController extends Controller
         }
 
         return inertia()->render('Plan/Upgrade', [
-            'plans' => PlanData::collect(Plan::ordered()->active()->where('is_featured', false)->where('id', '!=', auth()->user()->premium_plan?->id)->where('type', 'premium')->get())
+            'plans' => PlanData::collect(Plan::ordered()->active()->where('is_featured', false)->where('id', '!=', auth()->user()->premium_plan?->id)->where('type', 'premium')->get()),
         ]);
     }
 

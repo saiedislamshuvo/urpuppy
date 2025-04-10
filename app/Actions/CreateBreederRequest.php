@@ -1,10 +1,8 @@
 <?php
 
-
 namespace App\Actions;
 
 use App\Models\BreederRequest;
-use App\Models\Puppy;
 use App\Models\User;
 
 class CreateBreederRequest
@@ -13,8 +11,9 @@ class CreateBreederRequest
     {
         $breeder_request = BreederRequest::create([
             ...$data,
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
+
         return $breeder_request;
         /* return $user->breeder_requests()->create($data); */
     }

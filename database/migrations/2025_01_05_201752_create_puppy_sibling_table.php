@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-          Schema::create('puppy_sibling', function (Blueprint $table) {
+        Schema::create('puppy_sibling', function (Blueprint $table) {
             $table->id();
             $table->foreignId('puppy_id')->cascadeOnDelete();
             $table->foreignId('sibling_id')->cascadeOnDelete();

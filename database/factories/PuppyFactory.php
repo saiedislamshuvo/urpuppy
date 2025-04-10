@@ -26,13 +26,13 @@ class PuppyFactory extends Factory
             'Buddy', 'Max', 'Bella', 'Charlie', 'Luna', 'Lucy', 'Rocky', 'Cooper',
             'Daisy', 'Sadie', 'Milo', 'Bailey', 'Oliver', 'Toby', 'Chloe', 'Zoe',
             'Duke', 'Rex', 'Leo', 'Scout', 'Jack', 'Shadow', 'Ruby', 'Samson',
-            'Frankie', 'Gizmo', 'Ollie', 'Finn', 'Penny', 'Bear', 'Harley', 'Rusty'
+            'Frankie', 'Gizmo', 'Ollie', 'Finn', 'Penny', 'Bear', 'Harley', 'Rusty',
         ];
 
         return [
             'name' => $this->faker->randomElement($dogNames),
             'gender' => collect(['Female', 'Male'])->random(),
-            'view_count' => 1 ,
+            'view_count' => 1,
             'birth_date' => $this->faker->dateTimeBetween('-2 years', 'now'),
             'user_id' => User::factory()->create()->id,
             'price' => (int) $this->faker->numberBetween(10, 50000),
@@ -46,16 +46,18 @@ class PuppyFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (Puppy $puppy) {
-                for ($i = 0; $i < 5; $i++) {
+            for ($i = 0; $i < 5; $i++) {
                 $petImagesPath = base_path('tests/test-puppies');
-                if (!is_dir($petImagesPath)) {
-                    Log::warning('Pet images directory not found: ' . $petImagesPath);
+                if (! is_dir($petImagesPath)) {
+                    Log::warning('Pet images directory not found: '.$petImagesPath);
+
                     return;
                 }
 
                 $petImages = File::files($petImagesPath);
                 if (empty($petImages)) {
-                    Log::warning('No images found in the directory: ' . $petImagesPath);
+                    Log::warning('No images found in the directory: '.$petImagesPath);
+
                     return;
                 }
 
@@ -67,7 +69,7 @@ class PuppyFactory extends Factory
                             ->preservingOriginal()
                             ->toMediaCollection('puppy_files');
                     } catch (Exception $e) {
-                        Log::error('Failed to add media: ' . $e->getMessage());
+                        Log::error('Failed to add media: '.$e->getMessage());
                     }
                 }
 
@@ -77,6 +79,4 @@ class PuppyFactory extends Factory
             $puppy->breeds()->attach($breed);
         });
     }
-
-
 }

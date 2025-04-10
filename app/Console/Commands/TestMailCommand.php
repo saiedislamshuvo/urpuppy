@@ -14,7 +14,6 @@ use App\Mail\RenewSellerMail;
 use App\Mail\SubscriptionEnded;
 use App\Mail\SupportTeamEmailResponseMail;
 use App\Mail\WishlistMail;
-use App\Models\Puppy;
 use App\Services\PuppyService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
@@ -41,8 +40,7 @@ class TestMailCommand extends Command
         $this->puppyService = $puppyService;
     }
 
-
-     protected PuppyService $puppyService;
+    protected PuppyService $puppyService;
 
     /**
      * Execute the console command.
@@ -64,7 +62,6 @@ class TestMailCommand extends Command
 
         ];
 
-
         $allPuppies = collect();
         Mail::queue((new AdminNewContact($payload))->to('businessguy1982@yahoo.com'));
         Mail::queue((new BreederAccountApproved($user))->to('businessguy1982@yahoo.com'));
@@ -77,12 +74,12 @@ class TestMailCommand extends Command
         Mail::queue((new SubscriptionEnded($user))->to('businessguy1982@yahoo.com'));
         Mail::queue((new SupportTeamEmailResponseMail($user->first_name, 'businessguy1982@yahoo.com', 'lorem ipsum dolor sit amet'))->to('businessguy1982@yahoo.com'));
 
-        $loop = $this->puppyService->getPuppiesCli([])->where('created_at' , '>=', now()->subDays(3))->orderByDesc('created_at')->limit(3)->get();
+        $loop = $this->puppyService->getPuppiesCli([])->where('created_at', '>=', now()->subDays(3))->orderByDesc('created_at')->limit(3)->get();
         $allPuppies = $allPuppies->merge($loop)->unique('id');
 
         try {
 
-        Mail::queue((new WishlistMail($user, $allPuppies))->to('businessguy1982@yahoo.com'));
+            Mail::queue((new WishlistMail($user, $allPuppies))->to('businessguy1982@yahoo.com'));
 
         } catch (\Throwable $th) {
             \Log::error($th->getMessage());

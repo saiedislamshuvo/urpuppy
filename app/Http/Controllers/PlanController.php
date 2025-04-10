@@ -18,7 +18,7 @@ class PlanController extends Controller
 
         if ($request->user()?->premium_plan) {
             return redirect()->route('profile.edit', [
-                'tab' => 'My Subscription'
+                'tab' => 'My Subscription',
             ]);
         }
 
@@ -34,20 +34,20 @@ class PlanController extends Controller
 
         if ($request->user()?->breeder_plan) {
             return redirect()->route('profile.edit', [
-                'tab' => 'My Subscription'
+                'tab' => 'My Subscription',
             ]);
         }
 
         if ($request->user()->company_phone == null) {
             return redirect()->route('breeders.create')->with([
-                'message.error' => 'Please fill up the details here'
+                'message.error' => 'Please fill up the details here',
             ]);
         }
 
         $plan = Plan::ordered()->active()->where('is_featured', true)->first();
+
         return inertia()->render('Plan/Breeder', [
-            'plan' => $plan
+            'plan' => $plan,
         ]);
     }
-
 }

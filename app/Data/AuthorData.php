@@ -2,7 +2,6 @@
 
 namespace App\Data;
 
-use App\PuppyStatus;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -13,8 +12,5 @@ class AuthorData extends Data
         public string $name,
         public string $email,
         public string $photo_url,
-    ) {
-
-
-    }
+    ) {}
 }

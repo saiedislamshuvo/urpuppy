@@ -16,7 +16,6 @@ test('test liking on blog', function () {
     /* $user->registerAsLoveReacter(); */
     $reacterFacade = $user->viaLoveReacter();
 
-
     /* $user->registerAsLoveReacter(); */
 
     $post = Post::factory()->create();

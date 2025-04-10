@@ -22,9 +22,9 @@ class PlanSeeder extends Seeder
             'trial_days' => 3,
             'active' => true,
             'features' => [
-                [ 'name' => 'Post up to 3 listings' ],
-                [ 'name' => 'Upload up to 3 images per listing' ],
-                [ 'name' => 'Perfect for getting started and testing the platform!' ],
+                ['name' => 'Post up to 3 listings'],
+                ['name' => 'Upload up to 3 images per listing'],
+                ['name' => 'Perfect for getting started and testing the platform!'],
             ],
             'listing_limit' => 3,
             'badge_title' => '3-Day Trial',
@@ -46,9 +46,9 @@ class PlanSeeder extends Seeder
             'trial_days' => 0,
             'active' => true,
             'features' => [
-                [ 'name' => 'Post up to 5 images per listing' ],
-                [ 'name' => 'Video uploads to showcase your puppies in action ' ],
-                [ 'name' => 'Featured listing appearance to boost visibility ' ],
+                ['name' => 'Post up to 5 images per listing'],
+                ['name' => 'Video uploads to showcase your puppies in action '],
+                ['name' => 'Featured listing appearance to boost visibility '],
             ],
             'listing_limit' => 3,
             'image_per_listing' => 3,
@@ -57,7 +57,7 @@ class PlanSeeder extends Seeder
         ]);
 
         /* // PREMIUM PACKAGE */
-       Plan::create([
+        Plan::create([
             'name' => 'Gold Plan',
             'price' => 7499,
             'type' => 'premium',
@@ -70,10 +70,10 @@ class PlanSeeder extends Seeder
             'trial_days' => 0,
             'active' => true,
             'features' => [
-                [ 'name' => 'Post up to 5 images per listing' ],
-                [ 'name' => 'Video uploads included for an engaging puppy showcase' ],
-                [ 'name' => 'Featured listing appearance to attract buyers' ],
-                [ 'name' => 'List up to 10 puppies—ideal for growing breeders ' ],
+                ['name' => 'Post up to 5 images per listing'],
+                ['name' => 'Video uploads included for an engaging puppy showcase'],
+                ['name' => 'Featured listing appearance to attract buyers'],
+                ['name' => 'List up to 10 puppies—ideal for growing breeders '],
             ],
             'listing_limit' => 10,
             'image_per_listing' => 5,
@@ -82,7 +82,7 @@ class PlanSeeder extends Seeder
         ]);
 
         /* // BREEDER SPECIAL */
-         Plan::create([
+        Plan::create([
             'name' => 'Platinum Plan',
             'price' => 19999,
             'type' => 'premium',
@@ -94,9 +94,9 @@ class PlanSeeder extends Seeder
             'trial_days' => 0,
             'active' => true,
             'features' => [
-                [ 'name' => 'Unlimited listings (up to 10 puppies per listing) ' ],
-                [ 'name' => 'Video uploads included to highlight your kennel’s quality' ],
-                [ 'name' => 'Featured listing appearance ensures maximum exposure year-round' ],
+                ['name' => 'Unlimited listings (up to 10 puppies per listing) '],
+                ['name' => 'Video uploads included to highlight your kennel’s quality'],
+                ['name' => 'Featured listing appearance ensures maximum exposure year-round'],
             ],
             'listing_limit' => 0,
             'image_per_listing' => 10,
@@ -104,7 +104,7 @@ class PlanSeeder extends Seeder
             'is_featured' => false,
         ]);
 
-         Plan::create([
+        Plan::create([
             'name' => 'The All-in-One Breeder Annual Subscription Plan',
             'price' => 7499,
             'type' => 'breeder',
@@ -116,9 +116,9 @@ class PlanSeeder extends Seeder
             'trial_days' => 0,
             'active' => true,
             'features' => [
-                [ 'name' => 'Unlimited listings (up to 10 puppies per listing) ' ],
-                [ 'name' => 'Video uploads included to highlight your kennel’s quality' ],
-                [ 'name' => 'Featured listing appearance ensures maximum exposure year-round' ],
+                ['name' => 'Unlimited listings (up to 10 puppies per listing) '],
+                ['name' => 'Video uploads included to highlight your kennel’s quality'],
+                ['name' => 'Featured listing appearance ensures maximum exposure year-round'],
             ],
             'listing_limit' => 0,
             'image_per_listing' => 10,

@@ -2,18 +2,17 @@
 
 namespace App\Filter;
 
-use App\Models\Puppy;
-use Spatie\QueryBuilder\Filters\Filter;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\QueryBuilder\Filters\Filter;
 
 class FilterGender implements Filter
 {
     public function __invoke(Builder $query, $value, string $property)
     {
-        if ($value == "0" || $value == "All") {
+        if ($value == '0' || $value == 'All') {
 
         } else {
-        $query->where('gender', $value);
+            $query->where('gender', $value);
         }
 
         /* $value = [$value[0] . '00',   $value[1] . '00']; */

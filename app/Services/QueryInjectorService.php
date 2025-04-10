@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Services;
 
-use Illuminate\Http\Request;
-use App\Models\User; // Example model for query logic
+use App\Models\User;
+use Illuminate\Http\Request; // Example model for query logic
 
 class QueryInjectorService
 {
@@ -29,4 +30,3 @@ class QueryInjectorService
     /*     return User::where(, 'breeder')->get(); */
     /* } */
 }
-

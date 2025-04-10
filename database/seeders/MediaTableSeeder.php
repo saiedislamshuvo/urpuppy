@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 
 class MediaTableSeeder extends Seeder
 {
-
     /**
      * Auto generated seed file
      *
@@ -15,12 +14,10 @@ class MediaTableSeeder extends Seeder
     public function run()
     {
 
-
         \DB::table('media')->delete();
 
-        \DB::table('media')->insert(array (
-            0 =>
-            array (
+        \DB::table('media')->insert([
+            0 => [
                 'id' => 15,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 242,
@@ -39,9 +36,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:09:54',
-            ),
-            1 =>
-            array (
+            ],
+            1 => [
                 'id' => 27,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 255,
@@ -60,9 +56,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:09:55',
-            ),
-            2 =>
-            array (
+            ],
+            2 => [
                 'id' => 5,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 12,
@@ -81,9 +76,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:53',
                 'updated_at' => '2024-11-14 22:10:09',
-            ),
-            3 =>
-            array (
+            ],
+            3 => [
                 'id' => 4,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 11,
@@ -102,9 +96,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:53',
                 'updated_at' => '2024-11-14 22:10:14',
-            ),
-            4 =>
-            array (
+            ],
+            4 => [
                 'id' => 3,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 4,
@@ -123,9 +116,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:53',
                 'updated_at' => '2024-11-14 22:10:15',
-            ),
-            5 =>
-            array (
+            ],
+            5 => [
                 'id' => 6,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 103,
@@ -144,9 +136,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:53',
                 'updated_at' => '2024-11-14 22:10:21',
-            ),
-            6 =>
-            array (
+            ],
+            6 => [
                 'id' => 7,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 234,
@@ -165,9 +156,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:53',
                 'updated_at' => '2024-11-14 22:10:29',
-            ),
-            7 =>
-            array (
+            ],
+            7 => [
                 'id' => 9,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 236,
@@ -186,9 +176,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:53',
                 'updated_at' => '2024-11-14 22:10:31',
-            ),
-            8 =>
-            array (
+            ],
+            8 => [
                 'id' => 8,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 235,
@@ -207,9 +196,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:53',
                 'updated_at' => '2024-11-14 22:10:32',
-            ),
-            9 =>
-            array (
+            ],
+            9 => [
                 'id' => 11,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 238,
@@ -228,9 +216,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:53',
                 'updated_at' => '2024-11-14 22:10:34',
-            ),
-            10 =>
-            array (
+            ],
+            10 => [
                 'id' => 12,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 239,
@@ -249,9 +236,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:10:37',
-            ),
-            11 =>
-            array (
+            ],
+            11 => [
                 'id' => 14,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 241,
@@ -270,9 +256,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:10:44',
-            ),
-            12 =>
-            array (
+            ],
+            12 => [
                 'id' => 13,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 240,
@@ -291,9 +276,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:10:51',
-            ),
-            13 =>
-            array (
+            ],
+            13 => [
                 'id' => 16,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 243,
@@ -312,9 +296,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:10:52',
-            ),
-            14 =>
-            array (
+            ],
+            14 => [
                 'id' => 19,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 246,
@@ -333,9 +316,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:10:57',
-            ),
-            15 =>
-            array (
+            ],
+            15 => [
                 'id' => 18,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 245,
@@ -354,9 +336,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:10:58',
-            ),
-            16 =>
-            array (
+            ],
+            16 => [
                 'id' => 22,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 249,
@@ -375,9 +356,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:10:58',
-            ),
-            17 =>
-            array (
+            ],
+            17 => [
                 'id' => 17,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 244,
@@ -396,9 +376,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:10:58',
-            ),
-            18 =>
-            array (
+            ],
+            18 => [
                 'id' => 20,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 247,
@@ -417,9 +396,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:11:00',
-            ),
-            19 =>
-            array (
+            ],
+            19 => [
                 'id' => 23,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 250,
@@ -438,9 +416,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:11:01',
-            ),
-            20 =>
-            array (
+            ],
+            20 => [
                 'id' => 25,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 253,
@@ -459,9 +436,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:12',
-            ),
-            21 =>
-            array (
+            ],
+            21 => [
                 'id' => 28,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 256,
@@ -480,9 +456,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:25',
-            ),
-            22 =>
-            array (
+            ],
+            22 => [
                 'id' => 29,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 257,
@@ -501,9 +476,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:31',
-            ),
-            23 =>
-            array (
+            ],
+            23 => [
                 'id' => 26,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 254,
@@ -522,9 +496,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:31',
-            ),
-            24 =>
-            array (
+            ],
+            24 => [
                 'id' => 24,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 252,
@@ -543,9 +516,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:11:32',
-            ),
-            25 =>
-            array (
+            ],
+            25 => [
                 'id' => 32,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 260,
@@ -564,9 +536,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:34',
-            ),
-            26 =>
-            array (
+            ],
+            26 => [
                 'id' => 30,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 258,
@@ -585,9 +556,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:47',
-            ),
-            27 =>
-            array (
+            ],
+            27 => [
                 'id' => 31,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 259,
@@ -606,9 +576,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:47',
-            ),
-            28 =>
-            array (
+            ],
+            28 => [
                 'id' => 33,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 261,
@@ -627,9 +596,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:47',
-            ),
-            29 =>
-            array (
+            ],
+            29 => [
                 'id' => 35,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 263,
@@ -648,9 +616,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:48',
-            ),
-            30 =>
-            array (
+            ],
+            30 => [
                 'id' => 38,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 267,
@@ -669,9 +636,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:11:51',
-            ),
-            31 =>
-            array (
+            ],
+            31 => [
                 'id' => 37,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 265,
@@ -690,9 +656,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:55',
-            ),
-            32 =>
-            array (
+            ],
+            32 => [
                 'id' => 36,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 264,
@@ -711,9 +676,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:12:09',
-            ),
-            33 =>
-            array (
+            ],
+            33 => [
                 'id' => 2,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 2,
@@ -732,9 +696,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:53',
                 'updated_at' => '2024-11-14 22:10:04',
-            ),
-            34 =>
-            array (
+            ],
+            34 => [
                 'id' => 10,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 237,
@@ -753,9 +716,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:53',
                 'updated_at' => '2024-11-14 22:10:37',
-            ),
-            35 =>
-            array (
+            ],
+            35 => [
                 'id' => 21,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 248,
@@ -774,9 +736,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:54',
                 'updated_at' => '2024-11-14 22:11:07',
-            ),
-            36 =>
-            array (
+            ],
+            36 => [
                 'id' => 34,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 262,
@@ -795,9 +756,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:55',
                 'updated_at' => '2024-11-14 22:11:49',
-            ),
-            37 =>
-            array (
+            ],
+            37 => [
                 'id' => 44,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 274,
@@ -816,9 +776,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:08',
-            ),
-            38 =>
-            array (
+            ],
+            38 => [
                 'id' => 45,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 275,
@@ -837,9 +796,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:10',
-            ),
-            39 =>
-            array (
+            ],
+            39 => [
                 'id' => 43,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 273,
@@ -858,9 +816,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:12',
-            ),
-            40 =>
-            array (
+            ],
+            40 => [
                 'id' => 48,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 278,
@@ -879,9 +836,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:19',
-            ),
-            41 =>
-            array (
+            ],
+            41 => [
                 'id' => 42,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 271,
@@ -900,9 +856,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:26',
-            ),
-            42 =>
-            array (
+            ],
+            42 => [
                 'id' => 41,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 270,
@@ -921,9 +876,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:28',
-            ),
-            43 =>
-            array (
+            ],
+            43 => [
                 'id' => 46,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 276,
@@ -942,9 +896,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:29',
-            ),
-            44 =>
-            array (
+            ],
+            44 => [
                 'id' => 49,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 280,
@@ -963,9 +916,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:30',
-            ),
-            45 =>
-            array (
+            ],
+            45 => [
                 'id' => 52,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 287,
@@ -984,9 +936,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:57',
                 'updated_at' => '2024-11-14 22:12:32',
-            ),
-            46 =>
-            array (
+            ],
+            46 => [
                 'id' => 47,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 277,
@@ -1005,9 +956,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:32',
-            ),
-            47 =>
-            array (
+            ],
+            47 => [
                 'id' => 39,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 268,
@@ -1026,9 +976,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:39',
-            ),
-            48 =>
-            array (
+            ],
+            48 => [
                 'id' => 50,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 282,
@@ -1047,9 +996,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:39',
-            ),
-            49 =>
-            array (
+            ],
+            49 => [
                 'id' => 40,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 269,
@@ -1068,9 +1016,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:56',
                 'updated_at' => '2024-11-14 22:12:41',
-            ),
-            50 =>
-            array (
+            ],
+            50 => [
                 'id' => 51,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 284,
@@ -1089,9 +1036,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:09:57',
                 'updated_at' => '2024-11-14 22:12:42',
-            ),
-            51 =>
-            array (
+            ],
+            51 => [
                 'id' => 54,
                 'model_type' => 'App\\Models\\Breed',
                 'model_id' => 290,
@@ -1110,9 +1056,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 22:19:05',
                 'updated_at' => '2024-11-14 22:19:05',
-            ),
-            52 =>
-            array (
+            ],
+            52 => [
                 'id' => 62,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 1,
@@ -1131,9 +1076,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 23:21:05',
                 'updated_at' => '2024-11-14 23:21:06',
-            ),
-            53 =>
-            array (
+            ],
+            53 => [
                 'id' => 56,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 1,
@@ -1152,9 +1096,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 23:19:58',
                 'updated_at' => '2024-11-14 23:20:00',
-            ),
-            54 =>
-            array (
+            ],
+            54 => [
                 'id' => 71,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 1,
@@ -1173,9 +1116,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 4,
                 'created_at' => '2024-11-15 00:54:43',
                 'updated_at' => '2024-11-15 00:54:43',
-            ),
-            55 =>
-            array (
+            ],
+            55 => [
                 'id' => 69,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 1,
@@ -1194,9 +1136,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 2,
                 'created_at' => '2024-11-15 00:54:42',
                 'updated_at' => '2024-11-15 00:54:42',
-            ),
-            56 =>
-            array (
+            ],
+            56 => [
                 'id' => 63,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 2,
@@ -1215,9 +1156,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 23:26:45',
                 'updated_at' => '2024-11-14 23:26:46',
-            ),
-            57 =>
-            array (
+            ],
+            57 => [
                 'id' => 64,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 2,
@@ -1236,9 +1176,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-14 23:27:45',
                 'updated_at' => '2024-11-14 23:27:45',
-            ),
-            58 =>
-            array (
+            ],
+            58 => [
                 'id' => 65,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 2,
@@ -1257,9 +1196,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 2,
                 'created_at' => '2024-11-14 23:27:45',
                 'updated_at' => '2024-11-14 23:27:46',
-            ),
-            59 =>
-            array (
+            ],
+            59 => [
                 'id' => 66,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 2,
@@ -1278,9 +1216,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 3,
                 'created_at' => '2024-11-14 23:27:46',
                 'updated_at' => '2024-11-14 23:27:46',
-            ),
-            60 =>
-            array (
+            ],
+            60 => [
                 'id' => 70,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 1,
@@ -1299,9 +1236,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 3,
                 'created_at' => '2024-11-15 00:54:42',
                 'updated_at' => '2024-11-15 00:54:43',
-            ),
-            61 =>
-            array (
+            ],
+            61 => [
                 'id' => 72,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 1,
@@ -1320,9 +1256,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 5,
                 'created_at' => '2024-11-15 00:54:43',
                 'updated_at' => '2024-11-15 00:54:43',
-            ),
-            62 =>
-            array (
+            ],
+            62 => [
                 'id' => 67,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 2,
@@ -1341,9 +1276,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 4,
                 'created_at' => '2024-11-14 23:27:46',
                 'updated_at' => '2024-11-14 23:27:46',
-            ),
-            63 =>
-            array (
+            ],
+            63 => [
                 'id' => 68,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 2,
@@ -1362,9 +1296,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 5,
                 'created_at' => '2024-11-14 23:27:46',
                 'updated_at' => '2024-11-14 23:27:47',
-            ),
-            64 =>
-            array (
+            ],
+            64 => [
                 'id' => 73,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 1,
@@ -1383,9 +1316,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 6,
                 'created_at' => '2024-11-15 00:54:43',
                 'updated_at' => '2024-11-15 00:54:43',
-            ),
-            65 =>
-            array (
+            ],
+            65 => [
                 'id' => 74,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 1,
@@ -1404,9 +1336,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 2,
                 'created_at' => '2024-11-16 06:07:09',
                 'updated_at' => '2024-11-16 06:07:10',
-            ),
-            66 =>
-            array (
+            ],
+            66 => [
                 'id' => 75,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 1,
@@ -1425,9 +1356,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 3,
                 'created_at' => '2024-11-16 06:07:09',
                 'updated_at' => '2024-11-16 06:07:10',
-            ),
-            67 =>
-            array (
+            ],
+            67 => [
                 'id' => 76,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 1,
@@ -1446,9 +1376,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 4,
                 'created_at' => '2024-11-16 06:07:09',
                 'updated_at' => '2024-11-16 06:07:11',
-            ),
-            68 =>
-            array (
+            ],
+            68 => [
                 'id' => 77,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 1,
@@ -1467,9 +1396,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 5,
                 'created_at' => '2024-11-16 06:07:09',
                 'updated_at' => '2024-11-16 06:07:11',
-            ),
-            69 =>
-            array (
+            ],
+            69 => [
                 'id' => 78,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 1,
@@ -1488,9 +1416,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 6,
                 'created_at' => '2024-11-16 06:07:09',
                 'updated_at' => '2024-11-16 06:07:11',
-            ),
-            70 =>
-            array (
+            ],
+            70 => [
                 'id' => 79,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 3,
@@ -1509,9 +1436,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-16 12:42:53',
                 'updated_at' => '2024-11-16 12:42:55',
-            ),
-            71 =>
-            array (
+            ],
+            71 => [
                 'id' => 85,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 3,
@@ -1530,9 +1456,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 2,
                 'created_at' => '2024-11-16 12:46:50',
                 'updated_at' => '2024-11-16 12:46:53',
-            ),
-            72 =>
-            array (
+            ],
+            72 => [
                 'id' => 80,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 3,
@@ -1551,9 +1476,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-16 12:45:30',
                 'updated_at' => '2024-11-16 12:45:30',
-            ),
-            73 =>
-            array (
+            ],
+            73 => [
                 'id' => 86,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 3,
@@ -1572,9 +1496,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 3,
                 'created_at' => '2024-11-16 12:46:50',
                 'updated_at' => '2024-11-16 12:46:53',
-            ),
-            74 =>
-            array (
+            ],
+            74 => [
                 'id' => 83,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 3,
@@ -1593,9 +1516,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 4,
                 'created_at' => '2024-11-16 12:45:31',
                 'updated_at' => '2024-11-16 12:45:31',
-            ),
-            75 =>
-            array (
+            ],
+            75 => [
                 'id' => 81,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 3,
@@ -1614,9 +1536,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 2,
                 'created_at' => '2024-11-16 12:45:30',
                 'updated_at' => '2024-11-16 12:45:30',
-            ),
-            76 =>
-            array (
+            ],
+            76 => [
                 'id' => 87,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 3,
@@ -1635,9 +1556,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 4,
                 'created_at' => '2024-11-16 12:46:50',
                 'updated_at' => '2024-11-16 12:46:53',
-            ),
-            77 =>
-            array (
+            ],
+            77 => [
                 'id' => 82,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 3,
@@ -1656,9 +1576,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 3,
                 'created_at' => '2024-11-16 12:45:30',
                 'updated_at' => '2024-11-16 12:45:31',
-            ),
-            78 =>
-            array (
+            ],
+            78 => [
                 'id' => 88,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 3,
@@ -1677,9 +1596,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 5,
                 'created_at' => '2024-11-16 12:46:50',
                 'updated_at' => '2024-11-16 12:46:53',
-            ),
-            79 =>
-            array (
+            ],
+            79 => [
                 'id' => 84,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 3,
@@ -1698,9 +1616,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 5,
                 'created_at' => '2024-11-16 12:45:31',
                 'updated_at' => '2024-11-16 12:45:31',
-            ),
-            80 =>
-            array (
+            ],
+            80 => [
                 'id' => 89,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 3,
@@ -1719,9 +1636,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 6,
                 'created_at' => '2024-11-16 12:46:50',
                 'updated_at' => '2024-11-16 12:46:53',
-            ),
-            81 =>
-            array (
+            ],
+            81 => [
                 'id' => 90,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 4,
@@ -1740,9 +1656,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-16 14:45:10',
                 'updated_at' => '2024-11-16 14:45:12',
-            ),
-            82 =>
-            array (
+            ],
+            82 => [
                 'id' => 91,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 5,
@@ -1761,9 +1676,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-16 14:54:48',
                 'updated_at' => '2024-11-16 14:54:49',
-            ),
-            83 =>
-            array (
+            ],
+            83 => [
                 'id' => 92,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 6,
@@ -1782,9 +1696,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-19 09:38:33',
                 'updated_at' => '2024-11-19 09:38:36',
-            ),
-            84 =>
-            array (
+            ],
+            84 => [
                 'id' => 93,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 7,
@@ -1803,9 +1716,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-19 09:39:38',
                 'updated_at' => '2024-11-19 09:39:39',
-            ),
-            85 =>
-            array (
+            ],
+            85 => [
                 'id' => 94,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 8,
@@ -1824,9 +1736,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-19 10:07:04',
                 'updated_at' => '2024-11-19 10:07:07',
-            ),
-            86 =>
-            array (
+            ],
+            86 => [
                 'id' => 95,
                 'model_type' => 'LaraZeus\\Sky\\Models\\Post',
                 'model_id' => 12,
@@ -1845,9 +1756,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-11-21 00:35:26',
                 'updated_at' => '2024-11-21 00:35:26',
-            ),
-            87 =>
-            array (
+            ],
+            87 => [
                 'id' => 96,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 9,
@@ -1866,9 +1776,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-12-06 12:58:16',
                 'updated_at' => '2024-12-06 12:58:18',
-            ),
-            88 =>
-            array (
+            ],
+            88 => [
                 'id' => 97,
                 'model_type' => 'App\\Models\\User',
                 'model_id' => 10,
@@ -1887,9 +1796,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-12-09 07:14:47',
                 'updated_at' => '2024-12-09 07:14:49',
-            ),
-            89 =>
-            array (
+            ],
+            89 => [
                 'id' => 98,
                 'model_type' => 'App\\Models\\Puppy',
                 'model_id' => 4,
@@ -1908,9 +1816,8 @@ class MediaTableSeeder extends Seeder
                 'order_column' => 1,
                 'created_at' => '2024-12-09 07:18:11',
                 'updated_at' => '2024-12-09 07:18:14',
-            ),
-        ));
-
+            ],
+        ]);
 
     }
 }

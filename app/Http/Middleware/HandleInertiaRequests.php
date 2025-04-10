@@ -6,8 +6,8 @@ use App\Data\UserData;
 use App\Models\Puppy;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-use Tighten\Ziggy\Ziggy;
 use Jenssegers\Agent\Agent;
+use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -26,7 +26,6 @@ class HandleInertiaRequests extends Middleware
         return parent::version($request);
     }
 
-
     /**
      * Define the props that are shared by default.
      *
@@ -35,21 +34,19 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
 
+        $min = Puppy::min('price') ?? 1;
 
-    $min = Puppy::min('price') ?? 1;
+        $max = Puppy::max('price') ?? 500;
 
-    $max = Puppy::max('price') ?? 500;
+        if ($min == $max) {
+            $min = 0;
+        }
 
-    if ($min == $max) {
-        $min = 0;
-    }
+        $agent = new Agent;
 
-    $agent = new Agent();
-
-
-    /* $min--; */
+        /* $min--; */
         /* dd(UserData::from($request->user()->load('media','city', 'state'))); */
-    /* $max++; */
+        /* $max++; */
         return [
             ...parent::share($request),
             'auth' => [
@@ -60,9 +57,8 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
             ],
-           'url' => fn () => $request->fullUrl(),
-           'isMobile' => $agent->isMobile(),
-
+            'url' => fn () => $request->fullUrl(),
+            'isMobile' => $agent->isMobile(),
 
             /* 'ziggy' => fn () => [ */
             /*     ...(new Ziggy)->toArray(), */

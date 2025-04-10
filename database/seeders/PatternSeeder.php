@@ -251,4 +251,3 @@ class PatternSeeder extends Seeder
         }
     }
 }
-

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,7 +19,7 @@ class State extends ModelsState
 
     protected $fillable = [
         'id', 'country_id', 'name', 'status',
-    'abbreviation' ];
+        'abbreviation'];
 
     /* public function sluggable(): array */
     /* { */
@@ -30,7 +29,6 @@ class State extends ModelsState
     /*         ], */
     /*     ]; */
     /* } */
-
 
     public function toSearchableArray()
     {

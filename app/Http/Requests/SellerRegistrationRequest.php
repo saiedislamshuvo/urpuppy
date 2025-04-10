@@ -23,7 +23,7 @@ class SellerRegistrationRequest extends FormRequest
     public function rules(Request $request): array
     {
         $user = $request->user();
-        $rules =  [
+        $rules = [
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
             /* 'email' => ['required', 'string', 'email', 'max:100', 'unique:users,email'], // Ensure email is unique */
@@ -57,7 +57,7 @@ class SellerRegistrationRequest extends FormRequest
             'videos.*' => ['mimes:mpeg,mp4,ogg,webm', 'max:50512'],
         ];
 
-        if (!$request->user()->profile_completed) {
+        if (! $request->user()->profile_completed) {
             $rules['gmap_payload'] = ['required'];
         }
 
@@ -99,8 +99,6 @@ class SellerRegistrationRequest extends FormRequest
             'social_tiktok.url' => 'Please enter a valid TikTok URL.',
             'social_x.url' => 'Please enter a valid X URL.',
 
-
         ];
     }
 }
-

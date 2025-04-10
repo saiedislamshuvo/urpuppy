@@ -20,14 +20,14 @@ class EmailVerificationPromptController extends Controller
 
         if ($user->roles()->where('name', 'breeder')->exists()) {
             $route = 'breeders.create';
-        } else if ($user->roles()->where('name', 'seller')->exists()) {
+        } elseif ($user->roles()->where('name', 'seller')->exists()) {
             $route = 'seller.create';
         }
 
         return $user->hasVerifiedEmail()
                     ? redirect()->intended(route($route, absolute: false))
             : Inertia::render('Auth/VerifyEmail', ['status' => session('status'),
-                'puppy' => guest_puppy()
+                'puppy' => guest_puppy(),
 
             ]);
     }

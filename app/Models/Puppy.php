@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Formatter\NoDecimal;
 use App\Models\Traits\LogsView;
 use App\Observers\PuppyObserver;
 use Carbon\Carbon;
@@ -34,6 +33,7 @@ class Puppy extends Model implements HasMedia, Sitemapable
 
     use InteractsWithMedia;
     use LogsView;
+
     /* use Searchable; */
     use Sluggable;
 
@@ -54,17 +54,15 @@ class Puppy extends Model implements HasMedia, Sitemapable
 
         /* static::creating(function ($model) { */
 
-            /* if (!request()->user()) { */
-            /*     return; */
-            /* } */
+        /* if (!request()->user()) { */
+        /*     return; */
+        /* } */
 
-            /* $user = request()->user(); */
+        /* $user = request()->user(); */
 
-            /* $plan = $user->premium_plan->plan; */
+        /* $plan = $user->premium_plan->plan; */
 
-            /* /1* dd(request('videos')); *1/ */
-
-
+        /* /1* dd(request('videos')); *1/ */
 
         /* }); */
 
@@ -82,8 +80,8 @@ class Puppy extends Model implements HasMedia, Sitemapable
     protected function status(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => $value=='published',
-            set: fn (string $value) => $value?'published':'draft',
+            get: fn (string $value) => $value == 'published',
+            set: fn (string $value) => $value ? 'published' : 'draft',
         );
     }
 
@@ -117,30 +115,30 @@ class Puppy extends Model implements HasMedia, Sitemapable
             ->sharpen(3);
     }
 
-/*     public function toSearchableArray() */
-/*     { */
-/*         $array = $this->toArray(); */
+    /*     public function toSearchableArray() */
+    /*     { */
+    /*         $array = $this->toArray(); */
 
-/*         // Convert `id` and `breed_id` to strings for consistency */
-/*         $array['id'] = (string) $array['id']; */
-/*         /1* $array['breed_id'] = (string) $array['breed_id']; *1/ */
+    /*         // Convert `id` and `breed_id` to strings for consistency */
+    /*         $array['id'] = (string) $array['id']; */
+    /*         /1* $array['breed_id'] = (string) $array['breed_id']; *1/ */
 
-/*         // Get all associated breeds and extract their names */
-/*         $array['breeds'] = $this->breeds->pluck('name')->toArray(); */
+    /*         // Get all associated breeds and extract their names */
+    /*         $array['breeds'] = $this->breeds->pluck('name')->toArray(); */
 
-/*         // Ensure `price` and `created_at` are in the desired format */
-/*         $array['price'] = isset($array['price']['amount']) ? (string) $array['price']['amount'] : null; */
-/*         $array['created_at'] = (int) Carbon::parse($array['created_at'])->timestamp; */
+    /*         // Ensure `price` and `created_at` are in the desired format */
+    /*         $array['price'] = isset($array['price']['amount']) ? (string) $array['price']['amount'] : null; */
+    /*         $array['created_at'] = (int) Carbon::parse($array['created_at'])->timestamp; */
 
-/*         return $array; */
-/*     } */
+    /*         return $array; */
+    /*     } */
 
     public function toSitemapTag(): Url|string|array
     {
         return route('puppies.show', $this->slug);
     }
 
-                                            public function getPublishedAtAttribute()
+    public function getPublishedAtAttribute()
     {
         return $this?->created_at?->diffForHumans();
 
@@ -174,14 +172,12 @@ class Puppy extends Model implements HasMedia, Sitemapable
 
     public function getFormattedPriceAttribute()
     {
-        return '$'. number_format($this->price);
-         /* $price = intdiv($price, 100); // Convert cents to dollars */
+        return '$'.number_format($this->price);
+        /* $price = intdiv($price, 100); // Convert cents to dollars */
         /* $mon = Money::USD($price,['precision' => 0]) */
-            /* ; */
+        /* ; */
         /* dd($mon); */
-   }
-
-
+    }
 
     public function getImagesAttribute()
     {
@@ -212,14 +208,14 @@ class Puppy extends Model implements HasMedia, Sitemapable
     {
         $query->where('status', 'published');
 
-           $query->whereHas('seller', function ($q) {
+        $query->whereHas('seller', function ($q) {
 
-        $q->whereHas('subscriptions', function ($subQuery) {
+            $q->whereHas('subscriptions', function ($subQuery) {
                 $subQuery->where(function ($query) {
                     $query->where('stripe_status', 'active')->orWhere('stripe_status', 'trialing');
                 });
+            });
         });
-    });
         /* $query->whereHas('seller', function ($q) { */
         /*     $q->where('is_subscribed', true); */
         /* }); */
@@ -280,12 +276,12 @@ class Puppy extends Model implements HasMedia, Sitemapable
                     return $item->getUrl('preview') ?? asset('paw.svg');
                 } catch (\Spatie\MediaLibrary\Exceptions\ConversionDoesNotExist $e) {
                     // Handle the case where the conversion does not exist
-                    return collect( asset('paw.svg')); // or handle as needed
+                    return collect(asset('paw.svg')); // or handle as needed
                 }
             });
         }
 
-        return collect( asset('paw.svg')); // or handle as needed
+        return collect(asset('paw.svg')); // or handle as needed
     }
 
     public function getThumbnailsAttribute()
@@ -465,8 +461,6 @@ class Puppy extends Model implements HasMedia, Sitemapable
         return null; // Return null if no media item exists
     }
 
-
-
     public function getPatternsAttribute()
     {
         return implode(', ', $this->puppy_patterns()->pluck('name')->toArray());
@@ -489,5 +483,4 @@ class Puppy extends Model implements HasMedia, Sitemapable
     {
         return $this->created_at->diffInDays(now()) <= 5 ? true : false;
     }
-
 }

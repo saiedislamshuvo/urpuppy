@@ -17,12 +17,10 @@ use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class PuppyResource extends Resource
 {
@@ -62,7 +60,7 @@ class PuppyResource extends Resource
                 ]),
 
                 /* Select::make('breed_id') */
-                    /* ->relationship(name: 'breed', titleAttribute: 'name')->searchable(), */
+                /* ->relationship(name: 'breed', titleAttribute: 'name')->searchable(), */
                 /* SpatieMediaLibraryFileUpload::make('image') */
                 /*     ->collection('media'), */
                 /* DatePicker::make('birth_date') */
@@ -83,21 +81,20 @@ class PuppyResource extends Resource
                 })->openUrlInNewTab()->color('primary'),
                 TextColumn::make('price')->money()->searchable()->sortable(),
                 TextColumn::make('seller.full_name')
-                ->searchable(true, function ($query, $search) {
-                    $query->whereHas('seller', function ($query) use ($search) {
-                        $query->where(function ($q) use ($search) {
-                        $q->where('first_name', 'like', "%{$search}%")
-                          ->orWhere('last_name', 'like', "%{$search}%");
-                    });
+                    ->searchable(true, function ($query, $search) {
+                        $query->whereHas('seller', function ($query) use ($search) {
+                            $query->where(function ($q) use ($search) {
+                                $q->where('first_name', 'like', "%{$search}%")
+                                    ->orWhere('last_name', 'like', "%{$search}%");
+                            });
 
-                    });
+                        });
 
-
-                })
-    ->sortable('first_name'),
+                    })
+                    ->sortable('first_name'),
 
                 ToggleColumn::make('status')
-                    ->label('Published') ,
+                    ->label('Published'),
                 TextColumn::make('is_featured'),
                 TextColumn::make('gender')->searchable(),
 

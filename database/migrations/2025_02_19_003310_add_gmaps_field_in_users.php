@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-                $table->decimal('lat', 10, 8)->default(0); // Latitude: 10 total digits, 8 decimal places
-                $table->decimal('lng', 11, 8)->default(0); // Longitude: 11 total digits, 8 decimal places
-                $table->string('state')->nullable();
-                $table->string('street')->nullable();
-                $table->string('company_street')->nullable();
-                $table->string('company_state')->nullable();
-                $table->string('gmap_address')->nullable();
-                $table->string('gmap_id')->nullable();
+            $table->decimal('lat', 10, 8)->default(0); // Latitude: 10 total digits, 8 decimal places
+            $table->decimal('lng', 11, 8)->default(0); // Longitude: 11 total digits, 8 decimal places
+            $table->string('state')->nullable();
+            $table->string('street')->nullable();
+            $table->string('company_street')->nullable();
+            $table->string('company_state')->nullable();
+            $table->string('gmap_address')->nullable();
+            $table->string('gmap_id')->nullable();
         });
     }
 

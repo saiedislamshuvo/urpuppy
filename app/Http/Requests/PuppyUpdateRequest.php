@@ -21,7 +21,7 @@ class PuppyUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules =  [
+        $rules = [
             'puppy_name' => ['required', 'string', 'max:100', 'blasp_check'],
             'puppy_price' => ['required', 'numeric', 'min:1'], // Ensuring the price is a positive number
             'puppy_gender' => ['required', 'string', 'in:Male,Female,other'], // Define possible values
@@ -41,7 +41,6 @@ class PuppyUpdateRequest extends FormRequest
         ];
         $user = $this->user();
         $plan = $user?->premium_plan?->plan;
-
 
         if ($plan) {
             $rules['images'] = "required|array|max:$plan->image_per_listing";

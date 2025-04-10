@@ -23,21 +23,21 @@ class RegisteredUserController extends Controller
     public function create(): Response
     {
         return Inertia::render('Auth/Register', [
-            'puppy'  => PuppyData::optional(Puppy::with(['breeds', 'seller'])->hasSubscribedUsers()->inRandomOrder()->first())
+            'puppy' => PuppyData::optional(Puppy::with(['breeds', 'seller'])->hasSubscribedUsers()->inRandomOrder()->first()),
         ]);
     }
 
     public function createBreeder(): Response
     {
         return Inertia::render('Auth/RegisterBreeder', [
-            'puppy'  => PuppyData::optional(Puppy::with(['breeds', 'seller'])->hasSubscribedUsers()->inRandomOrder()->first())
+            'puppy' => PuppyData::optional(Puppy::with(['breeds', 'seller'])->hasSubscribedUsers()->inRandomOrder()->first()),
         ]);
     }
 
     public function createSeller(): Response
     {
         return Inertia::render('Auth/RegisterSeller', [
-            'puppy'  => PuppyData::optional(Puppy::with(['breeds', 'seller'])->hasSubscribedUsers()->inRandomOrder()->first())
+            'puppy' => PuppyData::optional(Puppy::with(['breeds', 'seller'])->hasSubscribedUsers()->inRandomOrder()->first()),
         ]);
     }
 
@@ -48,10 +48,9 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request, string $role): RedirectResponse
     {
-        if (!in_array($role, ['breeder', 'buyer', 'seller'])) {
+        if (! in_array($role, ['breeder', 'buyer', 'seller'])) {
             return response()->json(['error' => 'Invalid role'], 400);
         }
-
 
         $validated = $request->validate([
             'first_name' => 'required|string|max:40',
@@ -59,7 +58,7 @@ class RegisteredUserController extends Controller
             'state_id' => '',
             'city_id' => '',
             /* 'avatar' => 'required', */
-            'email' => 'confirmed|required|string|email|max:255|unique:' . User::class,
+            'email' => 'confirmed|required|string|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Password::defaults()],
             /* 'captcha' => 'required|captcha' */
         ]);
@@ -80,9 +79,9 @@ class RegisteredUserController extends Controller
 
         if ($role == 'buyer') {
             $user->assignRole('buyer');
-        } else if ($role == 'seller') {
+        } elseif ($role == 'seller') {
             $user->assignRole('seller');
-        } else if ($role == 'breeder') {
+        } elseif ($role == 'breeder') {
             $user->assignRole('breeder');
         }
 

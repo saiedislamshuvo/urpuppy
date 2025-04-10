@@ -18,22 +18,22 @@ class VerifyEmailController extends Controller
         $user = User::findOrFail($id);
         $role = $request->query('role');
 
-        $redirect_url = "home";
+        $redirect_url = 'home';
 
         if ($role == 'breeder') {
-            $redirect_url = "breeders.create";
-        } else if ($role == 'seller') {
-            $redirect_url = "seller.create";
+            $redirect_url = 'breeders.create';
+        } elseif ($role == 'seller') {
+            $redirect_url = 'seller.create';
         }
 
         if ($user->hasVerifiedEmail()) {
-            return redirect()->intended(route($redirect_url, absolute: false).'?verified=1&role='. $role);
+            return redirect()->intended(route($redirect_url, absolute: false).'?verified=1&role='.$role);
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 
-        return redirect()->intended(route($redirect_url, absolute: false).'?verified=1'.'&role='. $role);
+        return redirect()->intended(route($redirect_url, absolute: false).'?verified=1'.'&role='.$role);
     }
 }

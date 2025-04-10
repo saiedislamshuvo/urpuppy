@@ -22,18 +22,18 @@ class BreederDirectoryController extends Controller
             'breeders' => $breeders,
         ]);
 
-               /* ->title('Breeders') */
-            /* ->description('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */
-            /* ->image(asset('logo.png')) */
-            /* ->ogTitle('Breeders') */
-            /* ->ogDescription('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */
-            /* ->ogImage(asset('logo.png')) */
-            /* ->ogUrl(route('home')) */
-            /* ->twitterTitle('Breeders') */
-            /* ->twitterSite("@urpuppy") */
-            /* ->twitterImage(asset('logo.png')) */
-            /* ->twitterDescription('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */
-            /* ; */
+        /* ->title('Breeders') */
+        /* ->description('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */
+        /* ->image(asset('logo.png')) */
+        /* ->ogTitle('Breeders') */
+        /* ->ogDescription('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */
+        /* ->ogImage(asset('logo.png')) */
+        /* ->ogUrl(route('home')) */
+        /* ->twitterTitle('Breeders') */
+        /* ->twitterSite("@urpuppy") */
+        /* ->twitterImage(asset('logo.png')) */
+        /* ->twitterDescription('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */
+        /* ; */
     }
 
     public function breedIndex(string $slug)
@@ -50,7 +50,7 @@ class BreederDirectoryController extends Controller
 
             ])->breeders()->get(),
         ])
-           ->title('Breeders')
+            ->title('Breeders')
             ->description('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.')
             ->image(asset('logo.png'))
             ->ogTitle('Breeders')
@@ -58,10 +58,9 @@ class BreederDirectoryController extends Controller
             ->ogImage(asset('logo.png'))
             ->ogUrl(route('home'))
             ->twitterTitle('Breeders')
-            ->twitterSite("@urpuppy")
+            ->twitterSite('@urpuppy')
             ->twitterImage(asset('logo.png'))
-            ->twitterDescription('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.')
-            ;
+            ->twitterDescription('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.');
     }
 
     public function stateIndex(string $slug)

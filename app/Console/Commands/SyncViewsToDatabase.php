@@ -19,7 +19,7 @@ class SyncViewsToDatabase extends Command
 
     protected $models = [
         Puppy::class,
-        Post::class
+        Post::class,
     ];
 
     /**

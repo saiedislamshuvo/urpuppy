@@ -17,8 +17,8 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(Request $request): array
     {
         $rules = [
-            'first_name' => [ 'string', 'max:40'],
-            'last_name' => [ 'string', 'max:40'],
+            'first_name' => ['string', 'max:40'],
+            'last_name' => ['string', 'max:40'],
             'avatar' => ['nullable', 'max:4096'],
             'current_password' => ['nullable',  'current_password'],
             'new_password' => ['nullable', 'string', 'min:8', 'confirmed'],

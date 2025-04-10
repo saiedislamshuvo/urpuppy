@@ -1,6 +1,5 @@
 <?php
 
-use App\Mail\AccountDeletion;
 use App\Mail\AccountDeletionMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
@@ -86,12 +85,9 @@ test('correct password must be provided to delete account', function () {
             'password' => 'wrong-password',
         ]);
 
-
     $response
         ->assertSessionHasErrorsIn('password')
         ->assertRedirect('/profile');
 
     $this->assertNotNull($user->fresh());
 });
-
-

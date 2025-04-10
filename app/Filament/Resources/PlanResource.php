@@ -59,7 +59,7 @@ class PlanResource extends Resource
                 Checkbox::make('is_breeder')->default(false),
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->rules([
-                        'max:10040'
+                        'max:10040',
                     ])
                     ->validationMessages([
                         'max' => 'Image size should be less than 10MB',
@@ -67,9 +67,9 @@ class PlanResource extends Resource
                     ->disk('s3')
                     ->collection('logo'),
                 Repeater::make('features')
-                ->schema([
-                    TextInput::make('name')->required(),
-                ]),
+                    ->schema([
+                        TextInput::make('name')->required(),
+                    ]),
                 TextInput::make('badge_title'),
                 Select::make('badge_color')->options([
                     'primary' => 'primary',

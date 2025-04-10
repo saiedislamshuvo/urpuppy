@@ -5,15 +5,10 @@ namespace App\Http\Controllers;
 use App\Data\PlanData;
 use App\Models\Plan;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Stripe\Stripe;
-use Stripe\SetupIntent;
-use Stripe\PaymentIntent;
-use Stripe\PaymentMethod;
-use Laravel\Cashier\Subscription;
 use Illuminate\Support\Facades\Log;
-
-
+use Inertia\Inertia;
+use Stripe\SetupIntent;
+use Stripe\Stripe;
 
 class UpgradeCheckoutController extends Controller
 {
@@ -22,7 +17,7 @@ class UpgradeCheckoutController extends Controller
 
         $user = $request->user();
 
-        if (!$user->isSubscribed()) {
+        if (! $user->isSubscribed()) {
             return error('profile.edit', 'You are not subscribed to a plan.');
         }
 
@@ -40,7 +35,7 @@ class UpgradeCheckoutController extends Controller
                 $paymentMethod = $setupIntent->payment_method;
                 $plan = Plan::find($plan_id);
 
-                if (!$plan) {
+                if (! $plan) {
                     return redirect()->back()->with('message.error', 'Plan not founded.');
                 }
 
@@ -53,7 +48,7 @@ class UpgradeCheckoutController extends Controller
                     return redirect()->route('checkout.success', ['plan_id' => $plan_id]);
 
                 } catch (\Exception $e) {
-                    Log::error('Subscription Error: ' . $e->getMessage());
+                    Log::error('Subscription Error: '.$e->getMessage());
 
                     return redirect()->route('checkout.index', ['plan_id' => $plan_id])
                         ->with('error', 'Payment failed. Please try again.');
@@ -66,8 +61,9 @@ class UpgradeCheckoutController extends Controller
 
         $plan = Plan::find($plan_id);
 
-        if (!$plan) {
+        if (! $plan) {
             return error('profile.edit', 'Plan not found.');
+
             return response()->json(['message' => 'Plan not found'], 404);
         }
 

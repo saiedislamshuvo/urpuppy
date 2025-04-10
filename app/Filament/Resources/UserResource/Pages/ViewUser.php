@@ -1,16 +1,13 @@
 <?php
 
-
 namespace App\Filament\Resources\UserResource\Pages;
 
 use Filament\Actions\Action;
-use Filament\Facades\Filament;
 use Filament\Actions\EditAction;
-use Illuminate\Support\Facades\Config;
+use Filament\Facades\Filament;
 use Filament\Resources\Pages\ViewRecord;
-use Illuminate\Validation\UnauthorizedException;
-use Phpsa\FilamentAuthentication\FilamentAuthentication;
 use Phpsa\FilamentAuthentication\Actions\ImpersonateLink;
+use Phpsa\FilamentAuthentication\FilamentAuthentication;
 
 class ViewUser extends ViewRecord
 {
@@ -38,6 +35,6 @@ class ViewUser extends ViewRecord
 
         return Action::make('impersonate')
             ->label(__('filament-authentication::filament-authentication.button.impersonate'))
-            ->action(fn() => ImpersonateLink::impersonate($record));
+            ->action(fn () => ImpersonateLink::impersonate($record));
     }
 }

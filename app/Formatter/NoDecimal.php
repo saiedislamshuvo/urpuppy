@@ -12,4 +12,3 @@ class NoDecimal implements MoneyFormatter
         return 'My Formatter';
     }
 }
-

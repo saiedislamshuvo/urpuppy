@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Plan;
 use Illuminate\Database\Seeder;
 use Joaopaulolndev\FilamentGeneralSettings\Models\GeneralSetting;
 
@@ -23,8 +22,8 @@ class SettingSeeder extends Seeder
             ],
             'more_configs' => [
                 'footer_text' => 'Urpuppy. All rights reserved.',
-                'footer_1_content' => ''
-            ]
+                'footer_1_content' => '',
+            ],
         ]);
     }
 }

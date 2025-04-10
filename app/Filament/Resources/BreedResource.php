@@ -61,14 +61,14 @@ class BreedResource extends Resource
                 RichEditor::make('content'),
                 SpatieMediaLibraryFileUpload::make('image')
                     ->rules([
-                        'max:10040'
+                        'max:10040',
                     ])
                     ->validationMessages([
                         'max' => 'Image size should be less than 10MB',
                     ])
                     ->disk('s3')
                     ->collection('media'),
-            ])
+            ]),
 
         ]);
     }
@@ -88,7 +88,7 @@ class BreedResource extends Resource
                 })->color('primary')->openUrlInNewTab(),
                 TextColumn::make('description')->limit(50)->searchable(),
             ])
-                ->defaultSort('name', 'asc')
+            ->defaultSort('name', 'asc')
             ->filters([
 
             ])

@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Plan;
 use Cog\Laravel\Love\ReactionType\Models\ReactionType;
 use Illuminate\Database\Seeder;
-use Joaopaulolndev\FilamentGeneralSettings\Models\GeneralSetting;
 
 class LoveSeeder extends Seeder
 {

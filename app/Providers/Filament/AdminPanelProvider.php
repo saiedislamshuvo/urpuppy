@@ -4,15 +4,14 @@ namespace App\Providers\Filament;
 
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use CmsMulti\FilamentClearCache\FilamentClearCachePlugin;
-use \TomatoPHP\FilamentUsers\FilamentUsersPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
-/* use Filament\SpatieLaravelTranslatablePlugin; */
 use Filament\Support\Colors\Color;
+/* use Filament\SpatieLaravelTranslatablePlugin; */
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -23,6 +22,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Phpsa\FilamentAuthentication\Widgets\LatestUsersWidget;
 use Stephenjude\FilamentBlog\BlogPlugin;
+use TomatoPHP\FilamentUsers\FilamentUsersPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -47,7 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                LatestUsersWidget::class
+                LatestUsersWidget::class,
             ])
             ->font('Poppins')
             ->breadcrumbs(false)

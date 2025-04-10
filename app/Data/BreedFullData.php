@@ -2,14 +2,12 @@
 
 namespace App\Data;
 
-use App\PuppyStatus;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class BreedFullData extends Data
 {
-
     public function __construct(
         public string $name,
         public string $slug,
@@ -20,9 +18,5 @@ class BreedFullData extends Data
         public ?string $temperament_description,
         public ?string $lifestyle_description,
         public ?string $activities_description
-    ) {
-
-
-    }
+    ) {}
 }
-

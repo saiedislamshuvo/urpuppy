@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->boolean('has_federal_license')->default(false);
 
-
             // Social
             $table->string('x_id')->nullable()->unique();
 

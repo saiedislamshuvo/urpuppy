@@ -32,7 +32,7 @@ test('shows the breeds page', function () {
         ->assertInertia(function (Assert $page) {
             $page->component('Breed/Index');
             $page->has('breeds', 3);
-    });
+        });
 });
 
 test('show single breed page', function () {
@@ -40,9 +40,9 @@ test('show single breed page', function () {
     $puppies = Breed::factory()->times(1)->create();
     $puppy = $puppies->first();
 
-    get('/breeds/' . $puppy->slug)
+    get('/breeds/'.$puppy->slug)
         ->assertInertia(function (Assert $page) {
             $page->component('Breed/Show');
-    });
+        });
 
 });

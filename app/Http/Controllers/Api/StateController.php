@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Country;
-use App\Models\State;
 use Illuminate\Http\Request;
 
 class StateController extends Controller
@@ -20,7 +19,7 @@ class StateController extends Controller
 
             if ($request->filled('search')) {
                 $searchTerm = strtolower($request->search);
-                $states = $countryState->whereRaw('LOWER(name) LIKE ?', ['%' . $searchTerm . '%'])->orderBy('name');
+                $states = $countryState->whereRaw('LOWER(name) LIKE ?', ['%'.$searchTerm.'%'])->orderBy('name');
             }
 
             $pagination = $request->has('all') ? 1000 : 10;
@@ -33,16 +32,15 @@ class StateController extends Controller
                 ];
             });
 
-        if ($request->has('all')) {
-            $states->prepend([
-                'value' => 'All',
-                'label' => 'All',
-            ]);
-        }
+            if ($request->has('all')) {
+                $states->prepend([
+                    'value' => 'All',
+                    'label' => 'All',
+                ]);
+            }
 
         }
 
         return $states;
     }
 }
-

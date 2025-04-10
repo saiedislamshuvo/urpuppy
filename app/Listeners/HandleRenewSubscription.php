@@ -2,7 +2,6 @@
 
 namespace App\Listeners;
 
-
 use Illuminate\Support\Facades\Mail;
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Events\WebhookReceived;
@@ -47,8 +46,9 @@ class HandleRenewSubscription
         // Fetch the associated user
         $user = $this->getUser($customerId);
 
-        if (!$user) {
+        if (! $user) {
             \Log::warning('No user found for Stripe customer ID', ['customer_id' => $customerId]);
+
             return;
         }
 
@@ -119,8 +119,8 @@ class HandleRenewSubscription
             return \Stripe\Subscription::retrieve($subscriptionId);
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve subscription from Stripe', ['subscription_id' => $subscriptionId, 'error' => $e->getMessage()]);
+
             return [];
         }
     }
 }
-

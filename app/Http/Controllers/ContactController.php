@@ -31,7 +31,7 @@ class ContactController extends Controller
 
         Mail::queue(new AdminNewContact($validated));
 
-        Mail::queue(new SupportTeamEmailResponseMail($validated['first_name'] . " " . $validated['last_name'], $validated['email']));
+        Mail::queue(new SupportTeamEmailResponseMail($validated['first_name'].' '.$validated['last_name'], $validated['email']));
 
         return redirect()->back()->with('message.success', 'Your message has been sent successfully!');
     }

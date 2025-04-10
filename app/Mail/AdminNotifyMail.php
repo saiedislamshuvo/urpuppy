@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -30,7 +29,7 @@ class AdminNotifyMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject:  $this->payload['subject'],
+            subject: $this->payload['subject'],
             to: [config('custom.support')],
         );
     }
@@ -40,12 +39,11 @@ class AdminNotifyMail extends Mailable
      */
     public function content(): Content
     {
-             $message = (new MailMessage)
+        $message = (new MailMessage)
             ->greeting('Hello Admin,')
             ->line('**Message:**')
             ->line($this->payload['message']);
-            /* ->line('**Contact Email:** ' . $this->payload['email']); // Added email for better context. */
-
+        /* ->line('**Contact Email:** ' . $this->payload['email']); // Added email for better context. */
 
         return new Content(htmlString: $message->render());
     }
@@ -58,4 +56,3 @@ class AdminNotifyMail extends Mailable
         return []; // You can add attachments if necessary
     }
 }
-

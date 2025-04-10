@@ -1,20 +1,12 @@
 <?php
 
-use App\Data\BreedData;
-use App\Data\BreederData;
-use App\Data\BreederFullData;
-use App\Data\PuppyData;
-use App\Data\VideoData;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\BreedController;
-use App\Http\Controllers\ContactUsController;
 use App\Http\Controllers\BreederController;
 use App\Http\Controllers\BreederListingController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\SellerController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PlanController;
@@ -24,30 +16,24 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PuppyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SavedSearchController;
+use App\Http\Controllers\SellerController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UpgradeCheckoutController;
 use App\Http\Controllers\UpgradePlanController;
-use App\Models\Breed;
 use App\Models\Plan;
-use App\Models\Puppy;
-use App\Models\State;
 use App\Models\User;
-use App\Models\Video;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use Inertia\EncryptHistoryMiddleware;
 use Inertia\Inertia;
-use Stripe\PaymentIntent;
 use Stripe\Stripe;
 
 Route::group(['prefix' => 'posts'], function () {
     Route::get('/', [PostController::class, 'index'])->name('posts.index');
     Route::post('/{postId}/react/{reactionType}', [PostController::class, 'toggleReaction'])
-    ->middleware('auth');
+        ->middleware('auth');
     Route::get('/{slug}', [PostController::class, 'show'])->name('posts.show');
     Route::post('/{id}/comment', [PostController::class, 'comment'])->name('posts.comment');
-
 
 });
 
@@ -85,20 +71,11 @@ Route::post('/breeder/request/retry', function (Request $request) {
 
 /* Route::middleware(['role:seller'])->group(function () { */
 
-
-
 /* }); */
-
-
-
-
 
 Route::get('/saved-search/{id}', [SavedSearchController::class, 'destroy']);
 Route::get('/saved-search', [SavedSearchController::class, 'show']);
 Route::post('/saved-search', [SavedSearchController::class, 'store']);
-
-
-
 
 Route::post('/complete-subscription', function (Request $request) {
     $user = $request->user();
@@ -108,20 +85,19 @@ Route::post('/complete-subscription', function (Request $request) {
     $user->updateDefaultPaymentMethod($paymentMethod);
 
     $user->newSubscription('standard', $plan->stripe_plan_id)
-         ->create($paymentMethod);
+        ->create($paymentMethod);
 
     return response()->json(['success' => true]);
 });
 
 Route::post('/report/{slug}', [ReportController::class, 'store']);
 
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/ui/{path?}', function ($path = null) {
     $storybookPath = public_path();
 
-    $filePath = $storybookPath . ($path ? '/' . $path : '/index.html');
+    $filePath = $storybookPath.($path ? '/'.$path : '/index.html');
 
     if (! file_exists($filePath)) {
         abort(404);
@@ -135,23 +111,17 @@ Route::group(['prefix' => 'puppies'], function () {
     Route::get('/{slug}', [PuppyController::class, 'show'])->name('puppies.show');
 });
 
-
-
 Route::middleware('auth', 'verified')->group(function () {
 
+    Route::get('/upgrade', [UpgradePlanController::class, 'index']);
+    /* Route::get('/upgrade/{plan_id}', UpgradePlanController::class); */
 
-Route::get('/upgrade', [UpgradePlanController::class, 'index']);
-/* Route::get('/upgrade/{plan_id}', UpgradePlanController::class); */
-
-
-Route::group(['prefix' => 'plans'], function () {
-    Route::get('/', [PlanController::class, 'index'])->name('plans.index');
-    Route::get('/breeder', [PlanController::class, 'breeder'])->name('plans.breeder');
-});
+    Route::group(['prefix' => 'plans'], function () {
+        Route::get('/', [PlanController::class, 'index'])->name('plans.index');
+        Route::get('/breeder', [PlanController::class, 'breeder'])->name('plans.breeder');
+    });
 
 });
-
-
 
 Route::group(['prefix' => 'breeds'], function () {
     Route::get('/', [BreedController::class, 'index'])->name('breeds.index');
@@ -180,7 +150,6 @@ Route::group(['prefix' => 'subscriptions'], function () {
 
 });
 
-
 Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::post('/comment/{seller}', [CommentController::class, 'store'])->name('comment.store');
@@ -197,7 +166,6 @@ Route::get('/billing', function (Request $request) {
 })->middleware(['auth'])->name('billing');
 /* Route::get('') */
 
-
 Route::group(['prefix' => 'checkout', 'middleware' => ['auth', 'verified']], function () {
     Route::get('success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('{plan_id}', [CheckoutController::class, 'index'])->name('checkout.index');
@@ -205,7 +173,6 @@ Route::group(['prefix' => 'checkout', 'middleware' => ['auth', 'verified']], fun
     Route::post('/complete', [CheckoutController::class, 'complete']);
     Route::get('/payment-methods', [CheckoutController::class, 'payment_methods'])->name('checkout.payment_methods');
     Route::get('subscription/success', [CheckoutController::class, 'success'])->name('subscription.success');
-
 
     Route::group(['prefix' => 'change'], function () {
         Route::get('{plan_id}', [UpgradeCheckoutController::class, 'index'])->name('checkout.upgrade.index');
@@ -217,10 +184,7 @@ Route::group(['prefix' => 'checkout', 'middleware' => ['auth', 'verified']], fun
 
 });
 
-
-
 Route::get('/all-puppies/{slug}', [SellerController::class, 'show'])->name('seller.show');
-
 
 Route::group(['prefix' => 'seller'], function () {
     Route::get('create/{id?}', [SellerController::class, 'create'])->name('seller.create')->middleware([EncryptHistoryMiddleware::class]);
@@ -250,7 +214,6 @@ Route::group(['prefix' => 'breeder-listings'], function () {
 
 });
 
-
 Route::get('/contact-us', [ContactController::class, 'index']);
 Route::post('/contact-us', [ContactController::class, 'store']);
 Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index']);
@@ -267,7 +230,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/profile/avatar', [ProfileController::class, 'destroyAvatar'])->name('profile.destroy.avatar');
 });
-
 
 require __DIR__.'/auth.php';
 

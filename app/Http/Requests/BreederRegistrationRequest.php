@@ -19,10 +19,9 @@ class BreederRegistrationRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-
-        public function rules(): array
+    public function rules(): array
     {
-        $rules =  [
+        $rules = [
             'fullname' => ['required', 'string', 'max:100', 'blasp_check'],
             'kennel_name' => ['required', 'string', 'max:100', 'blasp_check'],
             'gmap_payload' => ['required'],
@@ -38,7 +37,7 @@ class BreederRegistrationRequest extends FormRequest
             'about_company' => ['required', 'string', 'max:255', 'min:40', 'blasp_check'],
 
             'has_usda_registration' => ['nullable'], // Optional boolean field
-            'company_logo' =>  ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:12048'],
+            'company_logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:12048'],
             'gallery' => ['required', 'array', 'max:10'], // Limit gallery to a maximum of 10 images
             'gallery.*' => [
                 'required',
@@ -54,14 +53,12 @@ class BreederRegistrationRequest extends FormRequest
             ],
         ];
 
-
-/*         if (!empty(request()->get('company_logo'))) */
-/*         { */
+        /*         if (!empty(request()->get('company_logo'))) */
+        /*         { */
         /* } */
 
         return $rules;
     }
-
 
     public function messages()
     {
@@ -72,5 +69,4 @@ class BreederRegistrationRequest extends FormRequest
             'gmap_payload.required' => 'Location field is required',
         ];
     }
-
 }

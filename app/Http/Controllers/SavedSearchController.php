@@ -15,7 +15,7 @@ class SavedSearchController extends Controller
 
         return redirect()->back()->with([
             'message.success' => 'Deleted saved search',
-            'redirect_tab' =>  'Saved Search',
+            'redirect_tab' => 'Saved Search',
         ]);
     }
 
@@ -23,7 +23,7 @@ class SavedSearchController extends Controller
     {
         return Inertia::modal('SavedSearchModal', [
 
-        ])->baseRoute('puppies.index');;
+        ])->baseRoute('puppies.index');
     }
 
     public function store(Request $request)
@@ -33,29 +33,24 @@ class SavedSearchController extends Controller
             'payload' => 'required',
         ]);
 
-
         $data = json_decode($validated['payload'], true);
 
         $result = [];
         parse_str(http_build_query($data), $result);
         $validated['payload'] = $result;
 
-
         try {
             $request->user()->saved_searches()->create($validated);
         } catch (\Throwable $th) {
 
-        return redirect()->back()->with([
-            'message.error' => 'Failed to create saved search',
-        ]);
+            return redirect()->back()->with([
+                'message.error' => 'Failed to create saved search',
+            ]);
         }
-
 
         return redirect()->back()->with([
             'message.success' => 'Saved search created',
         ]);
-
-
 
         return inertia()->back()->with([
             'message.success' => 'Saved search created',

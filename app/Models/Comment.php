@@ -9,6 +9,7 @@ class Comment extends Model
 {
     /** @use HasFactory<\Database\Factories\ReviewFactory> */
     use HasFactory;
+
     use \Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
     protected $guarded = [

@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Jobs\PromptNewListingJob;
 use App\Models\Puppy;
 use Illuminate\Support\Facades\Cache;
 
@@ -13,7 +12,5 @@ class PuppyObserver
         /* Cache::flush(); */
     }
 
-    public function created(Puppy $puppy)
-    {
-    }
+    public function created(Puppy $puppy) {}
 }

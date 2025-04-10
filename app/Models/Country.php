@@ -3,9 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Nnjeim\World\Models\Country as ModelsCountry;
 
@@ -15,7 +13,7 @@ class Country extends ModelsCountry
     /* use SoftDeletes; */
 
     protected $fillable = [
-        'id', 'name', 'status', 'iso2', 'phone_code', 'iso3', 'region', 'subregion'
+        'id', 'name', 'status', 'iso2', 'phone_code', 'iso3', 'region', 'subregion',
     ];
 
     public function states(): HasMany

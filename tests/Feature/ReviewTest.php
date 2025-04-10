@@ -14,11 +14,11 @@ it('post a review', function () {
 
     $puppy = Puppy::factory()->create();
 
-    get('/puppies/' . $puppy->slug)->assertOk();
+    get('/puppies/'.$puppy->slug)->assertOk();
 
     /* dd($puppy->breeder); */
 
-    $comment = post('/comment/' . $puppy->breeder->id, [
+    $comment = post('/comment/'.$puppy->breeder->id, [
         'body' => 'nice puppy',
         'rating' => 4,
     ]);
@@ -29,57 +29,51 @@ it('post a review', function () {
 
     $comment->assertSessionHas('message.success', 'Review submitted successfully');
 
-
 });
 
 it('does not allow user to review twice', function () {
-
 
     $current_user = User::factory()->create();
     actingAs($current_user);
 
     $puppy = Puppy::factory()->create();
 
-    get('/puppies/' . $puppy->slug)->assertOk();
+    get('/puppies/'.$puppy->slug)->assertOk();
 
-    post('/comment/' . $puppy->breeder->id, [
+    post('/comment/'.$puppy->breeder->id, [
         'body' => 'nice puppy',
         'rating' => 4,
     ])->tap(function ($response) use ($puppy) {
 
-    $last_comment = post('/comment/' . $puppy->breeder->id, [
-        'body' => 'nice puppy',
-        'rating' => 5,
-    ]);
+        $last_comment = post('/comment/'.$puppy->breeder->id, [
+            'body' => 'nice puppy',
+            'rating' => 5,
+        ]);
 
-    $last_comment->assertSessionHas('message.error', 'You can only submit one review per breeder');
+        $last_comment->assertSessionHas('message.error', 'You can only submit one review per breeder');
 
     });
-
-
 
 });
 
 it('sellers cannot review themselves', function () {
 
-
     $current_user = User::factory()->create();
     actingAs($current_user);
 
     $puppy = Puppy::factory()->create([
-        'user_id' => $current_user->id
+        'user_id' => $current_user->id,
     ]);
 
-    get('/puppies/' . $puppy->slug)->assertOk();
+    get('/puppies/'.$puppy->slug)->assertOk();
 
-    $comment = post('/comment/' . $puppy->breeder->id, [
+    $comment = post('/comment/'.$puppy->breeder->id, [
         'body' => 'nice puppy',
         'rating' => 4,
     ]);
 
     $comment->assertSessionHas('message.error', 'You cannot review yourself');
 });
-
 
 it('cannot review if not logged in', function () {
 
@@ -88,14 +82,12 @@ it('cannot review if not logged in', function () {
 
     $puppy = Puppy::factory()->create();
 
-    get('/puppies/' . $puppy->slug)->assertOk();
+    get('/puppies/'.$puppy->slug)->assertOk();
 
-    $comment = post('/comment/' . $puppy->breeder->id, [
+    $comment = post('/comment/'.$puppy->breeder->id, [
         'body' => 'nice puppy',
         'rating' => 4,
     ]);
 
     $comment->assertSessionHas('message.error', 'You have to login first');
 });
-
-

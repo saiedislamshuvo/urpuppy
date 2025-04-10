@@ -3,13 +3,11 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\HtmlString;
 
 class BreederAccountRejected extends Mailable
 {
@@ -37,21 +35,20 @@ class BreederAccountRejected extends Mailable
     /**
      * Get the message content definition.
      */
-
     public function content(): Content
-{
+    {
         $url = route('plans.breeder');
-    $m = (new MailMessage)
-        ->greeting("Hi {$this->user->full_name},")
+        $m = (new MailMessage)
+            ->greeting("Hi {$this->user->full_name},")
 
-        ->line('')
-        ->line('Your breeder account has been rejected.')
-        ->line($this->reason)
-        /* ->line("[Go to plan]({$url})") */
-        ->line('Thank you for being a part of the Urpuppy community!');
+            ->line('')
+            ->line('Your breeder account has been rejected.')
+            ->line($this->reason)
+            /* ->line("[Go to plan]({$url})") */
+            ->line('Thank you for being a part of the Urpuppy community!');
 
-    return new Content(htmlString: $m->render());
-}
+        return new Content(htmlString: $m->render());
+    }
 
     /**
      * Get the attachments for the message.

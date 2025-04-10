@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -30,7 +29,7 @@ class AdminNewContact extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Message : '.  $this->payload['subject'],
+            subject: 'New Message : '.$this->payload['subject'],
             to: [config('custom.support')],
         );
     }
@@ -40,16 +39,15 @@ class AdminNewContact extends Mailable
      */
     public function content(): Content
     {
-             $message = (new MailMessage)
+        $message = (new MailMessage)
             ->greeting('Hello Admin,')
             ->line('**Contact Inquiry**')
-            ->line('**Name:** ' . $this->payload['first_name'] . ' ' . $this->payload['last_name'])
-            ->line('**Account Type:** ' . $this->payload['account_type'])
-            ->line('**Subject:** ' . $this->payload['subject'])
+            ->line('**Name:** '.$this->payload['first_name'].' '.$this->payload['last_name'])
+            ->line('**Account Type:** '.$this->payload['account_type'])
+            ->line('**Subject:** '.$this->payload['subject'])
             ->line('**Message:**')
             ->line($this->payload['message'])
-            ->line('**Contact Email:** ' . $this->payload['email']); // Added email for better context.
-
+            ->line('**Contact Email:** '.$this->payload['email']); // Added email for better context.
 
         return new Content(htmlString: $message->render());
     }
@@ -62,4 +60,3 @@ class AdminNewContact extends Mailable
         return []; // You can add attachments if necessary
     }
 }
-

@@ -1,6 +1,5 @@
 <?php
 
-use App\Data\PuppyData;
 use App\Models\Puppy;
 use App\Models\User;
 

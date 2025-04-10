@@ -13,7 +13,7 @@ class CityController extends Controller
     {
         $country = Country::where('iso2', 'US')->first();
 
-        if (!$country) {
+        if (! $country) {
             return response()->json(['message' => 'Country not found'], 404);
         }
 
@@ -21,7 +21,7 @@ class CityController extends Controller
 
         if ($request->filled('search')) {
             $searchTerm = strtolower($request->search);
-            $cities = $citiesQuery->whereRaw('LOWER(name) LIKE ?', ['%' . $searchTerm . '%']);
+            $cities = $citiesQuery->whereRaw('LOWER(name) LIKE ?', ['%'.$searchTerm.'%']);
         }
 
         $cities = $citiesQuery->select('id', 'name')->paginate(10);
@@ -36,4 +36,3 @@ class CityController extends Controller
         return response()->json($cities);
     }
 }
-

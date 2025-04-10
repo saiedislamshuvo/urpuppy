@@ -12,7 +12,6 @@ class CountryController extends Controller
     {
         $countries = Country::query();
 
-
         if ($request->has('search')) {
             $countries->where('name', 'like', '%'.$request->search.'%');
         }

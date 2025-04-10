@@ -4,8 +4,8 @@ namespace App\Jobs;
 
 use App\Models\Puppy;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
@@ -17,7 +17,6 @@ class ProcessPuppyMedia implements ShouldQueue
     /**
      * Create a new job instance.
      */
-
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
@@ -48,5 +47,4 @@ class ProcessPuppyMedia implements ShouldQueue
         Cache::forget('spotlights');
         Cache::forget('new');
     }
-
 }

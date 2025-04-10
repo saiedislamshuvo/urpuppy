@@ -37,4 +37,3 @@ class PuppyPatternsSeeder extends Seeder
         }
     }
 }
-

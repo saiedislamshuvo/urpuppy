@@ -12,5 +12,4 @@ return new class extends Migration
             $table->string('phash', 255)->nullable()->after('renewable_id');
         });
     }
-
 };

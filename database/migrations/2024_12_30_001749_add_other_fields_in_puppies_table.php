@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('puppies', function (Blueprint $table) {
-                $table->boolean('has_health_certificate')->default(false);
-                $table->boolean('has_vaccine')->default(false);
-                $table->boolean('has_vet_exam')->default(false);
-                $table->boolean('has_travel_ready')->default(false);
-                $table->boolean('has_delivery_included')->default(false);
+            $table->boolean('has_health_certificate')->default(false);
+            $table->boolean('has_vaccine')->default(false);
+            $table->boolean('has_vet_exam')->default(false);
+            $table->boolean('has_travel_ready')->default(false);
+            $table->boolean('has_delivery_included')->default(false);
         });
     }
 

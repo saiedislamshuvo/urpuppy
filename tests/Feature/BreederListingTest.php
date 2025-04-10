@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Breed;
 use App\Models\Puppy;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -19,7 +18,7 @@ test('shows the breeder listings page', function () {
         ->assertInertia(function (Assert $page) {
             $page->component('BreederListing/Index');
             $page->has('listings.data', 10);
-    });
+        });
 });
 
 test('show breeder listing create page', function () {
@@ -32,6 +31,6 @@ test('show breeder listing create page', function () {
     get('/breeder-listings/create')
         ->assertInertia(function (Assert $page) {
             $page->component('BreederListing/Create');
-    });
+        });
 
 });

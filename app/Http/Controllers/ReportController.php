@@ -10,23 +10,21 @@ class ReportController extends Controller
 {
     public function store(Request $request, string $slug)
     {
-        if (!$request->user()) {
-         return redirect()->back()->with('message.error', 'You have to login first');
+        if (! $request->user()) {
+            return redirect()->back()->with('message.error', 'You have to login first');
         }
 
         $validated = $request->validate([
             'reason' => 'required|string|max:255',
-            'customOptionInput' => 'max:255|nullable'
+            'customOptionInput' => 'max:255|nullable',
         ]);
 
         $puppy = Puppy::where('slug', $slug)->first();
 
-
         $is_reported_today = $puppy->reports()->whereDate('created_at', Carbon::today())->exists();
 
-
         if ($is_reported_today) {
-         return redirect()->back()->with('message.error', 'This has been reported today');
+            return redirect()->back()->with('message.error', 'This has been reported today');
         }
 
         if ($validated['reason'] == 'other') {
@@ -44,7 +42,7 @@ class ReportController extends Controller
     public function create(string $slug)
     {
         return inertia()->modal('Report', [
-            'slug' => $slug
+            'slug' => $slug,
         ])->baseRoute('puppies.show', $slug);
     }
 }

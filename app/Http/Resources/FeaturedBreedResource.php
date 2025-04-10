@@ -18,7 +18,7 @@ class FeaturedBreedResource extends JsonResource
             'count' => $this->puppies_count,
             'name' => $this->name,
             'image' => $this->thumbnail,
-            'slug' => $this->slug
+            'slug' => $this->slug,
         ];
     }
 }

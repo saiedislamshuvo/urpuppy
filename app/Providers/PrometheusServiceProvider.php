@@ -21,7 +21,7 @@ class PrometheusServiceProvider extends ServiceProvider
          * want to export to prometheus
          */
         Prometheus::addGauge('My gauge')
-            ->value(function() {
+            ->value(function () {
                 return 123.45;
             });
 
@@ -29,7 +29,7 @@ class PrometheusServiceProvider extends ServiceProvider
          * Uncomment this line if you want to export
          * all Horizon metrics to prometheus
          */
-         $this->registerHorizonCollectors();
+        $this->registerHorizonCollectors();
     }
 
     public function registerHorizonCollectors(): self

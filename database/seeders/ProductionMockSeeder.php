@@ -3,16 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\Breed;
-use App\Models\Puppy;
 use App\Models\User;
-use Cviebrock\EloquentSluggable\Services\SlugService;
 use Exception;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use User as GlobalUser;
 
 class ProductionMockSeeder extends Seeder
 {
@@ -89,8 +84,7 @@ class ProductionMockSeeder extends Seeder
         /*     report($e); */
         /* } */
 
-
-     }
+    }
 
     private function getDogCollections(): array
     {
@@ -158,7 +152,7 @@ class ProductionMockSeeder extends Seeder
 
         ];
 
-        return [/*... URLs ...*/];
+        return [/* ... URLs ... */];
     }
 
     private function getChaoImages(): array
@@ -179,7 +173,7 @@ class ProductionMockSeeder extends Seeder
 
         ];
 
-        return [/*... URLs ...*/];
+        return [/* ... URLs ... */];
     }
 
     private function getHuskyImages(): array
@@ -206,7 +200,7 @@ class ProductionMockSeeder extends Seeder
             'https://images.unsplash.com/photo-1614005920677-ed9b298c3a28?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         ];
 
-        return [/*... URLs ...*/];
+        return [/* ... URLs ... */];
     }
 
     private function getDalmatianImages(): array
@@ -220,7 +214,7 @@ class ProductionMockSeeder extends Seeder
             'https://images.unsplash.com/photo-1562771968-a70d17a93823?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         ];
 
-        return [/*... URLs ...*/];
+        return [/* ... URLs ... */];
     }
 
     private function getBulldogImages(): array
@@ -245,7 +239,7 @@ class ProductionMockSeeder extends Seeder
             'https://images.unsplash.com/photo-1440484058382-90d25a76b879?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         ];
 
-        return [/*... URLs ...*/];
+        return [/* ... URLs ... */];
     }
 
     private function getRandomMaleName(): string

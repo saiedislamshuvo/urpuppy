@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
@@ -20,7 +19,7 @@ class City extends ModelsCity
         $array = $this->toArray();
 
         $array['id'] = (string) $array['id'];
-        $array['name'] = $array['name'] ;
+        $array['name'] = $array['name'];
         /* $array['created_at'] = (int) Carbon::parse($array['created_at'])->timestamp; */
 
         return $array;

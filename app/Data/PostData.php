@@ -2,7 +2,6 @@
 
 namespace App\Data;
 
-use App\PuppyStatus;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -27,8 +26,5 @@ class PostData extends Data
         /** @var \App\Data\CommentData[] */
         public ?DataCollection $comments,
 
-    ) {
-
-
-    }
+    ) {}
 }

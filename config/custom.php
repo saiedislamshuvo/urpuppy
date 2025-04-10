@@ -2,5 +2,5 @@
 
 return [
     'team' => 'The Urpuppy Team',
-    'support' => env('SUPPORT_ADDRESS')
+    'support' => env('SUPPORT_ADDRESS'),
 ];

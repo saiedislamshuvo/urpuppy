@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\BreedData;
-use App\Data\BreederData;
 use App\Data\BreederFullData;
 use App\Data\BreedOptionData;
 use App\Data\PuppyCardData;
@@ -32,7 +30,7 @@ class BreederController extends Controller
         ]);
 
         if (request()->breed && request()->breed != 'undefined' && request()->breed != 'All') {
-          $breeders = $breeders->whereHas('breeds' , function ($query) {
+            $breeders = $breeders->whereHas('breeds', function ($query) {
                 $query->where('name', request()->breed);
             });
         }
@@ -40,12 +38,12 @@ class BreederController extends Controller
         /* dd($breeders->whereHas('state')->first()->state); */
         if (request()->state && request()->state != 'undefined' && request()->state != 'All') {
             $breeders->where(function ($query) {
-            $query->whereHas('state', function ($query) {
-                $query->where('name', request()->state);
-            })
-            ->orWhereHas('company_state', function ($query) {
-                $query->where('name', request()->state);
-            });
+                $query->whereHas('state', function ($query) {
+                    $query->where('name', request()->state);
+                })
+                    ->orWhereHas('company_state', function ($query) {
+                        $query->where('name', request()->state);
+                    });
             });
 
         }
@@ -67,17 +65,17 @@ class BreederController extends Controller
     public function create(Request $request)
     {
 
-        if (!$request->user()) {
+        if (! $request->user()) {
             return redirect()->to(route('register.breeder'));
         }
 
-        if (!$request->user()->email_verified_at) {
+        if (! $request->user()->email_verified_at) {
             return error('verification.notice', 'Verify first.');
         }
 
         if (! $request->user()->roles->contains('breeder')) {
             return redirect()->to(route('home'))->with([
-                'message.error' => 'You are not a breeder'
+                'message.error' => 'You are not a breeder',
             ]);
         }
 
@@ -88,7 +86,7 @@ class BreederController extends Controller
         /* } */
 
         return inertia('Breeders/Registration', [
-            'breeds' => BreedOptionData::collect(Breed::query()->get())
+            'breeds' => BreedOptionData::collect(Breed::query()->get()),
         ]);
     }
 
@@ -97,103 +95,97 @@ class BreederController extends Controller
 
         return DB::transaction(function () use ($request) {
 
+            if (! $request->user()->roles->contains('breeder')) {
+                return error('home', 'You are not a breeder');
+            }
 
-        if (! $request->user()->roles->contains('breeder')) {
-            return error('home', 'You are not a breeder');
-        }
+            $data = $request->validated();
+            $user = $request->user();
 
+            $user->update([
+                'kennel_name' => $data['kennel_name'],
+                'company_name' => $data['fullname'],
+                'company_email_address' => $data['company_email_address'],
+                'company_phone' => $data['company_phone'],
+                'company_established_on' => $data['established_date'],
 
-        $data = $request->validated();
-        $user = $request->user();
+                'company_about' => $data['about_company'],
+                'has_usda_registration' => $data['has_usda_registration'] == 'yes' ? true : false,
+                'breeder_profile_completed' => true,
 
-        $user->update([
-            'kennel_name' => $data['kennel_name'],
-            'company_name' => $data['fullname'],
-            'company_email_address' => $data['company_email_address'],
-            'company_phone' => $data['company_phone'],
-            'company_established_on' => $data['established_date'],
+                'company_address' => @$data['gmap_payload']['address'],
+                'company_city' => @$data['gmap_payload']['city'],
+                'company_street' => @$data['gmap_payload']['street'],
+                'company_state' => @$data['gmap_payload']['state'],
+                'company_short_state' => @$data['gmap_payload']['shortState'],
+                'company_zip_code' => @$data['gmap_payload']['zipCode'],
 
-            'company_about' => $data['about_company'],
-            'has_usda_registration' => $data['has_usda_registration'] == 'yes' ? true : false,
-            'breeder_profile_completed' => true,
+            ]);
 
-
-            'company_address' => @$data['gmap_payload']['address'],
-            'company_city' => @$data['gmap_payload']['city'],
-            'company_street' => @$data['gmap_payload']['street'],
-            'company_state' => @$data['gmap_payload']['state'],
-            'company_short_state' => @$data['gmap_payload']['shortState'],
-            'company_zip_code' => @$data['gmap_payload']['zipCode'],
-
-        ]);
-
-        if ($breeds = $data['breeds']) {
+            if ($breeds = $data['breeds']) {
                 $user->breeds()->detach();
-                $garm = collect($breeds)->map(function ($breed) use ($user) {
-                    return is_array($breed) ?  $breed['value'] : $breed;
+                $garm = collect($breeds)->map(function ($breed) {
+                    return is_array($breed) ? $breed['value'] : $breed;
                 });
                 $user->breeds()->attach($garm);
-        }
+            }
 
             /* dd('adi'); */
-        $b = $user->breeder_requests()->create([
-            'message' => 'Reviewing your application',
-            'status' => 'pending'
-        ]);
+            $b = $user->breeder_requests()->create([
+                'message' => 'Reviewing your application',
+                'status' => 'pending',
+            ]);
 
-        /* dd($data['gallery']); */
+            /* dd($data['gallery']); */
 
-        if (isset($data['gallery'])) {
-            $user->clearMediaCollection('gallery');
+            if (isset($data['gallery'])) {
+                $user->clearMediaCollection('gallery');
 
-            collect($data['gallery'])->each(function ($image) use ($user) {
-                $user->addMedia($image)->toMediaCollection('gallery');
-            });
-        }
+                collect($data['gallery'])->each(function ($image) use ($user) {
+                    $user->addMedia($image)->toMediaCollection('gallery');
+                });
+            }
 
-        if (isset($data['videos'])) {
-            $user->clearMediaCollection('videos');
-        collect($data['videos'])->each(function ($image) use ($user) {
-            try {
-            $media = $user->addMedia($image)->toMediaCollection('videos');
-            GenerateVideoThumbnail::dispatch($media);
+            if (isset($data['videos'])) {
+                $user->clearMediaCollection('videos');
+                collect($data['videos'])->each(function ($image) use ($user) {
+                    try {
+                        $media = $user->addMedia($image)->toMediaCollection('videos');
+                        GenerateVideoThumbnail::dispatch($media);
 
-} catch (\Exception $e) {
-    \Log::error('Error adding media: ' . $e->getMessage());
-}
+                    } catch (\Exception $e) {
+                        \Log::error('Error adding media: '.$e->getMessage());
+                    }
 
-        });
-}
+                });
+            }
 
-        /* $video = collect($data['videos'])->first(); */
+            /* $video = collect($data['videos'])->first(); */
 
-        /* $media = $user->addMedia($video)->toMediaCollection('videos'); */
-        /* GenerateVideoThumbnail::dispatch($media); */
+            /* $media = $user->addMedia($video)->toMediaCollection('videos'); */
+            /* GenerateVideoThumbnail::dispatch($media); */
 
-        if (!empty($data['company_logo'])) {
-            $user->clearMediaCollection('company_logo');
-            $user->addMedia($data['company_logo'])->toMediaCollection('company_logo');
-        }
+            if (! empty($data['company_logo'])) {
+                $user->clearMediaCollection('company_logo');
+                $user->addMedia($data['company_logo'])->toMediaCollection('company_logo');
+            }
 
+            Mail::queue(new AdminNotifyMail([
+                'subject' => 'New Breeder Application',
+                'message' => 'You have a new breeder application. Please go to admin page to review',
+            ]));
 
+            inertia()->clearHistory();
 
-        Mail::queue(new AdminNotifyMail([
-            'subject' => 'New Breeder Application',
-            'message' => 'You have a new breeder application. Please go to admin page to review',
-        ]));
+            /* if (!$request->user()->is_subscribed && $request->user()->puppies()->count() == 1) { */
+            /* return redirect()->to(route('plans.index'))->with([ */
+            /*     'message.success' => 'Subscribe to any plan to activate your listing' */
+            /* ]); */
+            /* } */
 
-        inertia()->clearHistory();
-
-        /* if (!$request->user()->is_subscribed && $request->user()->puppies()->count() == 1) { */
-        /* return redirect()->to(route('plans.index'))->with([ */
-        /*     'message.success' => 'Subscribe to any plan to activate your listing' */
-        /* ]); */
-        /* } */
-
-        return success('home', 'Your application has been submitted for review');
+            return success('home', 'Your application has been submitted for review');
 
         });
-
 
         /* return redirect()->to(route('plans.breeder'))->with([ */
         /*     'message.success' => 'Subscribe to activate your breeders account' */
@@ -223,10 +215,9 @@ class BreederController extends Controller
 
         if ($breeder?->breeder_plan === null) {
             return redirect()->back()->with([
-                'message.error' => 'This user is not a breeder'
+                'message.error' => 'This user is not a breeder',
             ]);
         }
-
 
         /* if ($breeder) { */
         /*     $breeder->attr = $breeder->attributes */
@@ -235,7 +226,7 @@ class BreederController extends Controller
 
         /* dd($breeder->comments->first(), $breeder->comments[1]); */
 
-        if (!auth()->user()) {
+        if (! auth()->user()) {
 
             /* $breeder->attr['public_email'] = null; */
             /* $breeder->attr['public_mobile'] = null; */
@@ -243,7 +234,7 @@ class BreederController extends Controller
         }
         /* dd($breeder->attr); */
 
-        $puppies = $breeder->puppies()->with(['breeds:id,name,slug','seller', 'media', 'favorites'])->take(4)->get();
+        $puppies = $breeder->puppies()->with(['breeds:id,name,slug', 'seller', 'media', 'favorites'])->take(4)->get();
 
         return inertia('Breeders/Show', [
             'rating_count' => $breeder->comments->count(),
@@ -251,17 +242,17 @@ class BreederController extends Controller
             'breeder' => BreederFullData::from($breeder),
             'puppies' => PuppyCardData::collect($puppies),
         ]);
-            /* ->title('Breeder: '.$breeder->name) */
-            /* ->description('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */
-            /* ->image($breeder->avatar) */
-            /* ->ogTitle('Breeder: '.$breeder->name) */
-            /* ->ogDescription('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */
-            /* ->ogImage($breeder->avatar) */
-            /* ->ogUrl(route('breeder-directory')) */
-            /* ->twitterTitle('Breeder: '.$breeder->name) */
-            /* ->twitterSite('@urpuppy') */
-            /* ->twitterImage($breeder->avatar) */
-            /* ->twitterDescription('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.'); */
+        /* ->title('Breeder: '.$breeder->name) */
+        /* ->description('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */
+        /* ->image($breeder->avatar) */
+        /* ->ogTitle('Breeder: '.$breeder->name) */
+        /* ->ogDescription('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.') */
+        /* ->ogImage($breeder->avatar) */
+        /* ->ogUrl(route('breeder-directory')) */
+        /* ->twitterTitle('Breeder: '.$breeder->name) */
+        /* ->twitterSite('@urpuppy') */
+        /* ->twitterImage($breeder->avatar) */
+        /* ->twitterDescription('Find your perfect puppy! Discover diverse dog breeds, connect with trusted breeders, and register as a buyer or breeder to make pet ownership easy and secure.'); */
     }
 
     /* public function listings($slug) */

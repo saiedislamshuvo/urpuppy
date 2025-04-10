@@ -61,13 +61,13 @@ class NavigationSeeder extends Seeder
             'ordering' => 4,
         ]);
 
-        $about_us = "
+        $about_us = '
         <h3><strong>UrPuppy.com</strong></h3><p><br></p><p>Are you ready to welcome a new furry friend into your life? Look no further than UrPuppy.com—the ultimate online destination for finding your perfect puppy! Our platform is designed to make your search not only easy but also enjoyable. With comprehensive information on every dog breed and access to our trusted local breeder directory, you can confidently connect with reputable breeders right in your area.</p><p><br></p><p>Why choose UrPuppy.com? Because we believe finding your new companion should be hassle-free! Our user-friendly interface and free access to listings empower you to explore a world of adorable puppies at your fingertips. Whether you have a specific breed in mind or are just starting your journey, UrPuppy.com is your dedicated partner in this exciting adventure.&nbsp;</p><p><br></p><p>Don’t wait any longer—start your search today and let us help you find the puppy of your dreams!</p>
-        ";
+        ';
 
-         $page_about_us = Page::create([
+        $page_about_us = Page::create([
             'user_id' => $user->id,
-            'title' => $name = "About us",
+            'title' => $name = 'About us',
             'description' => 'plans',
             'published_at' => now(),
             'slug' => SlugService::createSlug(Page::class, 'slug', $name),
@@ -75,7 +75,6 @@ class NavigationSeeder extends Seeder
             'post_type' => 'page',
             'ordering' => 4,
         ]);
-
 
         $items = [];
 
@@ -121,15 +120,15 @@ class NavigationSeeder extends Seeder
             'children' => [],
         ];
 
-/*         $items[] = [ */
-/*             'id' => str()->uuid(), */
-/*             'label' => 'Plan', */
-/*             'type' => 'page_link', */
-/*             'data' => [ */
-/*                 'page_id' => $planPage->id, */
-/*             ], */
-/*             'children' => [], */
-/*         ]; */
+        /*         $items[] = [ */
+        /*             'id' => str()->uuid(), */
+        /*             'label' => 'Plan', */
+        /*             'type' => 'page_link', */
+        /*             'data' => [ */
+        /*                 'page_id' => $planPage->id, */
+        /*             ], */
+        /*             'children' => [], */
+        /*         ]; */
 
         /* Navigation::create([ */
         /*     'name' => 'Store', */

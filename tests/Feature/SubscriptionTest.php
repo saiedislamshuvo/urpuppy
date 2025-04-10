@@ -1,22 +1,17 @@
 <?php
 
-
 use App\Mail\FreeAccountMail;
 use App\Mail\NewBreederSpecialAccountMail;
 use App\Mail\PremiumAccountMail;
-use App\Mail\RenewBreederMail;
-use App\Mail\RenewSellerMail;
 use App\Models\Plan;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Mail;
-use Str;
-use function Pest\Laravel\postJson;
-use App\Models\Breed;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Testing\AssertableInertia as Assert;
+use Str;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
+use function Pest\Laravel\postJson;
 
 test('shows the subscriptions page', function () {
     $user = User::factory()->create();
@@ -26,9 +21,8 @@ test('shows the subscriptions page', function () {
         ->assertInertia(function (Assert $page) {
             $page->component('Subscription/Index');
             /* $page->has('breeds.data', 20); */
-    });
+        });
 });
-
 
 test('it_processes_stripe_payment_webhook_for_premium_account', function () {
     Mail::fake();
@@ -60,7 +54,7 @@ test('it_processes_stripe_payment_webhook_for_premium_account', function () {
             'object' => [
                 'id' => 'sub_'.Str::random(14),
 
-            'status' => 'active',
+                'status' => 'active',
                 'object' => 'subscription',
                 'application' => null,
                 'application_fee_percent' => null,
@@ -172,7 +166,7 @@ test('it_processes_stripe_payment_webhook_for_premium_account', function () {
                 'livemode' => false,
                 'metadata' => [
 
-            'status' => 'active',
+                    'status' => 'active',
                     'plan_type' => $plan->type,
                     'is_on_session_checkout' => 'true',
                     'type' => 'standard',
@@ -187,8 +181,6 @@ test('it_processes_stripe_payment_webhook_for_premium_account', function () {
 
     Mail::assertQueued(PremiumAccountMail::class);
 });
-
-
 
 test('it_processes_stripe_payment_webhook_for_breeder_account', function () {
     Mail::fake();
@@ -220,7 +212,7 @@ test('it_processes_stripe_payment_webhook_for_breeder_account', function () {
             'object' => [
                 'id' => 'sub_'.Str::random(14),
 
-            'status' => 'active',
+                'status' => 'active',
                 'object' => 'subscription',
                 'application' => null,
                 'application_fee_percent' => null,
@@ -332,7 +324,7 @@ test('it_processes_stripe_payment_webhook_for_breeder_account', function () {
                 'livemode' => false,
                 'metadata' => [
 
-            'status' => 'active',
+                    'status' => 'active',
                     'plan_type' => $plan->type,
                     'is_on_session_checkout' => 'true',
                     'type' => 'standard',
@@ -347,10 +339,6 @@ test('it_processes_stripe_payment_webhook_for_breeder_account', function () {
 
     Mail::assertQueued(NewBreederSpecialAccountMail::class);
 });
-
-
-
-
 
 test('it_processes_stripe_payment_webhook_for_free_account', function () {
     Mail::fake();
@@ -382,7 +370,7 @@ test('it_processes_stripe_payment_webhook_for_free_account', function () {
             'object' => [
                 'id' => 'sub_'.Str::random(14),
 
-            'status' => 'active',
+                'status' => 'active',
                 'object' => 'subscription',
                 'application' => null,
                 'application_fee_percent' => null,
@@ -494,7 +482,7 @@ test('it_processes_stripe_payment_webhook_for_free_account', function () {
                 'livemode' => false,
                 'metadata' => [
 
-            'status' => 'active',
+                    'status' => 'active',
                     'plan_type' => $plan->type,
                     'is_on_session_checkout' => 'true',
                     'type' => 'standard',
@@ -509,9 +497,6 @@ test('it_processes_stripe_payment_webhook_for_free_account', function () {
 
     Mail::assertQueued(FreeAccountMail::class);
 });
-
-
-
 
 test('it_processes_stripe_payment_webhook_for_renewal_for_premium_account', function () {
     Mail::fake();
@@ -579,10 +564,6 @@ test('it_processes_stripe_payment_webhook_for_renewal_for_premium_account', func
     Mail::assertQueued(\App\Mail\RenewSellerMail::class);
 });
 
-
-
-
-
 test('it_processes_stripe_payment_webhook_for_renewal_for_breeder_account', function () {
     Mail::fake();
 
@@ -648,9 +629,6 @@ test('it_processes_stripe_payment_webhook_for_renewal_for_breeder_account', func
     Mail::assertQueued(\App\Mail\RenewBreederMail::class);
 });
 
-
-
-
 test('it_processes_stripe_payment_webhook_for_subscription_ended', function () {
     Mail::fake();
 
@@ -705,12 +683,11 @@ test('it_processes_stripe_payment_webhook_for_subscription_ended', function () {
                 'livemode' => false,
                 'metadata' => [
                     'plan_type' => $plan->type, // Make sure the plan type is set here
-                    'cancellation_reason' => 'sheeshilentiks'
+                    'cancellation_reason' => 'sheeshilentiks',
                 ],
             ],
         ],
     ];
-
 
     // Simulate a POST request to the webhook route
     $response = postJson('http://localhost/stripe/webhook', $webhookPayload);

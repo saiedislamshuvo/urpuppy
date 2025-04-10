@@ -6,13 +6,11 @@ use App\Models\Breed;
 use App\Models\Puppy;
 use App\Models\State;
 use App\Models\User;
-use Cviebrock\EloquentSluggable\Services\SlugService;
 use Exception;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class DevelopmentSeeder extends Seeder
 {
@@ -49,71 +47,70 @@ class DevelopmentSeeder extends Seeder
     public function run(): void
     {
 
+        $stateAbbreviations = [
+            'Alabama' => 'AL',
+            'Alaska' => 'AK',
+            'American Samoa' => 'AS',
+            'Arizona' => 'AZ',
+            'Arkansas' => 'AR',
+            'California' => 'CA',
+            'Colorado' => 'CO',
+            'Connecticut' => 'CT',
+            'Delaware' => 'DE',
+            'District of Columbia' => 'DC',
+            'Florida' => 'FL',
+            'Georgia' => 'GA',
+            'Guam' => 'GU',
+            'Hawaii' => 'HI',
+            'Idaho' => 'ID',
+            'Illinois' => 'IL',
+            'Indiana' => 'IN',
+            'Iowa' => 'IA',
+            'Kansas' => 'KS',
+            'Kentucky' => 'KY',
+            'Louisiana' => 'LA',
+            'Maine' => 'ME',
+            'Maryland' => 'MD',
+            'Massachusetts' => 'MA',
+            'Michigan' => 'MI',
+            'Minnesota' => 'MN',
+            'Mississippi' => 'MS',
+            'Missouri' => 'MO',
+            'Montana' => 'MT',
+            'Nebraska' => 'NE',
+            'Nevada' => 'NV',
+            'New Hampshire' => 'NH',
+            'New Jersey' => 'NJ',
+            'New Mexico' => 'NM',
+            'New York' => 'NY',
+            'North Carolina' => 'NC',
+            'North Dakota' => 'ND',
+            'Ohio' => 'OH',
+            'Oklahoma' => 'OK',
+            'Oregon' => 'OR',
+            'Pennsylvania' => 'PA',
+            'Puerto Rico' => 'PR',
+            'Rhode Island' => 'RI',
+            'South Carolina' => 'SC',
+            'South Dakota' => 'SD',
+            'Tennessee' => 'TN',
+            'Texas' => 'TX',
+            'Utah' => 'UT',
+            'Vermont' => 'VT',
+            'Virginia' => 'VA',
+            'Washington' => 'WA',
+            'West Virginia' => 'WV',
+            'Wisconsin' => 'WI',
+            'Wyoming' => 'WY',
+        ];
 
-$stateAbbreviations = [
-    "Alabama" => "AL",
-    "Alaska" => "AK",
-    "American Samoa" => "AS",
-    "Arizona" => "AZ",
-    "Arkansas" => "AR",
-    "California" => "CA",
-    "Colorado" => "CO",
-    "Connecticut" => "CT",
-    "Delaware" => "DE",
-    "District of Columbia" => "DC",
-    "Florida" => "FL",
-    "Georgia" => "GA",
-    "Guam" => "GU",
-    "Hawaii" => "HI",
-    "Idaho" => "ID",
-    "Illinois" => "IL",
-    "Indiana" => "IN",
-    "Iowa" => "IA",
-    "Kansas" => "KS",
-    "Kentucky" => "KY",
-    "Louisiana" => "LA",
-    "Maine" => "ME",
-    "Maryland" => "MD",
-    "Massachusetts" => "MA",
-    "Michigan" => "MI",
-    "Minnesota" => "MN",
-    "Mississippi" => "MS",
-    "Missouri" => "MO",
-    "Montana" => "MT",
-    "Nebraska" => "NE",
-    "Nevada" => "NV",
-    "New Hampshire" => "NH",
-    "New Jersey" => "NJ",
-    "New Mexico" => "NM",
-    "New York" => "NY",
-    "North Carolina" => "NC",
-    "North Dakota" => "ND",
-    "Ohio" => "OH",
-    "Oklahoma" => "OK",
-    "Oregon" => "OR",
-    "Pennsylvania" => "PA",
-    "Puerto Rico" => "PR",
-    "Rhode Island" => "RI",
-    "South Carolina" => "SC",
-    "South Dakota" => "SD",
-    "Tennessee" => "TN",
-    "Texas" => "TX",
-    "Utah" => "UT",
-    "Vermont" => "VT",
-    "Virginia" => "VA",
-    "Washington" => "WA",
-    "West Virginia" => "WV",
-    "Wisconsin" => "WI",
-    "Wyoming" => "WY",
-];
-
-// Retrieve all states and update abbreviations
-State::all()->each(function ($state) use ($stateAbbreviations) {
-    if (isset($stateAbbreviations[$state->name])) {
-        $state->abbreviation = $stateAbbreviations[$state->name];
-        $state->save();
-    }
-});
+        // Retrieve all states and update abbreviations
+        State::all()->each(function ($state) use ($stateAbbreviations) {
+            if (isset($stateAbbreviations[$state->name])) {
+                $state->abbreviation = $stateAbbreviations[$state->name];
+                $state->save();
+            }
+        });
 
         $this->call(MediaTableSeeder::class);
         $this->call(RoleSeeder::class);
@@ -140,7 +137,7 @@ State::all()->each(function ($state) use ($stateAbbreviations) {
         $this->call(NavigationSeeder::class);
         $this->call(CustomPageSeeder::class);
 
-        DB::statement("ALTER SEQUENCE media_id_seq RESTART WITH 1000");
+        DB::statement('ALTER SEQUENCE media_id_seq RESTART WITH 1000');
 
         Breed::factory()->times(10)->create();
         /* Puppy */
@@ -160,14 +157,11 @@ State::all()->each(function ($state) use ($stateAbbreviations) {
 
         $users->each(function ($user) {
             Puppy::factory()->times(4)->create([
-                'user_id' => $user->id
+                'user_id' => $user->id,
             ]);
         });
 
-
         $this->call(WorldSeeder::class);
-
-
 
         // Use try-catch for BreedSeeder
         /* try { */
@@ -177,8 +171,7 @@ State::all()->each(function ($state) use ($stateAbbreviations) {
         /*     report($e); */
         /* } */
 
-
-     }
+    }
 
     private function getDogCollections(): array
     {
@@ -246,7 +239,7 @@ State::all()->each(function ($state) use ($stateAbbreviations) {
 
         ];
 
-        return [/*... URLs ...*/];
+        return [/* ... URLs ... */];
     }
 
     private function getChaoImages(): array
@@ -267,7 +260,7 @@ State::all()->each(function ($state) use ($stateAbbreviations) {
 
         ];
 
-        return [/*... URLs ...*/];
+        return [/* ... URLs ... */];
     }
 
     private function getHuskyImages(): array
@@ -294,7 +287,7 @@ State::all()->each(function ($state) use ($stateAbbreviations) {
             'https://images.unsplash.com/photo-1614005920677-ed9b298c3a28?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         ];
 
-        return [/*... URLs ...*/];
+        return [/* ... URLs ... */];
     }
 
     private function getDalmatianImages(): array
@@ -308,7 +301,7 @@ State::all()->each(function ($state) use ($stateAbbreviations) {
             'https://images.unsplash.com/photo-1562771968-a70d17a93823?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         ];
 
-        return [/*... URLs ...*/];
+        return [/* ... URLs ... */];
     }
 
     private function getBulldogImages(): array
@@ -333,7 +326,7 @@ State::all()->each(function ($state) use ($stateAbbreviations) {
             'https://images.unsplash.com/photo-1440484058382-90d25a76b879?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         ];
 
-        return [/*... URLs ...*/];
+        return [/* ... URLs ... */];
     }
 
     private function getRandomMaleName(): string

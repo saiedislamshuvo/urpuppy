@@ -3,9 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PuppyColorResource\Pages;
-use App\Filament\Resources\PuppyColorResource\RelationManagers;
 use App\Models\PuppyColor;
-use Filament\Forms;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -14,8 +12,6 @@ use Filament\Tables;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PuppyColorResource extends Resource
 {
@@ -42,7 +38,7 @@ class PuppyColorResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name'),
-                ColorColumn::make('color')
+                ColorColumn::make('color'),
             ])
             ->filters([
                 //

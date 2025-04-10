@@ -2,11 +2,10 @@
 
 namespace Database\Factories;
 
-
 use App\Models\Breed;
 use Exception;
-use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -14,38 +13,34 @@ use Illuminate\Support\Facades\Log;
  */
 class BreedFactory extends Factory
 {
-
     public function configure(): static
     {
         return $this->afterCreating(function (Breed $breed) {
             $petImagesPath = base_path('tests/test-puppies');
             if (! is_dir($petImagesPath)) {
-                Log::warning('Pet images directory not found: ' . $petImagesPath);
+                Log::warning('Pet images directory not found: '.$petImagesPath);
 
                 return;
             }
 
             $petImages = File::files($petImagesPath);
             if (empty($petImages)) {
-                Log::warning('No images found in the directory: ' . $petImagesPath);
+                Log::warning('No images found in the directory: '.$petImagesPath);
 
                 return;
             }
 
-              $avatar = $petImages[array_rand($petImages)];
+            $avatar = $petImages[array_rand($petImages)];
 
-                try {
+            try {
                 $breed->addMedia($avatar->getPathname())
-                ->preservingOriginal()
-                ->toMediaCollection('media')
+                    ->preservingOriginal()
+                    ->toMediaCollection('media');
+            } catch (Exception $e) {
+                Log::error('Failed to add media: '.$e->getMessage());
+            }
 
-                ;
-                } catch (Exception $e) {
-                    Log::error('Failed to add media: ' . $e->getMessage());
-                }
-
-
-            });
+        });
 
     }
 

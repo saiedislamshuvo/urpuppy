@@ -2,7 +2,6 @@
 
 namespace App\Data;
 
-use App\PuppyStatus;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -13,8 +12,5 @@ class VideoData extends Data
         public string $title,
         public string $url,
         public ?string $video_thumbnail,
-    ) {
-
-
-    }
+    ) {}
 }

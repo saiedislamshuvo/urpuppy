@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
-use App\Models\User;
 
 class EmailVerificationRequest extends FormRequest
 {
@@ -64,7 +64,6 @@ class EmailVerificationRequest extends FormRequest
     /**
      * Configure the validator instance.
      *
-     * @param  \Illuminate\Validation\Validator  $validator
      * @return \Illuminate\Validation\Validator
      */
     public function withValidator(Validator $validator)

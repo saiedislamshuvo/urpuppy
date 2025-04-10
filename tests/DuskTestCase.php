@@ -36,7 +36,7 @@ abstract class DuskTestCase extends BaseTestCase
                 '--ignore-ssl-errors',
                 '--whitelisted-ips=""',
                 /* '--whitelisted-ips=""', */
-               /* '--disable-dev-shm-usage', */
+                /* '--disable-dev-shm-usage', */
                 '--disable-gpu',
                 '--headless=new',
             ]);

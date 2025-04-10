@@ -9,5 +9,6 @@ class PuppyTrait extends Model
 {
     /** @use HasFactory<\Database\Factories\PuppyTraitFactory> */
     use HasFactory;
+
     protected $fillable = ['name'];
 }

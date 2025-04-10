@@ -19,7 +19,6 @@ class BreederListingController extends Controller
 
         $searchQuery = $request->input('search');
 
-
         $listings = auth()->user()->puppies()->with('breeds');
 
         if ($searchQuery) {
@@ -54,7 +53,6 @@ class BreederListingController extends Controller
         if (! $request->user()->isSubscribed()) {
             return redirect()->route('home')->with('message.error', 'Please subscribe to create listings');
         }
-
 
         /* dd($request->validated()); */
         /* $validate = Validator::make(request()->all(), [ */
@@ -94,7 +92,7 @@ class BreederListingController extends Controller
 
         if ($request->has('misc') && $misc = $request->get('misc')) {
 
-            $puppy->deleteAttribute( 'has_passport', 'has_vaccination', 'has_vet_exam', 'is_registered', 'delivery_included');
+            $puppy->deleteAttribute('has_passport', 'has_vaccination', 'has_vet_exam', 'is_registered', 'delivery_included');
 
             foreach ($misc as $key => $value) {
                 $puppy->attachAttribute($key, $value);
@@ -148,7 +146,7 @@ class BreederListingController extends Controller
             return response()->json(['error' => 'Puppy not found'], 404);
         }
 
-        $data = $request->except('breed_id', 'breeds','file', 'misc', 'captcha', 'breeds', 'video', 'colors', 'characteristics', 'puppy_patterns');
+        $data = $request->except('breed_id', 'breeds', 'file', 'misc', 'captcha', 'breeds', 'video', 'colors', 'characteristics', 'puppy_patterns');
 
         if ($request->has('characteristics')) {
             $puppy->puppy_traits()->sync($request->get('characteristics'));
@@ -168,15 +166,13 @@ class BreederListingController extends Controller
             $puppy->breeds()->sync($breeds);
         }
 
-
         if ($request->has('colors')) {
             $puppy->puppy_colors()->sync($request->get('colors'));
         }
 
-
         if ($request->has('misc') && $misc = $request->get('misc')) {
 
-            $puppy->deleteAttribute( 'has_passport', 'has_vaccination', 'has_vet_exam', 'is_registered', 'delivery_included');
+            $puppy->deleteAttribute('has_passport', 'has_vaccination', 'has_vet_exam', 'is_registered', 'delivery_included');
 
             foreach ($misc as $key => $value) {
                 if ($value == '0') {
@@ -187,7 +183,6 @@ class BreederListingController extends Controller
         }
 
         $data['price'] = $data['price'] * 100;
-
 
         // Update puppy attributes except for 'file'
         $puppy->update(

@@ -2,17 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Filter\FilterAge;
-use App\Filter\FilterBreeds;
-use App\Filter\FilterPrice;
 use App\Mail\WishlistMail;
-use Illuminate\Console\Command;
 use App\Models\User;
 use App\Notifications\UserWishlistMail;
 use App\Services\PuppyService;
-use Illuminate\Http\Request;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use Spatie\QueryBuilder\AllowedFilter;
 
 class SendUserWishlistCommand extends Command
 {
@@ -33,8 +28,7 @@ class SendUserWishlistCommand extends Command
     /**
      * Execute the console command.
      */
-
-     protected PuppyService $puppyService;
+    protected PuppyService $puppyService;
 
     public function __construct(PuppyService $puppyService)
     {
@@ -42,8 +36,7 @@ class SendUserWishlistCommand extends Command
         $this->puppyService = $puppyService;
     }
 
-
-     public function handle()
+    public function handle()
     {
         $buyers = User::role('buyer')->whereHas('saved_searches')->with('saved_searches')->get();
 
@@ -51,7 +44,7 @@ class SendUserWishlistCommand extends Command
             $allPuppies = collect();
 
             foreach ($buyer->saved_searches as $search) {
-             $filters =  (array)$search->payload['filter'] ?? [];
+                $filters = (array) $search->payload['filter'] ?? [];
 
                 $last24Hours = now()->subDays(5);
                 $puppies = $this->puppyService->getPuppiesCli($filters)->where('created_at', '>=', $last24Hours)->get();
@@ -69,7 +62,6 @@ class SendUserWishlistCommand extends Command
             }
         }
 
-        $this->info("Wishlist processing complete.");
+        $this->info('Wishlist processing complete.');
     }
-
 }

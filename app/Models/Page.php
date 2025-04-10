@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Sitemap\Tags\Url;
 use Spatie\Sitemap\Contracts\Sitemapable;
+use Spatie\Sitemap\Tags\Url;
 
 class Page extends Post implements Sitemapable
 {
-/* extends Post */
-    use Sluggable, InteractsWithMedia;
+    /* extends Post */
+    use InteractsWithMedia, Sluggable;
 
     protected $table = 'posts';
 
@@ -24,7 +23,7 @@ class Page extends Post implements Sitemapable
         ];
     }
 
-     public function toSitemapTag(): Url | string | array
+    public function toSitemapTag(): Url|string|array
     {
         return route('custom.page', $this->slug);
 

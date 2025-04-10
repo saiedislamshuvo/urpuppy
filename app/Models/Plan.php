@@ -50,7 +50,7 @@ class Plan extends Model implements HasMedia, Sortable
     protected $appends = [
         'money_formatted',
         'logo',
-        'plan_days'
+        'plan_days',
         /* 'plan_id', */
     ];
 
@@ -78,15 +78,15 @@ class Plan extends Model implements HasMedia, Sortable
                 $stripePlan = self::createStripePlan($plan);
                 $plan->updateQuietly([
                     'stripe_plan_id' => $stripePlan->id,
-                    'stripe_product_id' => $stripePlan->product
+                    'stripe_product_id' => $stripePlan->product,
                 ]);
 
             } else {
 
-/*                 if ($plan->wasChanged('price')) { */
-/*                     $newStripePlan = self::createStripePlan($plan); */
-/*                     $plan->updateQuietly(['stripe_plan_id' => $newStripePlan->id]); */
-/*                 } */
+                /*                 if ($plan->wasChanged('price')) { */
+                /*                     $newStripePlan = self::createStripePlan($plan); */
+                /*                     $plan->updateQuietly(['stripe_plan_id' => $newStripePlan->id]); */
+                /*                 } */
             }
         });
     }
@@ -99,12 +99,12 @@ class Plan extends Model implements HasMedia, Sortable
 
         $total = 0;
         if ($this->interval === 'year') {
-           $total =  $this->interval_count * 365 ;
-        } else if ($this->interval === 'month') {
-           $total =  $this->interval_count * 30 ;
+            $total = $this->interval_count * 365;
+        } elseif ($this->interval === 'month') {
+            $total = $this->interval_count * 30;
         }
 
-        return $total . " Days";
+        return $total.' Days';
     }
 
     protected static function createStripePlan(self $plan): StripePlan
@@ -142,7 +142,7 @@ class Plan extends Model implements HasMedia, Sortable
             ]);
         } catch (Exception $e) {
             // Handle the exception if something goes wrong
-            Log::error('Failed to update Stripe plan: ' . $e->getMessage());
+            Log::error('Failed to update Stripe plan: '.$e->getMessage());
         }
     }
 

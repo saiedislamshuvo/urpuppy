@@ -4,43 +4,41 @@ namespace App\Models;
 
 use App\Observers\UserObserver;
 use Carbon\Carbon;
+use Cog\Contracts\Love\Reacterable\Models\Reacterable as ReacterableInterface;
 use Cog\Laravel\Love\Reacterable\Models\Traits\Reacterable;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
-use Filament\Panel;
 /* use Filament\Models\Contracts\FilamentUser; */
 /* use Filament\Models\Contracts\HasName; */
 /* use Filament\Panel; */
+use Filament\Panel;
 use Hashids\Hashids;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Cashier\Billable;
-use Milwad\LaravelAttributes\Traits\Attributable;
 use Overtrue\LaravelFavorite\Traits\Favoriter;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
-use Cog\Contracts\Love\Reacterable\Models\Reacterable as ReacterableInterface;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Lab404\Impersonate\Models\Impersonate;
-use Spatie\Image\Enums\Fit;
 use Spatie\Sitemap\Contracts\Sitemapable;
 use Spatie\Sitemap\Tags\Url;
 
 #[ObservedBy([UserObserver::class])]
-class User extends Authenticatable implements  HasMedia,  MustVerifyEmail, Sitemapable, HasName, FilamentUser, ReacterableInterface
+class User extends Authenticatable implements FilamentUser, HasMedia, HasName, MustVerifyEmail, ReacterableInterface, Sitemapable
 {
-    //FilamentUser
-    //HasName
+    use Billable, Favoriter, HasFactory, HasRoles, InteractsWithMedia, Notifiable, Reacterable;
+    // FilamentUser
+    // HasName
     use Impersonate;
     use SoftDeletes;
-
-    use Billable, Favoriter, HasFactory, HasRoles, InteractsWithMedia, Notifiable, Reacterable;
 
     /* use PivotEventTrait; */
 
@@ -144,27 +142,28 @@ class User extends Authenticatable implements  HasMedia,  MustVerifyEmail, Sitem
         return route('breeders.show', $this->slug);
     }
 
-   public function getActiveSubscriptions()
+    public function getActiveSubscriptions()
     {
         return Subscription::where(function ($query) {
             $query->where('stripe_status', 'active')->orWhere('stripe_status', 'trialing');
         })->where('user_id', $this->id)->get();
 
-    }    public function getPremiumPlanAttribute()
+    }
+
+    public function getPremiumPlanAttribute()
     {
-try {
-        $freePlan = $this->getActiveSubscriptions()?->where('type', 'free')->first();
+        try {
+            $freePlan = $this->getActiveSubscriptions()?->where('type', 'free')->first();
 
-        if ($freePlan) {
-            return $freePlan;
+            if ($freePlan) {
+                return $freePlan;
+            }
+
+            return $this->getActiveSubscriptions()?->where('type', 'premium')?->first();
+
+        } catch (Exception $e) {
+
         }
-
-        return $this->getActiveSubscriptions()?->where('type', 'premium')?->first();
-
-} catch (Exception $e) {
-
-
-}
     }
 
     public function getBreederPlanAttribute()
@@ -204,25 +203,25 @@ try {
         // Check for 'grid' URL, then 'preview', then return null
         if ($mediaItem) {
             try {
-                return $mediaItem->getUrl('thumbnail') ?? asset('paw.svg') ;
+                return $mediaItem->getUrl('thumbnail') ?? asset('paw.svg');
             } catch (\Spatie\MediaLibrary\Exceptions\ConversionDoesNotExist $e) {
                 // Handle the case where the conversion does not exist
-                return  asset('paw.svg'); // or handle as needed
+                return asset('paw.svg'); // or handle as needed
             }
 
         }
 
-        return  asset('paw.svg'); // Return null if no media item exists
+        return asset('paw.svg'); // Return null if no media item exists
     }
 
     public function getInitialNameAttribute()
     {
-        return ucfirst($this->first_name[0]) . '' . ucfirst($this->last_name[0]);
+        return ucfirst($this->first_name[0]).''.ucfirst($this->last_name[0]);
     }
 
     public function getNameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name.' '.$this->last_name;
     }
 
     public function getVideoAttribute()
@@ -307,17 +306,16 @@ try {
     public function scopeBreeders($query)
     {
 
-       return  $query->where('is_breeder', true)
-                  ->whereHas('breeder_requests', function ($q) {
-                      $q->where('id', function ($subquery) {
-                          $subquery->select('id')
-                                   ->from('breeder_requests')
-                                   ->whereColumn('breeder_requests.user_id', 'users.id') // Adjust based on your relationship
-                                   ->orderByDesc('created_at')
-                                   ->limit(1);
-                      })->where('status', 'approved');
-                  });
-
+        return $query->where('is_breeder', true)
+            ->whereHas('breeder_requests', function ($q) {
+                $q->where('id', function ($subquery) {
+                    $subquery->select('id')
+                        ->from('breeder_requests')
+                        ->whereColumn('breeder_requests.user_id', 'users.id') // Adjust based on your relationship
+                        ->orderByDesc('created_at')
+                        ->limit(1);
+                })->where('status', 'approved');
+            });
 
     }
 
@@ -375,7 +373,8 @@ try {
 
     public function getAddressAttribute()
     {
-        return $this->city . ' ' . $this->short_state;
+        return $this->city.' '.$this->short_state;
+
         return $this->gmap_address;
         /* $state = $this->state?->abbreviation ?? $this->state?->name; */
         /* $address = $this->city . ' ' . $state ; */
@@ -389,21 +388,19 @@ try {
     public function getShortAddressAttribute()
     {
         $state = $this->short_state;
-        $city_name = substr($this->city ?? "", 0, 6) . (strlen($this->city ?? "") > 6 ? '.' : '');
+        $city_name = substr($this->city ?? '', 0, 6).(strlen($this->city ?? '') > 6 ? '.' : '');
 
-        if (!empty($state) && !empty($city_name)) {
-            return  $city_name . ' ' . $state ;
+        if (! empty($state) && ! empty($city_name)) {
+            return $city_name.' '.$state;
         }
 
         $state = $this->short_company_state;
-        $city_name = substr($this->company_city ?? "", 0, 6) . (strlen($this->company_city ?? "") > 6 ? '.' : '');
-        return  $city_name . ' ' . $state ;
+        $city_name = substr($this->company_city ?? '', 0, 6).(strlen($this->company_city ?? '') > 6 ? '.' : '');
+
+        return $city_name.' '.$state;
     }
 
-    public function getOriginalCompanyAddressAttribute($value)
-    {
-
-    }
+    public function getOriginalCompanyAddressAttribute($value) {}
 
     public function getCompanyAddressFormattedAttribute($value)
     {
@@ -449,18 +446,18 @@ try {
         }
         $establishedDate = Carbon::parse($this->company_established_on);
 
-        if (!$establishedDate) {
+        if (! $establishedDate) {
             return null;
         }
 
         $now = now();
-        $years =  (int) $establishedDate->diffInYears($now);
+        $years = (int) $establishedDate->diffInYears($now);
         $months = $establishedDate->copy()->addYears($years)->diffInMonths($now);
 
         if ($years > 0) {
-            return (int)$years . ' year' . ($years > 1 ? 's' : '');
+            return (int) $years.' year'.($years > 1 ? 's' : '');
         } elseif ($months > 0) {
-            return (int)$months . ' month' . ($months > 1 ? 's' : '');
+            return (int) $months.' month'.($months > 1 ? 's' : '');
         }
 
         return 'Less than a month';
@@ -483,21 +480,21 @@ try {
     }
 
     public function getPhoneFormattedAttribute()
-{
-    if (!$this->phone) {
-        return "N/A"; // Default value if phone is null
+    {
+        if (! $this->phone) {
+            return 'N/A'; // Default value if phone is null
+        }
+
+        // Remove country code (+1) if it exists
+        $phone = preg_replace('/^\+1/', '', $this->phone);
+
+        // Ensure it's exactly 10 digits
+        if (preg_match('/^(\d{3})(\d{3})(\d{4})$/', $phone, $matches)) {
+            return "{$matches[1]}-{$matches[2]}-{$matches[3]}";
+        }
+
+        return $this->phone; // Return original if not a valid 10-digit number
     }
-
-    // Remove country code (+1) if it exists
-    $phone = preg_replace('/^\+1/', '', $this->phone);
-
-    // Ensure it's exactly 10 digits
-    if (preg_match('/^(\d{3})(\d{3})(\d{4})$/', $phone, $matches)) {
-        return "{$matches[1]}-{$matches[2]}-{$matches[3]}";
-    }
-
-    return $this->phone; // Return original if not a valid 10-digit number
-}
 
     /*      static::pivotUpdated(function ($model, $relationName, $pivotIds, $pivotIdsAttributes) { */
     /*         echo 'pivotUpdated'; */
@@ -523,4 +520,3 @@ try {
 
     }
 }
-
