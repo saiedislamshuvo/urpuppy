@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Vite::useAggressivePrefetching();
         /* Model::shouldBeStrict((! $this->app->isProduction())); */
-        Model::unguard();
+        /* Model::unguard(); */
         /* Vite::prefetch(concurrency: 3); */
 
         /* \DB::prohibitDestructiveCommands( */
