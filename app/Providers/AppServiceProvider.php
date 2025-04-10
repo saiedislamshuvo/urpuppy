@@ -10,6 +10,7 @@ use Illuminate\Auth\Notifications\VerifyEmail;
 use Filament\Tables\Actions\CreateAction as TablesAction;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Messages\MailMessage;
 use Spatie\SchemaOrg\Schema;
 use Illuminate\Support\Facades\Cache;
@@ -42,13 +43,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::useAggressivePrefetching();
-        Model::shouldBeStrict((! $this->app->isProduction()));
+        /* Model::shouldBeStrict((! $this->app->isProduction())); */
         Model::unguard();
         /* Vite::prefetch(concurrency: 3); */
 
-         \DB::prohibitDestructiveCommands(
-            $this->app->isProduction()
-        );
+         /* \DB::prohibitDestructiveCommands( */
+         /*    config('app.env') === 'production' */
+        /* ); */
 
 
 /*         Gate::define('viewPulse', function (User $user) { */
