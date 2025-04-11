@@ -85,7 +85,8 @@ class PuppyService
             }
 
             if (@$filters['state'] != 'All' && $filters['state'] != 0) {
-                $puppies->whereHas('seller', fn ($query) => $query->whereHas('state', fn ($q) => $q->where('name', $filters['state'])));
+                $puppies->whereHas('seller', fn ($query) => $query->where('state', $filters['state'])) ;
+
             }
 
             if (@$filters['gender'] != 'All' && $filters['gender'] != 0) {
