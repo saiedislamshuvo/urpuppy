@@ -284,8 +284,8 @@ class SellerController extends Controller
         // Process images
         if (isset($data['images'])) {
             $filePaths = collect($data['images'])->map(function ($image) {
-                $path = $image->store('temp/uploads', config('media-library.disk_name'));
-                return Storage::disk(config('media-library.disk_name'))->url($path);
+                $path = $image->store('temp/uploads', 's3');
+                return Storage::disk('s3')->url($path);
             })->toArray();
 
             ProcessPuppyMedia::dispatch($puppy, $filePaths, 'puppy_files')
