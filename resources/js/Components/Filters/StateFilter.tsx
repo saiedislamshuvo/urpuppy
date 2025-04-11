@@ -36,7 +36,6 @@ const StateFilter: React.FC<StateFilterProps> = ({setState,  defaultValue}) => {
         );
         const data = await response.json();
 
-        console.log('Data from API:', data.data);
 
         if (isMobile) {
             setOptions(data.data);

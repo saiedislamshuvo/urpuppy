@@ -57,7 +57,6 @@ const CheckoutElement = ({plan_id, intent: clientSecret}: {
     });
 
     if (adi.error) {
-    console.log('Fail')
       setErrorMessage(adi.error.message as any);
     } else {
     }

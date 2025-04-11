@@ -33,7 +33,6 @@ const AgeFilter: React.FC<AgeFilterProps> = ({ setAge, defaultValue }) => {
     const isMobile = usePage().props.isMobile;
     const handleMobileInputChange = (selected: any) => {
         let selectedValue: any = isMobile ? options.find((option) => option?.label === selectedValue)?.value || 0 : selected.value;
-        console.log(selectedValue)
         setAge((prev: any) => ({
           ...prev,
           age: {label: selectedValue, value: options.find((option) => option.value === selectedValue?.value) },

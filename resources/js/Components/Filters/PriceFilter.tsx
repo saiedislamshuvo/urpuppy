@@ -50,12 +50,14 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ setPrice, range = [1, 10000] 
     }));
   }, [setPrice]);
 
-  // Memoized thumb render
-  const renderThumb = useCallback(({ props }: { props: any }) => (
+    const renderThumb = useCallback(({ props }: { props: any }) => {
+  const { key, ...restProps } = props; // Extract key and keep the rest
+  return (
     <div
-      {...props}
+      key={key}  // Pass key directly
+      {...restProps} // Spread the rest
       style={{
-        ...props.style,
+        ...restProps.style,
         height: '17px',
         width: '17px',
         borderRadius: '90px',
@@ -66,7 +68,8 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ setPrice, range = [1, 10000] 
         alignItems: 'center',
       }}
     />
-  ), []);
+  );
+}, []);
 
   // Memoized track render
   const renderTrack = useCallback(({ props, children }: { props: any; children: React.ReactNode }) => (

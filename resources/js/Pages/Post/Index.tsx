@@ -8,7 +8,6 @@ import MetaTags from '@/Components/MetaTags'
 const Index = ({posts} : {
     posts: PaginatedCollection<App.Data.PostData>
 }) => {
-    console.log(posts)
   return (
   <Layout>
             <Banner header="Blog" size="md" enable_filter={false} subheader="" />

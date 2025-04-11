@@ -37,8 +37,6 @@ const Slider: React.FC<SliderProps> = ({ children, slidesPerView = 1, autoplay =
                         spaceBetween: 40,
                     },
                 }}
-                // onSlideChange={() => console.log("slide change")}
-                // onSwiper={(swiper) => console.log(swiper)}
             >
                 {React.Children.map(children, (child, index) => (
                     <SwiperSlide key={index}>{child}</SwiperSlide>

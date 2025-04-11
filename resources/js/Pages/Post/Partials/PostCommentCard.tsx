@@ -6,7 +6,6 @@ const PostCommentCard = ({
 }: {
         comment: App.Data.CommentData
     }) => {
-    console.log(comment)
   return (
 
     <div className="card border mb-3">

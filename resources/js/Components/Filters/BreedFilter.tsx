@@ -34,7 +34,6 @@ const BreedFilter: React.FC<BreedFilterProps> = ({ setBreed, title = "Breed", de
         );
         const data = await response.json();
 
-        console.log('Data from API:', data.data);
 
         if (isMobile) {
             setOptions(data.data);

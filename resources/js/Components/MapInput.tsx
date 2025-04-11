@@ -213,7 +213,6 @@ const fetchAddress = async ({ lat, lng }: Location) => {
         component.types.includes("country")
       );
 
-      console.log(countryComponent)
       if (countryComponent?.short_name !== "US") {
         setError("Please select a location within the USA.");
       if (initialAddress && inputRef.current) {

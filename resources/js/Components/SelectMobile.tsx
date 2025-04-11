@@ -17,10 +17,6 @@ const SelectMobile = ({
 
     const isMobile = usePage().props.isMobile;
 
-    console.log('supal')
-    console.log(selectedItem)
-    // console.log(selectedItem)
-    //
   return (
            !isMobile ?
            <SelectFilterInput options={options} onChange={handleInputChange} value={selectedItem} />

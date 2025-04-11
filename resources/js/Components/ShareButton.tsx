@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react'
 import { FacebookShareButton, TwitterShareButton } from 'react-share'
 import Tooltip from './Tooltip'
