@@ -216,9 +216,6 @@ class Puppy extends Model implements HasMedia, Sitemapable
                 });
             });
         });
-        /* $query->whereHas('seller', function ($q) { */
-        /*     $q->where('is_subscribed', true); */
-        /* }); */
     }
 
     public function scopeNewArrivals($query)

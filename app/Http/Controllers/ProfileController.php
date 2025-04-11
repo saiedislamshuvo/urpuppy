@@ -15,6 +15,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
@@ -29,27 +30,10 @@ class ProfileController extends Controller
     public function edit(Request $request): Response
     {
         $user = $request->user();
-        /* dd($user->subscriptions()->active()->first()); */
 
-        /* $countryState = Country::where('iso2', 'US')->first()?->states(); */
-
-        /* $states = $countryState?->select('id', 'name')->get()->map(fn($state) => [ */
-        /*     'value' => $state->id, */
-        /*     'label' => ucwords($state->name), */
-        /* ]) ?? []; */
-
-        /* $selectedStateId = request('state_id') ?: $user->state_id ?? $countryState?->first()?->id; */
-        /*     dd($selectedStateId); */
-        /* $stateCities = $countryState?->where('id', $selectedStateId)?->first(); */
-
-        /* $cities = $stateCities?->cities()->exists() */
-        /*     ? $stateCities->cities()->select('id', 'name')->get()->map(fn($city) => [ */
-        /*         'value' => $city->id, */
-        /*         'label' => ucwords($city->name), */
-        /*     ]) */
-        /*     : []; */
-
-        $breeds = BreedResource::collection(Breed::select('id', 'name')->orderBy('name')->get());
+        $breeds = Cache::remember("user_{$user->id}_breeds", now()->addHours(12), function() {
+            return BreedResource::collection(Breed::select('id', 'name')->orderBy('name')->get());
+        });
 
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
@@ -65,59 +49,37 @@ class ProfileController extends Controller
             'breeder_requests' => $user->breeder_requests()->latest()->first(),
             'tab' => $request->tab ?? 'Account Settings',
             'breeds' => $breeds,
-            /* 'states' => $states, */
-            /* 'cities' => $cities, */
         ]);
     }
 
     private function getStripeDate($plan)
     {
-        try {
-            if (! $plan) {
+        if (!$plan) return null;
+
+        return Cache::remember("stripe_date_{$plan->id}", now()->addHours(1), function() use ($plan) {
+            try {
+                $subscription = $plan->asStripeSubscription();
+                return $subscription->current_period_end
+                    ? Carbon::parse($subscription->current_period_end)->format('d M Y')
+                    : null;
+            } catch (\Exception $e) {
                 return null;
             }
-
-            // Retrieve the subscription from Stripe
-            $subscription = $plan->asStripeSubscription();
-
-            // Check if the subscription exists and has a current_period_end
-            if ($subscription && isset($subscription->current_period_end)) {
-                return Carbon::parse($subscription->current_period_end)->format('d M Y');
-            }
-
-            return null;
-        } catch (\Stripe\Exception\InvalidRequestException $e) {
-            // Handle the case where the subscription does not exist
-            return null;
-        } catch (Exception $e) {
-            // Handle any other exceptions
-            return null;
-        }
+        });
     }
 
     private function getStripeCancelStatus($plan)
     {
-        try {
-            if (! $plan) {
+        if (!$plan) return null;
+
+        return Cache::remember("stripe_cancel_{$plan->id}", now()->addHours(1), function() use ($plan) {
+            try {
+                $subscription = $plan->asStripeSubscription();
+                return $subscription->cancel_at_period_end ?? null;
+            } catch (\Exception $e) {
                 return null;
             }
-
-            // Retrieve the subscription from Stripe
-            $subscription = $plan->asStripeSubscription();
-
-            // Check if the subscription exists and has the `cancel_at_period_end` property
-            if ($subscription && isset($subscription->cancel_at_period_end)) {
-                return $subscription->cancel_at_period_end;
-            }
-
-            return null;
-        } catch (\Stripe\Exception\InvalidRequestException $e) {
-            // Handle the case where the subscription does not exist
-            return null;
-        } catch (Exception $e) {
-            // Handle any other exceptions
-            return null;
-        }
+        });
     }
 
     /**
@@ -125,18 +87,15 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-
         $input = $request->validated();
-        $avatar = $input['avatar'];
+        $user = $request->user();
 
-        /* unset($input['avatar']); */
-        /* /1* unset($input['company_logo']); *1/ */
-
+        // Handle state/city data
         if (is_array(@$input['state_id'])) {
             $input['state_id'] = $input['state_id']['id'];
         }
 
-        if (@$input['company_state'] && ! is_array(@$input['company_state'])) {
+        if (@$input['company_state'] && !is_array(@$input['company_state'])) {
             $input['company_state_id'] = $input['company_state'];
         }
 
@@ -144,10 +103,7 @@ class ProfileController extends Controller
             $input['company_state_id'] = $input['company_state']['id'];
         }
 
-        if (is_array(@$input['city'])) {
-            $input['city'] = $input['city'];
-        }
-
+        // Handle map data
         if (is_array(@$input['gmap_payload'])) {
             $map = $input['gmap_payload'];
             $input['city'] = $map['city'];
@@ -158,28 +114,31 @@ class ProfileController extends Controller
             $input['gmap_address'] = $map['address'];
         }
 
-        $request->user()->fill($input);
+        // Update user data
+        $user->fill($input);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        if ($avatar) {
-            $request->user()->clearMediaCollection('avatars');
-            $request->user()->addMedia($avatar)->toMediaCollection('avatars');
+        // Handle avatar
+        if (!empty($input['avatar'])) {
+            $user->clearMediaCollection('avatars');
+            $user->addMedia($input['avatar'])->toMediaCollection('avatars');
         }
 
-        if (isset($input['company_logo']) && ! is_string($input['company_logo'])) {
-            $company_logo = $input['company_logo'];
-            $request->user()->clearMediaCollection('company_logo');
-            $request->user()->addMedia($company_logo)->toMediaCollection('company_logo');
+        // Handle company logo
+        if (isset($input['company_logo']) && !is_string($input['company_logo'])) {
+            $user->clearMediaCollection('company_logo');
+            $user->addMedia($input['company_logo'])->toMediaCollection('company_logo');
         }
 
-        if ($input['current_password'] != null && $input['new_password']) {
-            $request->user()->password = Hash::make($input['new_password']);
+        // Handle password change
+        if (!empty($input['current_password']) && !empty($input['new_password'])) {
+            $user->password = Hash::make($input['new_password']);
         }
 
-        $request->user()->save();
+        $user->save();
 
         return Redirect::route('profile.edit')->with([
             'message.success' => 'Profile updated successfully.',
@@ -196,14 +155,12 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
         Auth::logout();
 
+        // Queue the deletion email
+        Mail::to($user)->queue(new AccountDeletionMail($user));
+
         $user->delete();
-
-        Mail::queue(new AccountDeletionMail($user));
-
-        /* inertia()->clearHistory(); */
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -216,7 +173,6 @@ class ProfileController extends Controller
     public function destroyAvatar(Request $request)
     {
         $request->user()->clearMediaCollection('avatars');
-
         return redirect()->back()->with([
             'message.success' => 'Avatar deleted successfully.',
         ]);

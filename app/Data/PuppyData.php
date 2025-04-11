@@ -42,4 +42,10 @@ class PuppyData extends Data
         public ?Collection $characteristics,
 
     ) {}
+
+    public function setIsFavorite(bool $isFavorite): self
+{
+    $this->is_favorite = $isFavorite;
+    return $this;
+}
 }

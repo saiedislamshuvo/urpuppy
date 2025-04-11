@@ -16,7 +16,7 @@ class PlanSeeder extends Seeder
         // FREE ACCOUNT
         Plan::create([
             'name' => 'Free Plan',
-            'price' => 2499,
+            'price' => 0,
             'type' => 'free',
             'interval' => 'month',
             'trial_days' => 3,
@@ -26,6 +26,7 @@ class PlanSeeder extends Seeder
                 ['name' => 'Upload up to 3 images per listing'],
                 ['name' => 'Perfect for getting started and testing the platform!'],
             ],
+            'stripe_plan_id' => 'prod_RiKrznXlALrq7f',
             'listing_limit' => 3,
             'badge_title' => '3-Day Trial',
             'badge_color' => 'secondary',
@@ -41,6 +42,7 @@ class PlanSeeder extends Seeder
             'type' => 'premium',
             'savings_label' => 'Save 0% when billed annually',
             'interval' => 'month',
+            'stripe_plan_id' => 'prod_RiKuxY0rvYHABD',
             'interval_count' => 1,
             'is_highlight' => true,
             'trial_days' => 0,
@@ -64,6 +66,7 @@ class PlanSeeder extends Seeder
             'savings_label' => 'Save 16% when billed annually',
             'is_highlight' => true,
             'interval' => 'month',
+            'stripe_plan_id' => 'prod_RiKujsQuE81sUx',
             'badge_title' => 'Most Popular',
             'badge_color' => 'primary',
             'interval_count' => 3,
@@ -91,6 +94,7 @@ class PlanSeeder extends Seeder
 
             'is_highlight' => true,
             'interval_count' => 1,
+            'stripe_plan_id' => 'prod_RiKuWQstgH7uJQ',
             'trial_days' => 0,
             'active' => true,
             'features' => [
@@ -110,7 +114,7 @@ class PlanSeeder extends Seeder
             'type' => 'breeder',
             'savings_label' => 'Save 35% when billed annually',
             'interval' => 'month',
-
+            'stripe_plan_id' => 'prod_RiKv2OyA16AAlN',
             'is_highlight' => true,
             'interval_count' => 1,
             'trial_days' => 0,

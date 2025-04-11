@@ -17,7 +17,7 @@ class BreederRequestFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'status' => 'pending'
         ];
     }
 }

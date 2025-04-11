@@ -6,42 +6,60 @@ use Carbon\Carbon;
 use Cknow\Money\Money;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Cache;
+use Laravel\Octane\Facades\Octane;
 
 class SubscriptionController extends Controller
 {
     public function index(Request $request)
     {
-        /* if (!auth()->check()) { */
+        $user = $request->user();
 
-        /* } */
-
-        $plans = [];
-
-        /* dd(auth()->user()->subscriptions()->active()->first()->asStripeSubscription()); */
-
-        $subscriptions = auth()->user()->customSubscriptions()->with('plan')
-            /* ->whereNull('ends_at') */
-            ->where('stripe_status', 'active')
-            ->get()->map(function ($subscription) {
-
-                $stripe = $subscription->asStripeSubscription();
-                $subscription->cancel_at = Carbon::parse($stripe->cancel_at)->toDateString();
-                if ($subscription->upcoming) {
-                    $subscription->upcoming = $subscription->upcomingInvoice();
-                    $subscription->upcoming_total = Money::USD($subscription->upcoming->total)->format();
-                    $subscription->upcoming_date = Carbon::parse($subscription->upcoming->next_payment_attempt)->diffForHumans();
-                }
-
-                return $subscription;
-            });
-        $invoices = auth()->user()->invoices()->map(function ($invoice) {
-            $new_invoice = (object) [];
-            $new_invoice->date = $invoice?->date()->toDateString();
-            $new_invoice->total = $invoice->total();
-            $new_invoice->pdf = $invoice->invoice_pdf;
-
-            return $new_invoice;
-        });
+        // Concurrently load subscriptions and invoices
+        [$subscriptions, $invoices] = Octane::concurrently([
+            function() use ($user) {
+                return Cache::remember(
+                    "user_{$user->id}_subscriptions",
+                    now()->addMinutes(15),
+                    function() use ($user) {
+                        return $user->customSubscriptions()
+                            ->with('plan')
+                            ->where('stripe_status', 'active')
+                            ->get()
+                            ->map(function ($subscription) {
+                                try {
+                                    $stripe = $subscription->asStripeSubscription();
+                                    return [
+                                        'id' => $subscription->id,
+                                        'plan' => $subscription->plan,
+                                        'cancel_at' => optional($stripe->cancel_at, fn($d) => Carbon::parse($d)->toDateString()),
+                                        'upcoming' => $this->getUpcomingInvoiceData($subscription),
+                                        // ... other fields
+                                    ];
+                                } catch (\Exception $e) {
+                                    report($e);
+                                    return null;
+                                }
+                            })->filter();
+                    }
+                );
+            },
+            function() use ($user) {
+                return Cache::remember(
+                    "user_{$user->id}_invoices",
+                    now()->addHours(1),
+                    function() use ($user) {
+                        return $user->invoices()->map(function ($invoice) {
+                            return [
+                                'date' => optional($invoice->date())->toDateString(),
+                                'total' => $invoice->total(),
+                                'pdf' => $invoice->invoice_pdf,
+                            ];
+                        });
+                    }
+                );
+            }
+        ]);
 
         return inertia()->render('Subscription/Index', [
             'subscriptions' => $subscriptions,
@@ -49,13 +67,30 @@ class SubscriptionController extends Controller
         ]);
     }
 
-    public function portal(Request $request)
+    protected function getUpcomingInvoiceData($subscription)
     {
-        return Inertia::location($request->user()->redirectToBillingPortal(route('subscription.index')));
+        try {
+            $invoice = $subscription->upcomingInvoice();
+            return [
+                'total' => Money::USD($invoice->total)->format(),
+                'date' => Carbon::parse($invoice->next_payment_attempt)->diffForHumans(),
+            ];
+        } catch (\Exception $e) {
+            report($e);
+            return null;
+        }
     }
 
-    public function destroy()
+    public function portal(Request $request)
     {
-        auth()->user()->getActiveSubscriptions()->first()->cancel();
+        return Inertia::location(
+            $request->user()->redirectToBillingPortal(route('subscription.index'))
+        );
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->user()->getActiveSubscriptions()->first()->cancel();
+        return back()->with('message', 'Subscription cancelled');
     }
 }

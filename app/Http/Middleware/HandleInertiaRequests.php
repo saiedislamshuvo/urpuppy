@@ -44,13 +44,14 @@ class HandleInertiaRequests extends Middleware
 
         $agent = new Agent;
 
+        $user = auth()->user()?->load('media', 'breeds');
         /* $min--; */
         /* dd(UserData::from($request->user()->load('media','city', 'state'))); */
         /* $max++; */
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => UserData::optional($request->user()?->load('media', 'breeds')),
+                'user' => UserData::optional($user),
             ],
             'price_filter_range' => [$min, $max],
             'csrf_token' => csrf_token(),

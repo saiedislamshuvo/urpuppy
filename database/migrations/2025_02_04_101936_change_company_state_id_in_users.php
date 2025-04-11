@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-        DB::statement('
-            ALTER TABLE users
-            ALTER COLUMN company_state_id TYPE bigint USING company_state_id::bigint,
-            ALTER COLUMN company_state_id DROP NOT NULL,
-            ALTER COLUMN company_state_id DROP DEFAULT,
-            ALTER COLUMN company_state_id DROP IDENTITY IF EXISTS
-        ');
-
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('company_state_id')->nullable()->change();
+        });
     }
 
     /**

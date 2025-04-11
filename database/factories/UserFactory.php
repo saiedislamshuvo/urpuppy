@@ -31,13 +31,52 @@ class UserFactory extends Factory
         try {
 
             return $this->afterCreating(function (User $user) {
-                $avatars = File::files(base_path('tests/test-avatars'));
 
-                if (! empty($avatars) && config('app.env') != 'testing') {
+                $petImagesPath = base_path('tests/test-puppies');
+                for ($i = 0; $i < 5; $i++) {
+                    if (! is_dir($petImagesPath)) {
+                        Log::warning('Pet images directory not found: '.$petImagesPath);
+
+                        return;
+                    }
+
+                    $petImages = File::files($petImagesPath);
+                    if (empty($petImages)) {
+                        Log::warning('No images found in the directory: '.$petImagesPath);
+
+                        return;
+                    }
+
+                    if (config('app.env') !== 'testing') {
+                        $avatar = $petImages[array_rand($petImages)];
+
+                        try {
+                            $user->addMedia($avatar->getPathname())
+                                ->preservingOriginal()
+                                ->toMediaCollection('gallery');
+                        } catch (Exception $e) {
+                            Log::error('Failed to add media: '.$e->getMessage());
+                        }
+                    }
+                }
+
+
+                $avatars = File::files(base_path('tests/test-avatars'));
+                $petImages = File::files($petImagesPath);
+
+                if (! empty($avatars)) {
                     $avatar = $avatars[array_rand($avatars)];
                     $user->addMedia($avatar->getPathname())
                         ->preservingOriginal()
                         ->toMediaCollection('avatars');
+                }
+
+
+                if (! empty($petImages) ) {
+                    $logo = $petImages[array_rand($petImages)];
+                    $user->addMedia($logo->getPathname())
+                        ->preservingOriginal()
+                        ->toMediaCollection('company_logo');
                 }
 
                 $breeds = Breed::inRandomOrder()->limit(4)->get();
@@ -45,21 +84,18 @@ class UserFactory extends Factory
 
                 $initial = rand(2, 3);
 
-                if (config('app.env') != 'testing') {
+                for ($count = 0; $count < $initial; $count++) {
+                    $comment = $user->comments()->make([
+                        'rating' => rand(1, 5),
+                        'body' => fake()->paragraphs(2, true),
+                    ]);
 
-                    for ($count = 0; $count < $initial; $count++) {
-                        $comment = $user->comments()->make([
-                            'rating' => rand(1, 5),
-                            'body' => fake()->paragraphs(2, true),
-                        ]);
-
-                        $reviewer = User::inRandomOrder()->where('id', '!=', $user->id)->first();
-                        if ($reviewer != null) {
-                            $comment->reviewer()->associate($reviewer);
-                            $comment->save();
-                        }
-
+                    $reviewer = User::inRandomOrder()->where('id', '!=', $user->id)->first();
+                    if ($reviewer != null) {
+                        $comment->reviewer()->associate($reviewer);
+                        $comment->save();
                     }
+
                 }
             });
 
@@ -67,6 +103,7 @@ class UserFactory extends Factory
 
         }
     }
+
 
     /**
      * Define the model's default state.
@@ -125,7 +162,9 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->unique()->phoneNumber(),
             'email_verified_at' => now(),
-            'city' => 'city',
+            'city' => $this->faker->city,
+            'state' => $this->faker->country,
+            'short_state' => $this->faker->countryCode(),
             'description' => fake()->paragraphs(5, true),
             'state_id' => $state?->id,
             'password' => static::$password ??= Hash::make('password'),
@@ -136,6 +175,16 @@ class UserFactory extends Factory
             'social_x' => fake()->unique()->url,
             'social_ig' => fake()->unique()->url,
             'enable_notification' => false,
+            'kennel_name' => fake()->company(),
+            'company_phone' => fake()->phoneNumber(),
+            'company_email_address' => fake()->unique()->safeEmail(),
+            'company_established_on' => fake()->dateTimeBetween('-10 years', 'now'),
+            'company_about' => fake()->paragraphs(2, true),
+            'company_city' => $this->faker->city,
+            'breeder_profile_completed' => true,
+            'company_state' => $this->faker->country,
+            'company_short_state' => $this->faker->country,
+            'company_zip_code' => $this->faker->countryCode,
         ];
     }
 

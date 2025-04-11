@@ -12,6 +12,7 @@ class Subscription extends CashierSubscription
     ];
 
     protected $fillable = [
+        'type',
         'card_fingerprint',
     ];
 
