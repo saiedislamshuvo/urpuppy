@@ -277,19 +277,17 @@ class SellerController extends Controller
 
         // Process videos
         if (isset($data['videos'])) {
-            ProcessPuppyMedia::dispatch($puppy, $data['videos'], 'video')
-                ->onQueue('media');
+            ProcessPuppyMedia::dispatch($puppy, $data['videos'], 'video');
         }
 
         // Process images
         if (isset($data['images'])) {
             $filePaths = collect($data['images'])->map(function ($image) {
-                $path = $image->store('temp/uploads', 's3');
-                return Storage::disk('s3')->url($path);
+                $path = $image->store('temp/uploads', config('media-library.disk_name'));
+                return Storage::disk(config('media-library.disk_name'))->url($path);
             })->toArray();
 
-            ProcessPuppyMedia::dispatch($puppy, $filePaths, 'puppy_files')
-                ->onQueue('media');
+            ProcessPuppyMedia::dispatch($puppy, $filePaths, 'puppy_files');
         }
     }
 }
