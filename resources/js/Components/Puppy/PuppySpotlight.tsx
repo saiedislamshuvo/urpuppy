@@ -2,7 +2,7 @@ import React from 'react'
 import PuppyCard from './Card'
 import { Link } from '@inertiajs/react'
 
-const PuppySpotlight = ({puppy_spotlights}: { puppy_spotlights: App.Data.PuppyData[] }) => {
+const PuppySpotlight = ({puppy_spotlights}: { puppy_spotlights: App.Data.PuppyCardData[] }) => {
   return (
       <section className="puppy-spotlight bg-extralight py-7 py-md-5 py-xl-9">
       <div className="container">
@@ -13,7 +13,7 @@ const PuppySpotlight = ({puppy_spotlights}: { puppy_spotlights: App.Data.PuppyDa
             Breeds</Link>
         </div>
         <div className="row">
-            {puppy_spotlights.map((puppy: App.Data.PuppyData) => (
+            {puppy_spotlights.map((puppy: App.Data.PuppyCardData) => (
                 <PuppyCard location="puppy-spotlight" key={puppy.slug} className="col-md-6 col-xl-3 mb-4 mb-xl-0" puppy={puppy} height="310px" />
             ))}
 

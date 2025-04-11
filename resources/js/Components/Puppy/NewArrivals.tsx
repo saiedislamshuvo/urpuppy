@@ -2,7 +2,7 @@ import React from 'react'
 import PuppyCard from './Card'
 import { Link } from '@inertiajs/react'
 
-const NewArrivals = ({new_arrivals}: { new_arrivals: App.Data.PuppyData[] }) => {
+const NewArrivals = ({new_arrivals}: { new_arrivals: App.Data.PuppyCardData[] }) => {
   return (
             <section className="new-arrivals py-5 py-md-9 mb-xl-10">
       <div className="container py-xl-9">
@@ -12,7 +12,7 @@ const NewArrivals = ({new_arrivals}: { new_arrivals: App.Data.PuppyData[] }) => 
             href="/puppies" data-aos="fade-left" data-aos-delay="100" data-aos-duration="1000">Discover new</Link>
         </div>
         <div className="row">
-            {new_arrivals.map((puppy: App.Data.PuppyData, index) => (
+            {new_arrivals.map((puppy: App.Data.PuppyCardData, index) => (
                 <PuppyCard location="new-arrivals"  key={puppy.slug} className="col-md-6 col-xl-3 mb-4 mb-xl-0" puppy={puppy} height="310px" />
             ))}
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SavedSearch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class SavedSearchController extends Controller
@@ -11,7 +12,10 @@ class SavedSearchController extends Controller
     public function destroy(int $id)
     {
         $savedSearch = SavedSearch::find($id);
-        $savedSearch->delete();
+
+        if ($savedSearch) {
+            $savedSearch->delete();
+        }
 
         return redirect()->back()->with([
             'message.success' => 'Deleted saved search',
@@ -22,15 +26,14 @@ class SavedSearchController extends Controller
     public function show()
     {
         return Inertia::modal('SavedSearchModal', [
-
         ])->baseRoute('puppies.index');
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'nullable',
-            'payload' => 'required',
+            'name' => 'nullable|string',
+            'payload' => 'required|json',
         ]);
 
         $data = json_decode($validated['payload'], true);
@@ -41,19 +44,30 @@ class SavedSearchController extends Controller
 
         try {
             $request->user()->saved_searches()->create($validated);
+
+            return redirect()->back()->with([
+                'message.success' => 'Saved search created',
+            ]);
         } catch (\Throwable $th) {
+            report($th);
 
             return redirect()->back()->with([
                 'message.error' => 'Failed to create saved search',
             ]);
         }
+    }
 
-        return redirect()->back()->with([
-            'message.success' => 'Saved search created',
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|max:5120',
         ]);
 
-        return inertia()->back()->with([
-            'message.success' => 'Saved search created',
+        $path = $request->file('image')->store('temp/uploads', 's3');
+
+        return response()->json([
+            'url' => Storage::disk('s3')->url($path),
         ]);
     }
 }
+

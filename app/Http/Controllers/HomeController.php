@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Data\BreedData;
 use App\Data\BreederFullData;
 use App\Data\PostData;
+use App\Data\PuppyCardData;
 use App\Data\PuppyData;
 use App\Models\Breed;
 use App\Models\Post;
 use App\Models\Puppy;
 use App\Models\State;
 use App\Models\User;
+use App\Services\FavoriteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Octane\Facades\Octane;
@@ -81,40 +83,13 @@ class HomeController extends Controller
             }
         ]);
 
-        // Process favorites if user is authenticated
-        $favoritesMap = [];
-        if (auth()->check()) {
-            // Collect all puppy IDs from spotlights and new arrivals
-            $puppyIds = $results['spotlights']->pluck('id')
-                ->merge($results['new_arrivals']->pluck('id'));
-
-            // Add top pick ID if exists
-            if ($results['top_picks']) {
-                $puppyIds->push($results['top_picks']->id);
-            }
-
-            $favoritesMap = auth()->user()
-                ->favorites()
-                ->whereIn('favoriteable_id', $puppyIds)
-                ->pluck('favoriteable_id')
-                ->flip()
-                ->toArray();
-        }
-
-        // Transform data with favorites information
         $topPick = $results['top_picks']
-            ? PuppyData::from($results['top_picks'])->setIsFavorite(isset($favoritesMap[$results['top_picks']->id]))
+            ? app(FavoriteService::class)->applyFavoriteToSingle(PuppyData::from($results['top_picks']))
             : null;
 
-        $spotlights = PuppyData::collect($results['spotlights'])
-            ->each(function ($puppy) use ($favoritesMap) {
-                $puppy->setIsFavorite(isset($favoritesMap[$puppy->id]));
-            });
+        $spotlights = app(FavoriteService::class)->applyFavorites(PuppyCardData::collect($results['spotlights']));
 
-        $newArrivals = PuppyData::collect($results['new_arrivals'])
-            ->each(function ($puppy) use ($favoritesMap) {
-                $puppy->setIsFavorite(isset($favoritesMap[$puppy->id]));
-            });
+        $newArrivals = app(FavoriteService::class)->applyFavorites(PuppyCardData::collect($results['new_arrivals']));
 
         return Inertia::render('Home/Index', [
             'breed_filter_list' => inertia()->optional(fn() =>
@@ -133,6 +108,7 @@ class HomeController extends Controller
             'puppy_spotlights' => $spotlights,
             'videos' => get_videos(),
             'trusted_breeders' => BreederFullData::collect($results['trusted_breeders']),
+            'price_filter_range' => [@$request->query('filter')['price'][0] ?? 1,  @$request->query('filter')['price'][1] ?? 50000],
             'new_arrivals' => $newArrivals,
             'featured_breeds' => BreedData::collect($results['featured_breeds']),
             'post_data' => PostData::collect($results['posts']),

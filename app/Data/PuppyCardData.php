@@ -25,4 +25,10 @@ class PuppyCardData extends Data
 
         public BreederData $seller,
     ) {}
+
+    public function setIsFavorite(bool $isFavorite): self
+{
+    $this->is_favorite = $isFavorite;
+    return $this;
+}
 }

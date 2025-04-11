@@ -10,6 +10,7 @@ use App\Jobs\GenerateVideoThumbnail;
 use App\Jobs\ProcessPuppyMedia;
 use App\Models\Puppy;
 use App\Models\User;
+use App\Services\FavoriteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -37,7 +38,7 @@ class SellerController extends Controller
 
         return inertia('Seller/AllPuppies', [
             'seller_name' => $seller?->company_name ?? $seller->full_name,
-            'all_puppies' => PuppyData::collect($puppies),
+            'all_puppies' => app(FavoriteService::class)->applyFavorites(PuppyData::collect($puppies)),
         ]);
     }
 

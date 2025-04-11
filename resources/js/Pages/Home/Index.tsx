@@ -29,7 +29,7 @@ export default function Index({
     header_label,
     videos,
     subheader_label,
-}: PageProps<{ laravelVersion: string; phpVersion: string; users: string, puppy_spotlights: App.Data.PuppyData[], top_pick_puppy: App.Data.PuppyData, trusted_breeders: App.Data.BreederFullData[] , new_arrivals: App.Data.PuppyData[], featured_breeds: App.Data.BreedData[], header_label: string, subheader_label: string , videos: App.Data.VideoData[], post_data: App.Data.PostData[] }>) {
+}: PageProps<{ laravelVersion: string; phpVersion: string; users: string, puppy_spotlights: App.Data.PuppyCardData[], top_pick_puppy: App.Data.PuppyData, trusted_breeders: App.Data.BreederFullData[] , new_arrivals: App.Data.PuppyCardData[], featured_breeds: App.Data.BreedData[], header_label: string, subheader_label: string , videos: App.Data.VideoData[], post_data: App.Data.PostData[] }>) {
 
     const [userState, setUserState] = useState('');
 

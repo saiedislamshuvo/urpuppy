@@ -97,30 +97,9 @@ class CheckoutController extends Controller
             return null; // Return null to indicate an error
         }
 
-        // Swap the subscription to the new plan without proration
-        /* $currentSubscription->swap($plan->stripe_plan_id, [ */
-        /*     'skip_proration' => true, // Ensure the user pays the full price of the new plan */
-        /* ]); */
-
         $vernigu = $currentSubscription->noProrate()->skipTrial()->swapAndInvoice($plan->stripe_plan_id);
-        /* dd($vernigu); */
 
         $user->updateDefaultPaymentMethod($paymentMethod);
-
-        /* $invoice = $user->invoice(); */
-
-        /* $stripeInvoice = Invoice::retrieve($invoice->asStripeInvoice()->id); */
-        /* $stripeInvoice->finalizeInvoice(); */
-
-        // Pay the invoice immediately
-        /* $stripeInvoice->pay(); */
-
-        /* $invoice = $user->createInvoice(); */
-        /* $invoice->finalizeInvoice(); // Finalize the invoice */
-        /* $invoice->pay(); // Pay the invoice immediately */
-        // Create an invoice and pay it immediately
-        /* $invoice = $user->invoice(); */
-        /* $invoice->payNow(); // Ensure the invoice is paid immediately */
 
         return $currentSubscription;
     }

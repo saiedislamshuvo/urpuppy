@@ -64,7 +64,7 @@ npm i
 ### 7. Application Setup
 
 ```
-php artisan migrate:fresh --seed && php artisan storage:link
+php artisan world:install && php artisan migrate:fresh --seed && php artisan storage:link
 ```
 
 ### 8. Run Laravel

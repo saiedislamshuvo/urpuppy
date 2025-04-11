@@ -49,6 +49,7 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call(RoleSeeder::class);
+        $this->call(WorldSeeder::class);
 
         if (! User::where('email', 'admin@urpuppy.com')->exists()) {
             $user = User::factory()->create([
@@ -95,6 +96,44 @@ class DatabaseSeeder extends Seeder
 
         });
 
+        $user = User::factory()->times(1)->create()->each(function ($user) {
+            $user->assignRole('breeder');
+            $user->is_breeder = true;
+            $user->save();
+
+            Subscription::factory()->create([
+                'user_id' => $user->id,
+                'stripe_status' => 'active',
+                'type' => 'breeder',
+                'stripe_price' => Plan::first([
+                    'type' => 'breeder'
+                ])->stripe_plan_id,
+                'ends_at' => now()->addDays(30),
+                'quantity' => 1
+            ]);
+
+            $request = BreederRequest::factory()->create([
+                'user_id' => $user->id,
+                'message' => 'Approved',
+                'status' => 'approved'
+            ]);
+
+            $puppies = Puppy::factory()->times(4)->create([
+                'user_id' => $user->id,
+                'status' => 'published',
+            ]);
+            $breed = Breed::query()->inRandomOrder()->first();
+
+            $puppies->each(function ($puppy) use ($breed) {
+                $puppy->breeds()->attach($breed);
+
+            });
+        });
+
+
+
+
+
 
         //CREATE SELLER ACCOUNT
         $user = User::factory()->times(4)->create()->each(function ($user) {
@@ -112,13 +151,10 @@ class DatabaseSeeder extends Seeder
                 'quantity' => 1
             ]);
 
-
-
             Puppy::factory()->create([
                 'user_id' => $user->id,
                 'status' => 'published'
             ]);
-
         });
 
 
