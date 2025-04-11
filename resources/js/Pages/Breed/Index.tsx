@@ -65,7 +65,7 @@ const Index = ({breeds, letter_param = 'A'} : {
             data-aos-delay="200" data-aos-duration="1000">
 
                                 {
-                                    ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'].map((letter, index) => (
+                                    ['All', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'].map((letter, index) => (
 <li className="nav-item" role="presentation" key={index}>
                                         <Link
                                             preserveState

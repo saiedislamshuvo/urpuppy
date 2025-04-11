@@ -9,6 +9,8 @@ class FilterByInitialLetter implements Filter
 {
     public function __invoke(Builder $query, $value, string $property)
     {
-        $query->where('name', 'like', "{$value}%");
+        if ($value != 'All') {
+            $query->where('name', 'like', "{$value}%");
+        }
     }
 }

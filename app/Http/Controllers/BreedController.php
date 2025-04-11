@@ -15,7 +15,7 @@ class BreedController extends Controller
 {
     public function index()
     {
-        $letter = request()->input('filter.name') ?? 'A';
+        $letter = request()->input('filter.name') ?? 'All';
         $cacheKey = "breeds_by_letter_{$letter}";
 
         $results = Octane::concurrently([
