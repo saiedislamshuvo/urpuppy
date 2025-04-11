@@ -93,7 +93,10 @@ class PuppyService
             }
 
             if (@$filters['price'] != 'All' && $filters['price'] != 0) {
-                $puppies->whereBetween('price', $filters['price']);
+                $prices = collect($filters['price'])->each(function ($value, $key) {
+                    return (int) $value;
+                });
+                $puppies->whereBetween('price', $prices);
             }
 
             if (@$filters['age'] != 'All' && $filters['age'] != 0) {
