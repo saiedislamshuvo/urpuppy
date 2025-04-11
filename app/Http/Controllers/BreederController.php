@@ -63,7 +63,7 @@ class BreederController extends Controller
             });
         }
 
-        return $query->breeders()->orderBy('full_name')->paginate(12);
+        return $query->breeders()->orderBy('name')->paginate(12);
     }
 
     public function create(Request $request)
