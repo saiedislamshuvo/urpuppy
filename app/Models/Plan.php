@@ -73,7 +73,7 @@ class Plan extends Model implements HasMedia, Sortable
             Stripe::setApiKey(config('services.stripe.secret'));
             /* $stripePlan = self::createStripePlan($plan); */
 
-            if (empty($plan->stripe_plan_id) && $plan->price > 0) {
+            if ($plan->stripe_plan_id === 0 || empty($plan->stripe_plan_id) && $plan->price > 0 ) {
 
                 $stripePlan = self::createStripePlan($plan);
                 $plan->updateQuietly([

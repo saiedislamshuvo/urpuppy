@@ -6,6 +6,7 @@
 - Composer installed
 - SQLite installed
 - Stripe account
+- Redis (Optional) # This is needed for counting views
 
 ## 🚀 Installation
 
@@ -23,7 +24,15 @@ touch database/database.sqlite
 composer install
 ```
 
-### 3. Install Laravel Octane
+### 3. Setup ENV
+
+```
+cp .env.example .env
+
+# CHECK all the required env variables
+```
+
+### 4. Install Laravel Octane
 
 ```
 php artisan octane:install
@@ -33,29 +42,32 @@ php artisan octane:install
 ADD env OCTANE_SERVER=roadrunner
 
 
-### 4. Setup Stripe
+### 5. Setup Stripe
+
 
 https://docs.stripe.com/stripe-cli``
 
 ```
 stripe listen --forward-to http://localhost:8000/stripe/webhook 
 # Hostname and port should be your laravel app url
+# Optional, This is needed for webhooks from stripe
 ```
 
-### 5. Setup ENV
+
+### 6. Install node modules
 
 ```
-cp .env.example .env
+npm i
 ```
 
-### 6. Application Setup
+
+### 7. Application Setup
 
 ```
-php artisan migrate:fresh --seed
-php artisan storage:link
+php artisan migrate:fresh --seed && php artisan storage:link
 ```
 
-### 7. Run Laravel
+### 8. Run Laravel
 
 ```
 composer run dev
