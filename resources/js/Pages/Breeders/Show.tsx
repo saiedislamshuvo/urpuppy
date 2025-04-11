@@ -49,9 +49,6 @@ const Show = ({breeder, puppies} : {
                 <div className="row">
                   <div className="col-xl-7 mb-4 mb-md-5 mb-xl-5">
                     <div
-style={{
-                                                    height: '535px',
-                                                }}
                                                     className="breeders-detail-img position-relative overflow-hidden rounded-1 me-xl-4">
                       <img src={breeder?.company_logo ?? ""} alt="" className="w-100 object-fit-cover"/>
                     </div>
