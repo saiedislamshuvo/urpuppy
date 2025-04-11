@@ -151,6 +151,14 @@ class SellerController extends Controller
                 inertia()->clearHistory();
                 Cache::forget("seller_{$user->slug}_puppies_*");
 
+                       if (
+                !$user->breeder_plan &&
+                !$user->premium_plan &&
+                $user->profile_completed
+            ) {
+                return success('plans.index', 'Subscribe to any plan to activate your listing');
+            }
+
                 return success('puppies.show', 'Puppy created successfully', $created_puppy->slug);
             });
         } catch (\Exception $e) {
@@ -275,8 +283,8 @@ class SellerController extends Controller
         // Process images
         if (isset($data['images'])) {
             $filePaths = collect($data['images'])->map(function ($image) {
-                $path = $image->store('temp/uploads', 's3');
-                return Storage::disk('s3')->url($path);
+                $path = $image->store('temp/uploads', config('media-library.disk_name'));
+                return Storage::disk(config('media-library.disk_name'))->url($path);
             })->toArray();
 
             ProcessPuppyMedia::dispatch($puppy, $filePaths, 'puppy_files')
