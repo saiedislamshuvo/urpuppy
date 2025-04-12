@@ -60,7 +60,7 @@ const Index = ({breeders} : {
                 <section className="choose-your-breeds py-7 py-md-5 py-xl-9">
       <div className="container">
         <div className="d-flex align-items-center justify-content-between mb-4 mb-lg-8">
-          <h2 className="mb-0" data-aos="fade-right" data-aos-delay="100" data-aos-duration="1000">Choose your Breeders</h2>
+          <h2 className="mb-0" data-aos="fade-right" data-aos-delay="100" data-aos-duration="1000">Choose your Breeder</h2>
         </div>
 
 
