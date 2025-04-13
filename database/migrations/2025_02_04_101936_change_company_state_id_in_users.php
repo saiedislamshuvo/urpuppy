@@ -13,6 +13,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
+
+                      try {
+
                 if (DB::getDriverName() === 'sqlite') {
         $table->unsignedBigInteger('company_state_id')->nullable()->change();
     } elseif (DB::getDriverName() === 'pgsql') {
@@ -24,7 +27,13 @@ return new class extends Migration
             ALTER COLUMN company_state_id DROP IDENTITY IF EXISTS
         ');
     }
+
+                      } catch (Exception $e) {
+
+                      }
+
         });
+
     }
 
     /**
