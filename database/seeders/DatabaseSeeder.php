@@ -76,9 +76,7 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $user->id,
                 'stripe_status' => 'active',
                 'type' => 'breeder',
-                'stripe_price' => Plan::first([
-                    'type' => 'breeder'
-                ])->stripe_plan_id,
+                'stripe_price' => Plan::first()->stripe_plan_id,
                 'ends_at' => now()->addDays(30),
                 'quantity' => 1
             ]);
@@ -105,9 +103,7 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $user->id,
                 'stripe_status' => 'active',
                 'type' => 'breeder',
-                'stripe_price' => Plan::first([
-                    'type' => 'breeder'
-                ])->stripe_plan_id,
+                'stripe_price' => Plan::first()->stripe_plan_id,
                 'ends_at' => now()->addDays(30),
                 'quantity' => 1
             ]);
@@ -144,9 +140,7 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $user->id,
                 'stripe_status' => 'active',
                 'type' => 'seller',
-                'stripe_price' => Plan::first([
-                    'type' => 'seller'
-                ])->stripe_plan_id,
+                'stripe_price' => Plan::first()->stripe_plan_id,
                 'ends_at' => now()->addDays(30),
                 'quantity' => 1
             ]);
