@@ -166,7 +166,7 @@ class UserFactory extends Factory
             'city' => $this->faker->city,
             'state' => $this->faker->country,
             'short_state' => $this->faker->countryCode(),
-            'description' => fake()->paragraphs(5, true),
+            'description' => fake()->paragraphs(2, true),
             'state_id' => $state?->id,
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
