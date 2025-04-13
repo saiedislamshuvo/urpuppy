@@ -22,7 +22,7 @@ return [
     'ssr' => [
 
         'enabled' => true,
-        'url' => 'app:13714',
+        'url' => env('INERTIA_SSR_URL', 'app:13714'),
         /* 'url' => 'http://localhost:13714', */
 
         // 'bundle' => base_path('bootstrap/ssr/ssr.mjs'),
