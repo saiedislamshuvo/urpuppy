@@ -16,7 +16,13 @@ return new class extends Migration
                 if (DB::getDriverName() === 'sqlite') {
         $table->unsignedBigInteger('company_state_id')->nullable()->change();
     } elseif (DB::getDriverName() === 'pgsql') {
-        DB::statement('ALTER TABLE users ALTER COLUMN company_state_id DROP NOT NULL');
+                                  DB::statement('
+            ALTER TABLE users
+            ALTER COLUMN company_state_id TYPE bigint USING company_state_id::bigint,
+            ALTER COLUMN company_state_id DROP NOT NULL,
+            ALTER COLUMN company_state_id DROP DEFAULT,
+            ALTER COLUMN company_state_id DROP IDENTITY IF EXISTS
+        ');
     }
         });
     }
