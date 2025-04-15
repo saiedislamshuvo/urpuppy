@@ -62,6 +62,5 @@ jobs:
           sudo swapoff -a && sudo swapon -a
           sync && echo 3 | sudo tee /proc/sys/vm/drop_caches
           docker pull ghcr.io/andrewperoramas/urpuppyv2:staging
-          docker compose up -d --no-deps --build urpuppy-staging
           EOF
 
