@@ -1,0 +1,49 @@
+services:
+    app:
+        image: ghcr.io/andrewperoramas/urpuppyv2:staging
+        container_name: urpuppy-staging
+        networks:
+          - dokploy-network
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.urpuppy.rule=Host(`staging.urpuppy.com`)"
+          - "traefik.http.services.urpuppy.loadbalancer.server.port=8000"
+        volumes:
+          - urpuppy-app-storage:/var/www/html/storage
+        env_file:
+          - path: .env
+        environment:
+            WITH_SSR: false
+            WITH_HORIZON: true
+            WITH_SCHEDULER: true
+    postgres:
+        image: postgres:16-alpine
+        volumes:
+          - pgalpine:/var/lib/postgresql/data
+          - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+          - dokploy-network
+        environment:
+          - POSTGRES_PASSWORD=Asakaboi35
+          - POSTGRES_USER=urpuppy
+          - POSTGRES_DB=urpuppy
+
+    redis:
+        networks:
+          - dokploy-network
+        image: redis:alpine
+
+    mailpit:
+        image: axllent/mailpit
+        networks:
+          - dokploy-network
+        volumes:
+          - ./data:/data
+
+networks:
+  dokploy-network:
+    external: true
+
+volumes:
+  pgalpine:
+  urpuppy-app-storage:

@@ -20,7 +20,7 @@
 <tr>
   <td style="background-color: #08314E; padding: 24px; text-align: center;">
     <p style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 400; line-height: 140%; color: #9aabb7; text-align: center;">
-      ©2025 Urpuppy, LLC. All Right Reserved
+      ©2025 Urpuppy, LLC. All Rights Reserved
     </p>
     <div style="text-align: center; margin-top: 12px;">
       <!-- TikTok -->

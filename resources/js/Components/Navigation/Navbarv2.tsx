@@ -161,9 +161,9 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
             id="offcanvasSidebar" aria-labelledby="offcanvasExampleLabel">
         <div className="offcanvas-header">
           <div className="logo">
-            <a className="navbar-brand py-0 me-0" href="index.html">
+            <Link className="navbar-brand py-0 me-0" href="/">
               <img src="/logo.svg" alt="" />
-            </a>
+            </Link>
           </div>
           <button
             type="button"

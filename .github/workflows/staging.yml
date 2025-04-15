@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - staging
+      - dev
 
 # on:
 #   pull_request:
@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: FrankenPHP.Dockerfile
+          file: Dockerfile.Staging
           tags: ghcr.io/${{ github.repository }}:staging
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -54,6 +54,14 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_STAGING }}
 
-      - name: Deploy to VPS
-        run: ssh -o StrictHostKeyChecking=no andrew@157.180.16.108 "cd /home/andrew/urpuppyv2 && make rollout"
+      - name: Execute Deployment with Full Cleanup
+        run: |
+          ssh -o StrictHostKeyChecking=no root@91.107.220.6 << 'EOF'
+          docker system prune -f --filter "until=14h"  # Only remove old images
+          docker builder prune -f
+          sudo swapoff -a && sudo swapon -a
+          sync && echo 3 | sudo tee /proc/sys/vm/drop_caches
+          docker pull ghcr.io/andrewperoramas/urpuppyv2:staging
+          docker compose up -d --no-deps --build urpuppy-staging
+          EOF
 
