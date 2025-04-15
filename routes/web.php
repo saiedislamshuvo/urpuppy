@@ -37,6 +37,10 @@ Route::group(['prefix' => 'posts'], function () {
 
 });
 
+Route::get('ci', function () {
+    dd('test ci');
+});
+
 Route::post('/create-intent', function (Request $request) {
     try {
         // Retrieve the user and the selected plan
