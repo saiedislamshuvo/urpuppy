@@ -64,3 +64,12 @@ jobs:
           docker pull ghcr.io/andrewperoramas/urpuppyv2:staging
           EOF
 
+          curl -X 'POST' \
+             'https://bugitik.761073128.xyz/api/compose.deploy' \
+             -H 'accept: application/json' \
+             -H 'Content-Type: application/json' \
+             -H 'x-api-key: ' ${{ secrets.DOKPLOY_API_KEY }}\
+             -d '{
+             "composeId": "oReeehdo53YQSbrn8pvYe"
+          }'
+
