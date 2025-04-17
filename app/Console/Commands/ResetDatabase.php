@@ -3,12 +3,14 @@
 namespace App\Console\Commands;
 
 use App\Models\Contact;
+use App\Models\Post;
 use App\Models\Puppy;
 use App\Models\Report;
 use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Laravel\Cashier\SubscriptionItem;
 
 class ResetDatabase extends Command
 {
@@ -32,12 +34,18 @@ class ResetDatabase extends Command
     public function handle()
     {
         Puppy::truncate();
-        User::where('email', '!=', 'admin@urpuppy.com')->forceDelete();
+
+        $users = User::withTrashed()
+        ->where('email', '!=', 'admin@urpuppy.com')
+        ->get();
+
+        foreach ($users as $user) {
+            $user->forceDelete();
+        }
         Artisan::call('optimize:clear');
         Report::truncate();
         Contact::truncate();
         Subscription::truncate();
-        /* dd('start'); */
-        //
+        SubscriptionItem::truncate();
     }
 }
