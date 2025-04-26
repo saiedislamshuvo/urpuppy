@@ -64,7 +64,7 @@ class PlanResource extends Resource
                     ->validationMessages([
                         'max' => 'Image size should be less than 10MB',
                     ])
-                    ->disk('s3')
+                    ->disk(config('media-library.disk_name'))
                     ->collection('logo'),
                 Repeater::make('features')
                     ->schema([

@@ -6,8 +6,9 @@ import SecondaryJumbotron from '@/Components/SecondaryJumbotron'
 import Layout from '@/Layouts/Layout'
 import React from 'react'
 
-const Index = ({plans} : {
-    plans: App.Data.PlanData[]
+const Index = ({plans, discount} : {
+    plans: App.Data.PlanData[],
+    discount?: App.Data.DiscountData
 }) => {
 
 
@@ -23,8 +24,9 @@ const Index = ({plans} : {
 
                         {plans.length > 0 && plans.map((plan: App.Data.PlanData) =>
 
-          <div className="col-md-6 col-xl-3 mb-7 mb-xl-0 d-flex align-items-stretch">
-                            <PlanCard plan={plan} />
+          <div className="col-md-6 col-xl-3 mb-7 mb-xl-0 d-flex align-items-stretch"  key={plan.id}>
+
+                            <PlanCard discount={discount} plan={plan} />
           </div>
 
                         )}

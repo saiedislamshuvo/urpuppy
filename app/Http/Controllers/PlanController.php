@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Discount;
 use App\Models\Plan;
 use Illuminate\Http\Request;
 
@@ -9,12 +10,6 @@ class PlanController extends Controller
 {
     public function index(Request $request)
     {
-        /* dd($request->user()); */
-        /* if ($request->user()->phone == null ) { */
-        /*     return redirect()->route('seller.create')->with([ */
-        /*         'message.error' => 'Please fill up the details here' */
-        /*     ]); */
-        /* } */
 
         if ($request->user()?->premium_plan) {
             return redirect()->route('profile.edit', [
@@ -26,12 +21,12 @@ class PlanController extends Controller
 
         return inertia()->render('Plan/Index', [
             'plans' => $plans,
+            'discount' => get_discount($request->user(), 'seller'),
         ]);
     }
 
     public function breeder(Request $request)
     {
-
         if ($request->user()?->breeder_plan) {
             return redirect()->route('profile.edit', [
                 'tab' => 'My Subscription',
@@ -48,6 +43,7 @@ class PlanController extends Controller
 
         return inertia()->render('Plan/Breeder', [
             'plan' => $plan,
+            'discount' => get_discount($request->user(), 'breeder'),
         ]);
     }
 }

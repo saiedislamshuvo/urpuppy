@@ -176,7 +176,7 @@ export default function RegisterBreeder({puppy}: {
                 </div>
                 <p className="mb-4">By signing up for a urpuppy account, you confirm that you have read, understand and
                   agreed <Link className="text-decoration-underline fw-semibold" href="/terms-of-use">Terms of Service</Link></p>
-                <Button size="full" href="" type="button" >Signup</Button>
+                <Button disabled={processing} size="full" href="" type="button" >Signup</Button>
 
                 <div className="d-flex align-items-center">
                   <p className="fs-4 mb-0">I already have an account?</p>

@@ -36,7 +36,7 @@ class ProcessPuppyMedia implements ShouldQueue
                 }
 
                 $path = parse_url($url, PHP_URL_PATH);
-                Storage::disk('s3')->delete(ltrim($path, '/'));
+                Storage::disk(config('media-library.disk_name'))->delete(ltrim($path, '/'));
 
             } catch (\Exception $e) {
                 Log::error("Media processing failed: {$e->getMessage()}");
