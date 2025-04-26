@@ -78,7 +78,7 @@ const PlanCard = (
                    <>
                   <p>Features:</p>
                   <ul className="list-unstyled mb-0 d-flex flex-column gap-6">
-                        {plan.features.map((feature: any, key: int) => (
+                        {plan.features.map((feature: any, key: number) => (
                             <li key={key} className="d-flex align-items-start gap-2">
                                 <img src="../images/svgs/icon-check-filled.svg" alt="" className="flex-shrink-0" />
                                 <h5 className="fs-3 mb-0 font-work-sans fw-normal">{feature.name}</h5>
