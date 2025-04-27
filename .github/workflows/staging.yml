@@ -59,7 +59,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@91.107.220.6 << 'EOF'
           docker system prune -f --filter "until=14h"  # Only remove old images
           docker builder prune -f
-          docker pull ghcr.io/andrewperoramas/urpuppyv2:staging
+          docker pull ghcr.io/adichannnnnhere64/urpuppyv2:staging
           EOF
 
           curl -X 'POST' \
