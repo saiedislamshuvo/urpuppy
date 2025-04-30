@@ -2,11 +2,13 @@
 
 use App\Data\BreedOptionData;
 use App\Data\ColorData;
+use App\Data\DiscountData;
 use App\Data\PatternData;
 use App\Data\PuppyCardData;
 use App\Data\SiblingData;
 use App\Data\VideoData;
 use App\Models\Breed;
+use App\Models\Discount;
 use App\Models\Puppy;
 use App\Models\PuppyColor;
 use App\Models\PuppyPattern;
@@ -120,6 +122,25 @@ if (! function_exists('error')) {
 
         return redirect()->route($route, $param);
 
+    }
+}
+
+if (! function_exists('get_discount')) {
+    function get_discount(User $user, string $account_type): ?DiscountData
+    {
+        $now = now();
+
+        $discounts = Discount::where('account_type', $account_type)
+            ->where('start_date', '<=', $now)
+            ->where('end_date', '>=', $now)
+            ->get();
+
+        $matching_discounts = $discounts->filter(function($discount) use ($user) {
+            $emails = explode("\n", $discount->targeted_emails);
+            return in_array($user->email, array_map('trim', $emails));
+        });
+
+        return DiscountData::optional($matching_discounts->first()) ?? null;
     }
 }
 

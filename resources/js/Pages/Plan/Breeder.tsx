@@ -7,8 +7,9 @@ import Layout from '@/Layouts/Layout'
 import { Link } from '@inertiajs/react'
 import React from 'react'
 
-const Breeder = ({plan} : {
-    plan: App.Data.PlanData
+const Breeder = ({plan, discount} : {
+    plan: App.Data.PlanData,
+    discount?: App.Data.DiscountData
 }) => {
   return (
   <Layout>
@@ -32,6 +33,10 @@ const Breeder = ({plan} : {
                       <div>
                         <p className="text-dark fs-5 mb-0">All this for just</p>
                         <h2 className="fs-12 mb-1">{plan.money_formatted} <span className="fs-5 text-muted">/{plan.plan_days}</span></h2>
+                                                    {discount &&
+                                                    <p className="mb-0 text-muted">Free trial for {discount.trial_days} days</p>
+                                                    }
+
                         <p className="mb-0 text-muted">Billed annually.</p>
                       </div>
                     </div>

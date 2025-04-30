@@ -98,7 +98,7 @@ class UserResource extends Resource
                             ->validationMessages([
                                 'max' => 'Image size should be less than 10MB',
                             ])
-                            ->disk('s3')->collection('avatars')->rules([
+                            ->disk(config('media-library.disk_name'))->collection('avatars')->rules([
                             'max:10040',
                         ])->circleCropper(),
                         TextInput::make('first_name'),
@@ -145,10 +145,10 @@ class UserResource extends Resource
                         TextInput::make('company_address'),
                         TextInput::make('company_established_on'),
 
-                        SpatieMediaLibraryFileUpload::make('company_logo')->rules(['max:10040'])->disk('s3')->collection('company_logo'),
+                        SpatieMediaLibraryFileUpload::make('company_logo')->rules(['max:10040'])->disk(config('media-library.disk_name'))->collection('company_logo'),
 
-                        SpatieMediaLibraryFileUpload::make('video')->disk('s3')->collection('videos')->multiple(),
-                        SpatieMediaLibraryFileUpload::make('gallery')->collection('gallery')->multiple()->disk('s3')->columns(2),
+                        SpatieMediaLibraryFileUpload::make('video')->disk(config('media-library.disk_name'))->collection('videos')->multiple(),
+                        SpatieMediaLibraryFileUpload::make('gallery')->collection('gallery')->multiple()->disk(config('media-library.disk_name'))->columns(2),
 
                     ])
                     ->columns(2),

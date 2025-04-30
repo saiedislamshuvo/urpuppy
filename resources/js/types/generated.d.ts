@@ -98,6 +98,18 @@ body: string;
 reviewer: App.Data.UserCommentData | null;
 review_on: string;
 };
+export type DiscountData = {
+id: number;
+name: string;
+slug: string;
+code: string;
+start_date: string;
+end_date: string | null;
+plan_id: number;
+trial_days: string;
+account_type: string;
+targeted_emails: any;
+};
 export type OptionData = {
 value: number;
 label: string;
@@ -283,7 +295,7 @@ phone: string | null;
 city: string | null;
 zip_code: string | null;
 address: string | null;
-short_address: string;
+short_address: string | null;
 initial_name: string;
 email_verified_at: string | null;
 member_since: string;

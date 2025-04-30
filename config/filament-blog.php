@@ -15,7 +15,7 @@ return [
      * Crop aspect ratio of the Posts banner image.
      */
     'banner' => [
-        'disk' => 's3',
+        'disk' => env('MEDIA_DISK', 's3'),
         'directory' => 'blog',
         'maxSize' => 51120,
         'cropAspectRatio' => '16:9',
@@ -36,7 +36,7 @@ return [
      * Of the Author avatar image.
      */
     'avatar' => [
-        'disk' => 's3',
+        'disk' => env('MEDIA_DISK', 's3'),
         'directory' => 'blog',
         'maxSize' => 5120,
     ],

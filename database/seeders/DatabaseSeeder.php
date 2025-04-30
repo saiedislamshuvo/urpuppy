@@ -49,7 +49,6 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call(RoleSeeder::class);
-        $this->call(WorldSeeder::class);
 
         if (! User::where('email', 'admin@urpuppy.com')->exists()) {
             $user = User::factory()->create([
@@ -156,6 +155,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PuppyPatternsSeeder::class);
         $this->call(PuppyColorsSeeder::class);
         $this->call(LoveSeeder::class);
+        $this->call(WorldSeeder::class);
 
     }
  }

@@ -37,6 +37,7 @@ Route::group(['prefix' => 'posts'], function () {
 
 });
 
+
 Route::post('/create-intent', function (Request $request) {
     try {
         // Retrieve the user and the selected plan

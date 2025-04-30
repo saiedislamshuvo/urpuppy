@@ -63,10 +63,10 @@ class SavedSearchController extends Controller
             'image' => 'required|image|max:5120',
         ]);
 
-        $path = $request->file('image')->store('temp/uploads', 's3');
+        $path = $request->file('image')->store('temp/uploads', config('media-library.disk_name'));
 
         return response()->json([
-            'url' => Storage::disk('s3')->url($path),
+            'url' => Storage::disk(config('media-library.disk_name'))->url($path),
         ]);
     }
 }

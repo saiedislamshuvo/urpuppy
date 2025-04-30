@@ -171,6 +171,7 @@ class CheckoutController extends Controller
             'plan_id' => $plan->id,
             'plan' => PlanData::from($plan),
             'intent' => $user->createSetupIntent(),
+            'discount' => get_discount($user, $plan->type),
         ]);
     }
 
@@ -212,7 +213,9 @@ class CheckoutController extends Controller
                 'plan_type' => (string) $plan->type,
             ]);
 
-        if ($plan->type == 'free') {
+        if ($discount = get_discount($user, $plan->type)) {
+            $subscription->trialDays($discount->trial_days);
+        } else if ($plan->type == 'free') {
             $subscription->trialDays($plan->trial_days);
         }
 

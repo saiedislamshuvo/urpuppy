@@ -1,6 +1,6 @@
 services:
     app:
-        image: ghcr.io/andrewperoramas/urpuppyv2:staging
+        image: ghcr.io/adichannnnnhere64/urpuppyv2:staging
         container_name: urpuppy-staging
         networks:
           - dokploy-network
