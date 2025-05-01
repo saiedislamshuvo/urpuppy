@@ -46,7 +46,7 @@ class DiscountResource extends Resource
                     ->numeric(),
                 Forms\Components\Select::make('account_type')->options([
                     'breeder' => 'Breeder',
-                    'premium' => 'Seller',
+                    'seller' => 'Seller',
                 ]),
                 Forms\Components\Textarea::make('targeted_emails')
                     ->required()
