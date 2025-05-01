@@ -1,6 +1,7 @@
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe("pk_live_51QCFB5B0xRl9Df0eXVBkh9yxfVuQWwCVbhTKipQGBxKGiidIJF6uYmI5c9uQ6agH6n2BEIMuMc5WfmGDz3gtyQHv00xhwM1fv7");
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
 async function confirmPayment() {
     const stripe = await stripePromise;

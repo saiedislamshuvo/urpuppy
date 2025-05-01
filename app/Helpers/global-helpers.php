@@ -134,9 +134,14 @@ if (! function_exists('get_discount')) {
             ->where('start_date', '<=', $now)
             ->where('end_date', '>=', $now)
             ->get();
+        $discount = $discounts?->first();
+        if ($discount->targeted_emails == null) {
+            return DiscountData::optional($discount) ?? null;
+        }
 
-        $matching_discounts = $discounts->filter(function($discount) use ($user) {
+        $matching_discounts = $discounts->filter(function ($discount) use ($user) {
             $emails = explode("\n", $discount->targeted_emails);
+
             return in_array($user->email, array_map('trim', $emails));
         });
 
