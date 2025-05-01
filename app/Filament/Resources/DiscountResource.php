@@ -49,7 +49,6 @@ class DiscountResource extends Resource
                     'seller' => 'Seller',
                 ]),
                 Forms\Components\Textarea::make('targeted_emails')
-                    ->required()
                     ->columnSpanFull(),
             ]);
     }

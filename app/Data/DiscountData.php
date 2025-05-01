@@ -18,6 +18,6 @@ class DiscountData extends Data
         public ?string $end_date,
         public int $trial_days,
         public string $account_type,
-        public string $targeted_emails,
+        public ?string $targeted_emails,
     ) {}
 }
