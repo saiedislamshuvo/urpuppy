@@ -64,6 +64,7 @@ class SendEmailBlastJob implements ShouldQueue
 
         $validEmails = [];
         $invalidEmails = [];
+        $processedEmails = [];
 
         foreach ($rawEmails as $email) {
             $email = trim($email);
@@ -74,8 +75,15 @@ class SendEmailBlastJob implements ShouldQueue
 
             $cleanedEmail = rtrim($email, '.');
 
+            if (in_array($cleanedEmail, $processedEmails)) {
+                Log::info('Duplicate email skipped', ['email' => $cleanedEmail]);
+
+                continue;
+            }
+
             if (filter_var($cleanedEmail, FILTER_VALIDATE_EMAIL)) {
                 $validEmails[] = $cleanedEmail; // Add the cleaned email
+                $processedEmails[] = $cleanedEmail; // Mark this email as processed
 
                 if ($cleanedEmail !== $email) {
                     Log::info('Email cleaned before validation', [
@@ -97,6 +105,6 @@ class SendEmailBlastJob implements ShouldQueue
 
         Log::info('Valid emails collected', ['count' => count($validEmails)]);
 
-        return $validEmails;
+        return array_unique($validEmails); // Extra safety to ensure uniqueness
     }
 }
