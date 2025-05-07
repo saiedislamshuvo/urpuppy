@@ -134,8 +134,7 @@ RUN composer install \
     --no-interaction \
     --no-autoloader \
     --no-ansi \
-    --no-scripts \
-    --audit
+    --no-scripts
 
 ###########################################
 # Build frontend assets with Bun
