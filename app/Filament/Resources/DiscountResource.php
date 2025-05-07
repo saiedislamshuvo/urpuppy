@@ -4,9 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DiscountResource\Pages;
 use App\Filament\Resources\DiscountResource\RelationManagers;
+use App\Jobs\SendEmailBlastJob;
 use App\Models\Discount;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -44,11 +46,14 @@ class DiscountResource extends Resource
                 Forms\Components\TextInput::make('trial_days')
                     ->required()
                     ->numeric(),
-                Forms\Components\Select::make('account_type')->options([
+                Forms\Components\Select::make('account_type')
+                    ->required()
+                    ->options([
                     'breeder' => 'Breeder',
                     'seller' => 'Seller',
                 ]),
                 Forms\Components\Textarea::make('targeted_emails')
+                    ->rows(14)
                     ->columnSpanFull(),
             ]);
     }
@@ -91,6 +96,25 @@ class DiscountResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('customAction')
+                ->label('Email Blast')
+                ->visible(fn (Discount $record) => !$record->is_sent)
+                ->color('success')
+                ->icon('heroicon-o-envelope')
+                    ->action(function ($record) {
+                         dispatch(new SendEmailBlastJob($record->id));
+
+                         Notification::make()
+                        ->title('Email blast queued')
+                        ->body('Emails will be sent with 30-second intervals')
+                        ->success()
+                        ->send();
+
+                        $record->update([
+                            'is_sent' => true
+                        ]);
+                    })
+                ->tooltip('Send all emails'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
