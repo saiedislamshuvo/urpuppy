@@ -5,8 +5,11 @@ namespace App\Providers\Filament;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use CmsMulti\FilamentClearCache\FilamentClearCachePlugin;
 use Filament\Http\Middleware\Authenticate;
+use Vormkracht10\FilamentMails\FilamentMailsPlugin;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
+use Vormkracht10\FilamentMails\Facades\FilamentMails;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -66,6 +69,14 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->navigationItems([
+                NavigationItem::make('Log')
+                    ->url('/log-viewer', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-book-open')
+                    ->group('Settings'),
+
+            ])
+            ->routes(fn () => FilamentMails::routes())
             ->authMiddleware([
                 Authenticate::class,
             ])->plugins([
@@ -82,6 +93,7 @@ class AdminPanelProvider extends PanelProvider
                 /* ]), */
                 FilamentClearCachePlugin::make(),
                 \Phpsa\FilamentAuthentication\FilamentAuthentication::make(),
+                FilamentMailsPlugin::make()
 
                 /* \BezhanSalleh\FilamentGoogleAnalytics\FilamentGoogleAnalyticsPlugin::make(), */
                 /* \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make() */
