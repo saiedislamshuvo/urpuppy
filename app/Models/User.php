@@ -300,7 +300,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, M
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, 'admin@urpuppy.com');
+        return str_ends_with($this->email, 'admin@urpuppy.com') || str_ends_with($this->email, 'editor@urpuppy.com');
     }
 
     public function scopeBreeders($query)
