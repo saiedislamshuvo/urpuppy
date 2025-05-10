@@ -58,7 +58,8 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('viewLogViewer', function (User $user) {
             return in_array($user->email, [
-                'admin@urpuppy.com',
+                'support@urpuppy.com',
+
             ]);
         });
 

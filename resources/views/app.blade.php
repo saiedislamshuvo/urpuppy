@@ -20,7 +20,7 @@
     <body class="font-sans antialiased" >
         @inertia
 
-        <script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"LocalBusiness","name":"Urpuppy.com","email":"admin@urpuppy.com","contactPoint":{"@type":"ContactPoint","areaServed":"US"},"image":"https:\/\/urpuppy.com\/logo.png"}</script>
+        <script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"LocalBusiness","name":"Urpuppy.com","email":"support@urpuppy.com","contactPoint":{"@type":"ContactPoint","areaServed":"US"},"image":"https:\/\/urpuppy.com\/logo.png"}</script>
 
         <noscript>
     <style>

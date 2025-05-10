@@ -130,6 +130,16 @@ class AdminPanelProvider extends PanelProvider
 
                         ]),
 
+                        NavigationGroup::make('Settings')->items([
+                            NavigationItem::make('Log')
+                                ->url('/log-viewer', shouldOpenInNewTab: true)
+                                ->icon('heroicon-o-book-open'),
+                            NavigationItem::make('Horizon')
+                                ->url('/horizon', shouldOpenInNewTab: true)
+                                ->icon('heroicon-o-book-open'),
+
+                        ]),
+
                     ];
                 } else {
                     $admin_items = [
