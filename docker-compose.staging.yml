@@ -13,7 +13,7 @@ services:
         env_file:
           - path: .env
         environment:
-            WITH_SSR: false
+            WITH_SSR: true
             WITH_HORIZON: true
             WITH_SCHEDULER: true
     postgres:
@@ -32,13 +32,6 @@ services:
         networks:
           - dokploy-network
         image: redis:alpine
-
-    mailpit:
-        image: axllent/mailpit
-        networks:
-          - dokploy-network
-        volumes:
-          - ./data:/data
 
 networks:
   dokploy-network:
