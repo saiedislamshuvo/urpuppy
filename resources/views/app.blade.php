@@ -14,6 +14,7 @@
         @vite([ 'resources/js/app.tsx', "resources/js/Pages/{$page['component']}.tsx"])
         @inertiaHead
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2165217194424630"
+        <script defer src="https://analytics.761073128.xyz/script.js" data-website-id="ff04b39a-2c33-43df-9854-8edb4ae01c4a"></script>
      crossorigin="anonymous"></script>
 
     </head>
