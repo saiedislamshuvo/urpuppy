@@ -45,7 +45,7 @@ const Show = ({breed} : {
               </div>
               <div className="col-lg-7">
                 <div className="information-details ms-xl-4">
-                  <h2 className="fs-10 mb-4">{breed.name}</h2>
+                  <h1 className="fs-10 mb-4">{breed.name}</h1>
                   <div className="d-xl-flex align-items-center gap-3 mb-4">
                     <Link href={`/puppies?filter[breed]=${breed.name}`}
                       className="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2 mb-3 mb-xl-0"><svg
