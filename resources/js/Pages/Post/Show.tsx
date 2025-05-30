@@ -9,6 +9,7 @@ import { FacebookShareButton, TwitterShareButton } from 'react-share';
 import CopyToClipboard from '@/Components/CopyToClipboard';
 import MetaTags from '@/Components/MetaTags';
 import Pagination from '@/Components/Pagination';
+import JsonLdArticle from '@/Components/JsonLdArticle';
 
 interface ShowProps {
     post: App.Data.PostData;
@@ -65,8 +66,10 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked }) => 
 
     return (
         <Layout navType="secondary">
-            <MetaTags url={currentUrl} title={post.title} description={post.excerpt ?? post.title} image={post.banner_url} />
-            <section className="puppy-spotlight py-7 py-md-5 py-xl-9" id="scroll-target">
+            <MetaTags url={currentUrl} title={post.title} description={post.excerpt ?? post.title} image={post.banner_url} >
+            </MetaTags>
+             <JsonLdArticle post={post} />
+            <article className="puppy-spotlight py-7 py-md-5 py-xl-9" id="scroll-target">
                 <div className="container">
                     <div className="mb-8">
                         <span style={{ backgroundColor: 'rgba(0, 122, 255, 0.1)', color: 'rgba(0, 122, 255, 1)', fontWeight: '500' }} className="btn py-1 mb-3">
@@ -201,7 +204,7 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked }) => 
                         </div>
                     </div>
                 </div>
-            </section>
+            </article>
         </Layout>
     );
 };

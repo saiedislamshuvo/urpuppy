@@ -102,13 +102,12 @@ export type DiscountData = {
 id: number;
 name: string;
 slug: string;
-code: string;
+code: string | null;
 start_date: string;
 end_date: string | null;
-plan_id: number;
-trial_days: string;
+trial_days: number;
 account_type: string;
-targeted_emails: any;
+targeted_emails: string | null;
 };
 export type OptionData = {
 value: number;
@@ -161,6 +160,7 @@ unlike_count: number;
 content: string;
 view_count: number;
 published_at: string;
+updated_at: string;
 published_at_formatted: string;
 author: App.Data.AuthorData;
 category: App.Data.PostCategoryData;

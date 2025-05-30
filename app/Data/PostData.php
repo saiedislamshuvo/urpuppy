@@ -20,6 +20,7 @@ class PostData extends Data
         public string $content,
         public int $view_count,
         public string $published_at,
+        public string $updated_at,
         public string $published_at_formatted,
         public AuthorData $author,
         public PostCategoryData $category,
