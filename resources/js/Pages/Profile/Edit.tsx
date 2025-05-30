@@ -13,6 +13,7 @@ import SavedSearchCard from '@/Components/SavedSearchCard';
 import { useEffect, useState } from 'react';
 import AlertDismissible from '@/Components/AlertDismissible';
 import Button from '@/Components/ui/Button';
+import MetaTags from '@/Components/MetaTags';
 
 const NavigationSettings = [
     {  name: 'Account Settings', href: '#pills-account-settings', id: 'pills-account-settings-tab', logo: '../images/svgs/icon-user-dark.svg' },
@@ -55,6 +56,7 @@ export default function Edit({
         <Layout
             navType="secondary"
         >
+            <MetaTags title="Profile" />
 
               <div className="page-wrapper position-relative overflow-hidden">
 

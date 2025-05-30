@@ -25,7 +25,7 @@ class PuppyUpdateRequest extends FormRequest
             'puppy_name' => ['required', 'string', 'max:100', 'blasp_check'],
             'puppy_price' => ['required', 'numeric', 'min:1'], // Ensuring the price is a positive number
             'puppy_gender' => ['required', 'string', 'in:Male,Female,other'], // Define possible values
-            'puppy_about' => ['required', 'string', 'min:40', 'max:255', 'blasp_check'],
+            'puppy_about' => ['required', 'string', 'min:40', 'max:10255'],
             'puppy_birth_date' => ['required', 'date', 'before_or_equal:today'],
             'puppy_patterns' => ['required', 'array', 'max:3'],
             'puppy_breeds' => ['required', 'array', 'max:3'],
