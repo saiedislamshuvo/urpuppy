@@ -12,12 +12,13 @@ import InputError from '../InputError'
 import DateInput from '../DateInput'
 import PhoneNumberInput from '../PhoneNumberInput'
 import MapInput from '../MapInput'
+import Button from '../ui/Button'
 
 const BreederRegistrationForm = ({breeds}: { breeds: App.Data.BreedOptionData[]}) => {
 
    const user = usePage().props.auth.user as App.Data.UserData;
 
-   const { data, setData, post, errors } = useForm({
+   const { data, setData, post, errors, processing } = useForm({
     health_certificate: 'yes',
     vaccinated: 'yes',
     company_address: user.company_address ??  '',
@@ -247,8 +248,8 @@ const BreederRegistrationForm = ({breeds}: { breeds: App.Data.BreedOptionData[]}
               </div>
             </div>
           </div>
-          <button type="submit" className="btn btn-primary d-flex align-items-center gap-6"><img
-              src="../images/svgs/icon-arrow-right.svg" alt="" />Submit Registration</button>
+          <Button disabled={processing} type="button" ><img
+              src="../images/svgs/icon-arrow-right.svg" alt="" /> Submit Registration</Button>
         </form>
   )
 }

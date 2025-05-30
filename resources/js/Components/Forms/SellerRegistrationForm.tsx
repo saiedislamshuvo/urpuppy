@@ -14,6 +14,7 @@ import InputError from '../InputError'
 import { parseInt } from 'lodash'
 import PhoneNumberInput from '../PhoneNumberInput'
 import MapInput from '../MapInput'
+import Button from '../ui/Button'
 
 
 
@@ -30,7 +31,8 @@ const SellerRegistrationForm = ({
     const puppy_count = usePage().props.puppy_count as number;
     const user = usePage().props.auth.user;
 
-   const {patch, data, setData, post, errors } = useForm({
+
+   const {patch, data, setData, post, errors, processing } = useForm({
         first_name: user.first_name,
         last_name: user.last_name,
         email: user.email,
@@ -321,8 +323,8 @@ value={data.are_you_a_breeder}  setData={setData}
 
 
 
-          <button type="submit" className="btn btn-primary d-flex align-items-center gap-6"><img
-              src="../images/svgs/icon-arrow-right.svg" alt="" />Submit Registration</button>
+          <Button disabled={processing} type="button" ><img
+              src="../images/svgs/icon-arrow-right.svg" alt="" /> Submit Registration</Button>
         </form>
   )
 }
