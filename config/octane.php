@@ -135,6 +135,7 @@ return [
     ],
 
     'flush' => [
+            \Filament\Http\Middleware\DispatchServingFilamentEvent::class,
         //
     ],
 

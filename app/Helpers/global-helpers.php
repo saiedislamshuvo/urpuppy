@@ -135,7 +135,7 @@ if (! function_exists('get_discount')) {
             ->where('end_date', '>=', $now)
             ->get();
         $discount = $discounts?->first();
-        if ($discount->targeted_emails == null) {
+        if ($discount?->targeted_emails == null) {
             return DiscountData::optional($discount) ?? null;
         }
 

@@ -94,13 +94,11 @@ class SellerController extends Controller
             return success('plans.index', 'Subscribe to any plan to activate your listing');
         }
 
-        // Load data concurrently
-        [$patterns, $breeds, $colors, $siblings] = Octane::concurrently([
-            fn() => pattern_options(),
-            fn() => breed_options(),
-            fn() => color_options(),
-            fn() => sibling_options($request, $id),
-        ]);
+        $patterns = pattern_options();
+$breeds = breed_options();
+$colors = color_options();
+$siblings = sibling_options($request, $id);
+
 
         return inertia('Seller/Registration', [
             'puppy_count' => $user->puppies()->count(),
