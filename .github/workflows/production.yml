@@ -59,7 +59,4 @@ jobs:
           docker rollout --env-file ./.env.production -t 180 app
 
           docker container prune -f --filter "until=1h"
-          echo "$NEW_SSH_PUBKEY" >> ~/.ssh/authorized_keys
-          chmod 600 ~/.ssh/authorized_keys
-          ls -l ~/.ssh/authorized_keys
           EOF
