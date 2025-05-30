@@ -1,4 +1,5 @@
 import Breadcrumb from '@/Components/Breadcrumb'
+import BreedJsonLd from '@/Components/BreedJsonLd'
 import MetaTags from '@/Components/MetaTags'
 import Footer from '@/Components/Navigation/Footer'
 import Layout from '@/Layouts/Layout'
@@ -13,6 +14,9 @@ const Show = ({breed} : {
             <Layout navType="secondary">
 
             <MetaTags title={breed.name} description={breed.history_description ?? ""} image={breed.image}/>
+
+             <BreedJsonLd breed={breed} />
+
               <div className="page-wrapper position-relative overflow-hidden">
 
     <section className="information pt-4 pb-9">

@@ -13,7 +13,7 @@ type BreedJsonLdProps = {
 const BreedJsonLd: React.FC<BreedJsonLdProps> = ({ breed }) => {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Thing',
+    '@type': 'DogBreed',
     name: breed.name,
     description: breed.history_description ?? '',
     image: breed.image,
