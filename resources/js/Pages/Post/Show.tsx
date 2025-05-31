@@ -81,7 +81,7 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked }) => 
 
                     <div className="d-flex flex-column flex-sm-column flex-md-row align-items-center justify-content-between">
                         <div className="d-flex gap-3 mb-2">
-                            <img src={post.author.photo_url} className="rounded-circle object-fit-cover" width="50" height="50" />
+                            <img alt={post.author.name} src={post.author.photo_url} className="rounded-circle object-fit-cover" width="50" height="50" />
                             <div>
                                 <h6 style={{ marginBottom: 'unset' }} className="btn-link fs-5 font-work-sans">
                                     {post.author.name}
@@ -92,7 +92,7 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked }) => 
 
                         <div className="d-flex justify-content-center align-items-center mb-2 gap-md-4 gap-3" style={{ height: "24px" }}>
                             <div className="d-flex align-items-center gap-2">
-                                <img src="../images/svgs/icon-time.svg" alt="" width="18" height="18" />
+                                <img src="../images/svgs/icon-time.svg" alt="time" width="18" height="18" />
                                 <p style={{ marginBottom: '0.5px' }} className="fs-3">{post.published_at_formatted}</p>
                             </div>
 
@@ -109,7 +109,7 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked }) => 
                                     <img
                                         style={{ filter: localIsLiked ? "brightness(0) saturate(100%) invert(43%) sepia(91%) saturate(2636%) hue-rotate(195deg) brightness(96%) contrast(104%)" : "" }}
                                         src="../images/svgs/icon-like.svg"
-                                        alt=""
+                                        alt="like"
                                         width="18"
                                         height="18"
                                     />
@@ -127,7 +127,7 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked }) => 
                                         handleReact('Unlike');
                                     }}
                                 >
-                                    <img src="../images/svgs/icon-dislike.svg" alt="" width="18" height="18" />
+                                    <img src="../images/svgs/icon-dislike.svg" alt="dislike" width="18" height="18" />
                                 </a>
                                 <p style={{ marginBottom: '0.5px' }} className="fs-3">{localUnlikeCount}</p>
                             </div>
@@ -135,7 +135,7 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked }) => 
                             <div style={{ width: "1px", background: "rgba(8, 49, 78, 0.4)", height: "12px" }}></div>
 
                             <div className="d-flex align-items-center gap-2">
-                                <img src="../images/svgs/icon-eye.svg" alt="" width="18" height="18" />
+                                <img src="../images/svgs/icon-eye.svg" alt="eye" width="18" height="18" />
                                 <p className="mb-0 fs-3">{post.view_count} Views</p>
                             </div>
                         </div>
@@ -168,12 +168,12 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked }) => 
                                 <CopyToClipboard link={currentUrl} />
                                 <FacebookShareButton url={currentUrl}>
                                     <a href="" data-bs-toggle="tooltip" data-bs-title="Instagram" className="bg-white border bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
-                                        <img loading="lazy" src="/images/svgs/icon-facebook-dark.svg" alt="" />
+                                        <img loading="lazy" src="/images/svgs/icon-facebook-dark.svg" alt="facebook" />
                                     </a>
                                 </FacebookShareButton>
                                 <TwitterShareButton url={currentUrl}>
                                     <a href="#" data-bs-toggle="tooltip" data-bs-title="Instagram" className="bg-white border bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
-                                        <img loading="lazy" src="/images/svgs/icon-twitter-dark.svg" alt="" />
+                                        <img loading="lazy" src="/images/svgs/icon-twitter-dark.svg" alt="twitter" />
                                     </a>
                                 </TwitterShareButton>
                             </div>

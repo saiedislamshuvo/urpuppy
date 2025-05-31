@@ -49,7 +49,7 @@ export default function Guest({ variant = 'primary', children, puppy, header = "
             <div
               className={`login-right-bg ${variant == 'secondary' ? 'signup-right-bg' :  '' } position-relative overflow-hidden h-100 d-flex align-items-center justify-content-center p-4 pt-10 py-lg-10`}>
               <div className="p-4 pb-0 position-absolute top-0 end-0">
-                <Link prefetch cacheFor="5m" href="/"><img src="/images/logos/logo-white.svg" alt="" /></Link>
+                <Link prefetch cacheFor="5m" href="/"><img src="/images/logos/logo-white.svg" alt="logo-white" /></Link>
               </div>
               <div className="card login-right-card mb-0">
                 <div className="card-body">

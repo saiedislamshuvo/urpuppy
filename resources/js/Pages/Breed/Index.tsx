@@ -46,7 +46,7 @@ const Index = ({breeds, letter_param = 'A'} : {
 
                 <Link href={`/breeds/${filter.breed.value}`}
                   className="btn btn-primary round-48 flex-shrink-0 p-2 d-flex align-items-center justify-content-center">
-                  <img src="/images/svgs/icon-search.svg" alt="" />
+                  <img src="/images/svgs/icon-search.svg" alt="icon-search" />
                 </Link>
               </div>
             </div>
@@ -98,7 +98,7 @@ const Index = ({breeds, letter_param = 'A'} : {
                   <Link prefetch cacheFor="1m" href={`/breeds/${breed.slug}`}
                     className="breeds-items d-flex align-items-center gap-6 py-3 px-6 d-block rounded-1">
                     <div className="breeds-items-img  flex-shrink-0 round-40 rounded position-relative overflow-hidden">
-                      <img src={breed.image} className="w-100 h-100 object-fit-cover" alt="" />
+                      <img src={breed.image} className="w-100 h-100 object-fit-cover" alt={breed.name} />
                     </div>
                     <div className="breeds-items-title">
                       <h6 className="mb-0 font-work-sans fw-semibold fs-3">{breed.name}</h6>

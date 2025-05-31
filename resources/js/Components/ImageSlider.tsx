@@ -137,7 +137,7 @@ const ImageSlider = ({
                                     }}
                                                 loading="lazy"
 
-  src="../images/svgs/icon-play.svg" alt="" width="15" height="15" />
+  src="../images/svgs/icon-play.svg" alt="urpuppy-img" width="15" height="15" />
                             </SwiperSlide>
 
                         ))}

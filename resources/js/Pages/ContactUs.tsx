@@ -103,7 +103,7 @@ const ContactUs = () => {
           </div>
           <div className="col-lg-6 ps-xl-10 order-first order-lg-last mb-7 mb-lg-0">
             <div className="position-relative overflow-hidden rounded-1 ps-xl-6">
-              <img src="/images/contact/contact-img.jpg" alt=""
+              <img src="/images/contact/contact-img.jpg" alt="contact-image"
                 className="w-100 h-auto object-fit-cover rounded-1" />
             </div>
           </div>

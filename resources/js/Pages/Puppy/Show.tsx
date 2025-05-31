@@ -74,7 +74,7 @@ const Show = ({ related_puppies, puppy, siblings }: {
   }}
                                                                 href="#" data-bs-toggle="tooltip" data-bs-title="Print"
                             className="bg-white border d-flex align-items-center justify-content-center round-40 rounded-circle">
-                            <img src="/images/svgs/icon-print.svg" alt="" />
+                            <img src="/images/svgs/icon-print.svg" alt="print" />
                           </a> } id={`print`} tooltipMessage="Print" />
 
                                                                                 <ShareButton
@@ -86,61 +86,35 @@ const Show = ({ related_puppies, puppy, siblings }: {
                                                                           <div className="row mb-2">
                         <div className="col-6 col-md-4 mb-6 border-end">
                           <div className="d-flex align-items-center gap-2">
-                            <img src="../images/svgs/icon-time.svg" alt="" width="18" height="18" />
+                            <img src="../images/svgs/icon-time.svg" alt="time" width="18" height="18" />
                             <p className="mb-0 fs-2">{puppy.published_at}</p>
                           </div>
                         </div>
                         <div className="col-6 col-md-4 mb-6 border-end">
                           <div className="d-flex align-items-center gap-2">
-                            <img src="../images/svgs/icon-map-pin.svg" alt="" width="18" height="18" />
+                            <img src="../images/svgs/icon-map-pin.svg" alt="map" width="18" height="18" />
                             <p className="mb-0 fs-2">{puppy.seller.address}</p>
                           </div>
                         </div>
                         <div className="col-6 col-md-4 mb-6 border-end">
                           <div className="d-flex align-items-center gap-2">
-                            <img src="../images/svgs/icon-calendar.svg" alt="" width="18" height="18" />
+                            <img src="../images/svgs/icon-calendar.svg" alt="calendar" width="18" height="18" />
                             <p className="mb-0 fs-2">{puppy.age}</p>
                           </div>
                         </div>
                         <div className="col-6 col-md-4 mb-6 border-end">
                           <div className="d-flex align-items-center gap-2">
-                            <img src="../images/svgs/icon-female.svg" alt="" width="18" height="18" />
+                            <img src="../images/svgs/icon-female.svg" alt="female" width="18" height="18" />
                             <p className="mb-0 fs-2">{puppy.gender}</p>
                           </div>
                         </div>
                         <div className="col-6 col-md-4 mb-6">
                           <div className="d-flex align-items-center gap-2">
-                            <img src="../images/svgs/icon-eye.svg" alt="" width="18" height="18" />
+                            <img src="../images/svgs/icon-eye.svg" alt="eye" width="18" height="18" />
                             <p className="mb-0 fs-2">{puppy.view_count} Views</p>
                           </div>
                         </div>
                         </div>
-
-{/*
-                      <div className="d-flex align-items-center flex-wrap mb-2">
-                        <div className="d-flex align-items-center gap-2 mb-3 border-end pe-6">
-                          <img src="/images/svgs/icon-time.svg" alt="" width="20" height="20" />
-                          <p className="mb-0">{puppy.published_at}</p>
-                        </div>
-                        <div className="d-flex align-items-center gap-2 mb-3 border-end pe-6 ps-6">
-                          <img src="/images/svgs/icon-map-pin.svg" alt="" width="20" height="20" />
-                          <p className="mb-0">{puppy.breeder.address}</p>
-                        </div>
-                        <div className="d-flex align-items-center gap-2 mb-3 border-end pe-6 ps-6">
-                          <img src="/images/svgs/icon-calendar.svg" alt="" width="20" height="20" />
-                          <p className="mb-0">{puppy.age}</p>
-                        </div>
-                        <div className="d-flex align-items-center gap-2 mb-3 border-end pe-6 ps-6">
-                          <img src="/images/svgs/icon-female.svg" alt="" width="20" height="20" />
-                          <p className="mb-0">{puppy.gender}</p>
-                        </div>
-                        <div className="d-flex align-items-center gap-2 mb-3 pe-6 ps-6">
-                          <img src="/images/svgs/icon-eye.svg" alt="" width="20" height="20" />
-                          <p className="mb-0">{puppy.view_count} Views</p>
-                        </div>
-                      </div>
-*/}
-
 
                       <p className="mb-1 fs-2 fw-medium">Our price</p>
                       <h2 className="mb-4">{puppy.formatted_price}</h2>
@@ -163,7 +137,7 @@ const Show = ({ related_puppies, puppy, siblings }: {
                       <p className="mb-6">{puppy.description}</p>
                       <p className="mb-3"></p>
                       <div className="d-flex align-items-center align-items-start gap-2">
-                        <img src="/images/svgs/icon-flag.svg" alt="" />
+                        <img src="/images/svgs/icon-flag.svg" alt="flag" />
 
 
                                                         <Link
@@ -222,7 +196,7 @@ href={`/report/${puppy.slug}`} method="post" data={{
               <div className="row">
                 <div className="col-xl-4 d-flex align-items-lg-stretch">
                   <Link href={`/breeders/${puppy.seller.slug}`} className="trusted-breeders-img position-relative overflow-hidden w-100 text-center p-4">
-                    <img className="object-fit-cover rounded-circle position-relative overflow-hidden" src={puppy.seller.company_logo ?? ""} alt="" width="230" height="230" />
+                    <img className="object-fit-cover rounded-circle position-relative overflow-hidden" src={puppy.seller.company_logo ?? ""} alt={puppy.seller.kennel_name ?? 'company logo'} width="230" height="230" />
                   </Link>
                 </div>
                 <div className="col-xl-8 d-flex align-items-lg-stretch">

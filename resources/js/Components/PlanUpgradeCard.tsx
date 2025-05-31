@@ -26,7 +26,7 @@ const PlanUpgradeCard = (
               <div className="card-body">
                 <div className="d-flex align-items-center justify-content-between mb-6">
                   <p className="text-dark fs-5 mb-0">{plan.name}</p>
-                  <img src={plan.logo ?? ''} alt="" width="48" height="48" />
+                  <img src={plan.logo ?? ''} alt="urpuppy-img" width="48" height="48" />
                 </div>
                 {
                     plan.type == 'free' ? (<>
@@ -53,7 +53,7 @@ const PlanUpgradeCard = (
                   <ul className="list-unstyled mb-0 d-flex flex-column gap-6">
                         {plan.features.map((feature: any) => (
                             <li className="d-flex align-items-start gap-2">
-                                <img src="/images/svgs/icon-check-filled.svg" alt="" className="flex-shrink-0" />
+                                <img src="/images/svgs/icon-check-filled.svg" alt="urpuppy-img" className="flex-shrink-0" />
                                 <h5 className="fs-3 mb-0 font-work-sans fw-normal">{feature.name}</h5>
                             </li>
                         ))}

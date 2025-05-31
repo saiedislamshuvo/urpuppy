@@ -26,7 +26,7 @@ const Breeder = ({plan, discount} : {
                   <div className="card mb-lg-0 h-100">
                     <div className="card-body py-lg-7 d-flex flex-column justify-content-between h-100">
                       <div>
-                        <img src={plan.logo ?? ''} alt="" />
+                        <img src={plan.logo ?? ''} alt="plan-logo" />
                         <h4 className="fs-8 mt-6">{plan.name}</h4>
                         <p>Designed to meet the needs of all dog breeders, this plan gives you everything you need to succeed on Urpuppy.com</p>
                       </div>
@@ -48,7 +48,7 @@ const Breeder = ({plan, discount} : {
                       <ul className="list-unstyled mb-4">
                         <li className="d-flex align-items-start gap-6 mb-3 pb-1">
                           <div className="round-40 bg-success bg-opacity-25 rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center">
-                            <img src="../images/svgs/icon-paws-success.svg" alt="" />
+                            <img src="../images/svgs/icon-paws-success.svg" alt="paws-success" />
                           </div>
                           <div>
                             <h6 className="mb-1 fs-3 font-work-sans">Featured Directory Listing</h6>
@@ -57,7 +57,7 @@ const Breeder = ({plan, discount} : {
                         </li>
                         <li className="d-flex align-items-start gap-6 mb-3 pb-1">
                           <div className="round-40 bg-success bg-opacity-25 rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center">
-                            <img src="../images/svgs/icon-video-display.svg" alt="" />
+                            <img src="../images/svgs/icon-video-display.svg" alt="video-display" />
                           </div>
                           <div>
                             <h6 className="mb-1 fs-3 font-work-sans">Full Multimedia Uploads</h6>
@@ -66,7 +66,7 @@ const Breeder = ({plan, discount} : {
                         </li>
                         <li className="d-flex align-items-start gap-6 mb-3 pb-1">
                           <div className="round-40 bg-success bg-opacity-25 rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center">
-                            <img src="../images/svgs/icon-link.svg" alt="" />
+                            <img src="../images/svgs/icon-link.svg" alt="icon-link" />
                           </div>
                           <div>
                             <h6 className="mb-1 fs-3 font-work-sans">Social Media Integration</h6>
@@ -75,7 +75,7 @@ const Breeder = ({plan, discount} : {
                         </li>
                         <li className="d-flex align-items-start gap-6 mb-3 pb-1">
                           <div className="round-40 bg-success bg-opacity-25 rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center">
-                            <img src="../images/svgs/icon-megephone.svg" alt="" />
+                            <img src="../images/svgs/icon-megephone.svg" alt="megaphone" />
                           </div>
                           <div>
                             <h6 className="mb-1 fs-3 font-work-sans">Exclusive Bulletin Placement</h6>
@@ -84,7 +84,7 @@ const Breeder = ({plan, discount} : {
                         </li>
                         <li className="d-flex align-items-start gap-6 mb-3 pb-1">
                           <div className="round-40 bg-success bg-opacity-25 rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center">
-                            <img src="../images/svgs/icon-share-success.svg" alt="" />
+                            <img src="../images/svgs/icon-share-success.svg" alt="share-success" />
                           </div>
                           <div>
                             <h6 className="mb-1 fs-3 font-work-sans">Social Media Sharing</h6>
@@ -93,7 +93,7 @@ const Breeder = ({plan, discount} : {
                         </li>
                         <li className="d-flex align-items-start gap-6 mb-3 pb-1">
                           <div className="round-40 bg-success bg-opacity-25 rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center">
-                            <img src="../images/svgs/icon-call-user.svg" alt="" />
+                            <img src="../images/svgs/icon-call-user.svg" alt="icon-call-user" />
                           </div>
                           <div>
                             <h6 className="mb-1 fs-3 font-work-sans">Priority Customer Support</h6>
@@ -102,7 +102,7 @@ const Breeder = ({plan, discount} : {
                         </li>
                         <li className="d-flex align-items-start gap-6 mb-3 pb-1">
                           <div className="round-40 bg-success bg-opacity-25 rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center">
-                            <img src="../images/svgs/icon-chat-heart.svg" alt="" />
+                            <img src="../images/svgs/icon-chat-heart.svg" alt="icon-chat-hearth" />
                           </div>
                           <div>
                             <h6 className="mb-1 fs-3 font-work-sans">Customer Reviews</h6>

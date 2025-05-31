@@ -86,7 +86,7 @@ const FilterBox = () => {
                     onClick={handleSearch}
                     className="btn btn-primary round-48 flex-shrink-0 p-2 d-flex align-items-center justify-content-center"
                 >
-                    <img src="/images/svgs/icon-search.svg" alt="" />
+                    <img src="/images/svgs/icon-search.svg" alt="urpuppy-img" />
                 </a>
             </div>
         </div>
@@ -104,7 +104,7 @@ const renderMobileFilters = React.useCallback(() => (
             >
                 <div className="breed d-flex gap-2">
                     <span className="flex-shrink-0">
-                        <img src="/images/svgs/icon-breed.svg" alt="" />
+                        <img src="/images/svgs/icon-breed.svg" alt="urpuppy-img" />
                     </span>
                     <div className="text-start">
                         <h6 className="font-work-sans mb-0">Find your puppy</h6>
@@ -115,7 +115,7 @@ const renderMobileFilters = React.useCallback(() => (
                     onClick={handleSearch}
                     className="btn btn-primary round-48 flex-shrink-0 p-2 d-flex align-items-center justify-content-center"
                 >
-                    <img src="/images/svgs/icon-search.svg" alt="" />
+                    <img src="/images/svgs/icon-search.svg" alt="urpuppy-img" />
                 </a>
             </button>
             <div className="dropdown-menu px-4 py-3 w-100 mt-n1" style={{ zIndex: '999999999!important' }}>

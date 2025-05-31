@@ -73,7 +73,7 @@ const StateFilter: React.FC<StateFilterProps> = ({setState,  defaultValue}) => {
 
   return (
   <>
-                  <span className="flex-shrink-0"><img src="/images/svgs/icon-map-pin.svg" alt="" /></span>
+                  <span className="flex-shrink-0"><img src="/images/svgs/icon-map-pin.svg" alt="urpuppy-img" /></span>
                   <div id="filter-box">
                     <h6 className="font-work-sans mb-0">State</h6>
                 <SelectPaginate

@@ -7,7 +7,7 @@ const SiblingCard = ({puppy} : { puppy: App.Data.PuppySiblingData }) => {
                     <div className="charlies-siblings">
                 <Link href={`/puppies/${puppy.slug}`}>
                       <div className="charlies-siblings-img position-relative overflow-hidden rounded-1 mb-2">
-                        <img src={puppy.image} alt=""
+                        <img src={puppy.image} alt="urpuppy-img"
                         style={{
                             height: '120px'
                         }}
@@ -18,7 +18,7 @@ const SiblingCard = ({puppy} : { puppy: App.Data.PuppySiblingData }) => {
                       <h6 className="mb-1">{puppy.name}</h6>
                 </Link>
                       <div className="d-flex align-items-center gap-1">
-                        <img src="/images/svgs/icon-female.svg" alt="" width="16" height="16" />
+                        <img src="/images/svgs/icon-female.svg" alt="urpuppy-img" width="16" height="16" />
                         <p className="mb-0 fs-2">{puppy.gender}</p>
                       </div>
                     </div>

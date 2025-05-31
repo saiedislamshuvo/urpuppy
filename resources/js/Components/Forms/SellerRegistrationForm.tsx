@@ -324,7 +324,7 @@ value={data.are_you_a_breeder}  setData={setData}
 
 
           <Button disabled={processing} type="button" ><img
-              src="../images/svgs/icon-arrow-right.svg" alt="" /> Submit Registration</Button>
+              src="../images/svgs/icon-arrow-right.svg" alt="urpuppy-img" /> Submit Registration</Button>
         </form>
   )
 }

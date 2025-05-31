@@ -27,7 +27,7 @@ const PuppyCard = ({puppy, className="col-md-6 col-lg-4 col-xl-3 mb-4", height="
               data-aos-duration="1000">
 
               <Link prefetch  preserveScroll={false} href={`/puppies/${puppy.slug}`} className="puppy-spotlight-img position-relative overflow-hidden d-block d-block">
-                <img loading="lazy" src={puppy.image} alt="" className="w-100 object-fit-cover product-card-responsive-height"  />
+                <img loading="lazy" src={puppy.image} alt="urpuppy-img" className="w-100 object-fit-cover product-card-responsive-height"  />
                 <div
                   className="d-flex align-items-center justify-content-between position-absolute top-0 start-0 w-100 p-3 pb-0">
                             {
@@ -48,13 +48,13 @@ const PuppyCard = ({puppy, className="col-md-6 col-lg-4 col-xl-3 mb-4", height="
                   <div className="row">
                     <div className="col-6">
                       <div className="d-flex align-items-center gap-2 mb-2">
-                        <img loading="lazy" src="/images/svgs/icon-map-pin.svg" alt="" width="20" height="20" />
+                        <img loading="lazy" src="/images/svgs/icon-map-pin.svg" alt="urpuppy-img" width="20" height="20" />
                         <p className="mb-0 ">{puppy.seller?.short_address}</p>
                       </div>
                     </div>
                     <div className="col-6">
                       <div className="d-flex align-items-center gap-2 mb-2">
-                        <img loading="lazy" src="/images/svgs/icon-calendar.svg" alt="" width="20" height="20" />
+                        <img loading="lazy" src="/images/svgs/icon-calendar.svg" alt="urpuppy-img" width="20" height="20" />
                         <p className="mb-0">{puppy.age}</p>
                       </div>
                     </div>
@@ -63,7 +63,7 @@ const PuppyCard = ({puppy, className="col-md-6 col-lg-4 col-xl-3 mb-4", height="
                     </div>
                     <div className="col-6">
                       <div className="d-flex align-items-center gap-2">
-                        <img loading="lazy" src="/images/svgs/icon-eye.svg" alt="" width="20" height="20" />
+                        <img loading="lazy" src="/images/svgs/icon-eye.svg" alt="urpuppy-img" width="20" height="20" />
 
                         <p className="mb-0">{puppy.view_count} Views</p>
                       </div>
@@ -73,7 +73,7 @@ const PuppyCard = ({puppy, className="col-md-6 col-lg-4 col-xl-3 mb-4", height="
                 <div className="p-3 border-top d-flex align-items-center justify-content-between">
                   <h6 className="fs-5 font-work-sans">{puppy.formatted_price}</h6>
                   <Link prefetch preserveScroll={false}   href={`/puppies/${puppy.slug}`} className="btn btn-primary d-flex align-items-center gap-2" >
-                    <img loading="lazy" src="/images/svgs/icon-paws.svg" alt="" />
+                    <img loading="lazy" src="/images/svgs/icon-paws.svg" alt="urpuppy-img" />
                     View more
                   </Link>
                 </div>

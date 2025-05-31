@@ -11,7 +11,7 @@ const Card = ({post} : {
               data-aos-duration="1000">
 
               <Link prefetch  preserveScroll={false} href={`/posts/${post.slug}`} className="puppy-spotlight-img position-relative overflow-hidden d-block d-block">
-                <img loading="lazy" src={post.banner_url} alt="" className="w-100 object-fit-cover product-card-responsive-height"  />
+                <img loading="lazy" src={post.banner_url} alt="urpuppy-img" className="w-100 object-fit-cover product-card-responsive-height"  />
                 <div
                   className="d-flex align-items-center justify-content-between position-absolute top-0 start-0 w-100 p-3 pb-0">
                 </div>
@@ -37,14 +37,14 @@ const Card = ({post} : {
 
                     <div className="col-12">
                       <div className="d-flex align-items-center gap-2 mb-2">
-                        <img loading="lazy" src="/images/svgs/icon-user-circle.svg" alt="" className="rounded-circle" width="18"  height="18" />
+                        <img loading="lazy" src="/images/svgs/icon-user-circle.svg" alt="urpuppy-img" className="rounded-circle" width="18"  height="18" />
                         <p className="mb-0">{post.author.name}</p>
                       </div>
                     </div>
 
                     <div className="col-12">
                       <div className="d-flex align-items-center gap-2 mb-2">
-                        <img loading="lazy" src="/images/svgs/icon-calendar.svg" alt="" width="20" height="20" />
+                        <img loading="lazy" src="/images/svgs/icon-calendar.svg" alt="urpuppy-img" width="20" height="20" />
                         <p className="mb-0">{post.published_at_formatted}</p>
                       </div>
                     </div>

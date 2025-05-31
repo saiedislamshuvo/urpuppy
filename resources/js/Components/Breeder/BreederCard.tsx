@@ -13,7 +13,7 @@ const BreederCard = ({breeder, hasBorder=false }: { breeder: App.Data.BreederFul
                 <div className="col-xl-4 d-flex align-items-lg-stretch">
                   <Link preserveState href={`/breeders/${breeder.slug}`} className="trusted-breeders-img position-relative overflow-hidden w-100">
                     <img loading="lazy" className="w-100 object-fit-cover product-card-responsive-height"
-                      src={breeder.company_logo ?? breeder.avatar} alt="" />
+                      src={breeder.company_logo ?? breeder.avatar} alt="urpuppy-img" />
                   </Link>
                 </div>
                 <div className="col-xl-8 d-flex align-items-lg-stretch">
@@ -25,16 +25,16 @@ const BreederCard = ({breeder, hasBorder=false }: { breeder: App.Data.BreederFul
                       </Link>
                         {breeder.breeds.length &&
                       <div className="d-flex align-items-center gap-6 mb-6">
-                        <img loading="lazy" src="/images/svgs/icon-paws-dark.svg" alt="" width="24" height="24" />
+                        <img loading="lazy" src="/images/svgs/icon-paws-dark.svg" alt="urpuppy-img" width="24" height="24" />
                         <p className="mb-0">{breeder?.breeds[0]?.name}</p>
                       </div>
     }
                       <div className="d-flex align-items-center gap-6 mb-6">
-                        <img loading="lazy" src="/images/svgs/icon-map-pin.svg" alt="" width="24" height="24" />
+                        <img loading="lazy" src="/images/svgs/icon-map-pin.svg" alt="urpuppy-img" width="24" height="24" />
                         <p className="mb-0 flex-xl-shrink-0">{breeder.company_address}</p>
                       </div>
                       <div className="d-flex align-items-center gap-6">
-                        <img loading="lazy" src="/images/svgs/icon-user-dark.svg" alt="" width="24" height="24"/>
+                        <img loading="lazy" src="/images/svgs/icon-user-dark.svg" alt="urpuppy-img" width="24" height="24"/>
                         <p className="mb-0">{breeder.full_name}</p>
                       </div>
                     </div>

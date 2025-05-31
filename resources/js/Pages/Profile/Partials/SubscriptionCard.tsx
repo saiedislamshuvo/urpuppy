@@ -19,7 +19,7 @@ const SubscriptionCard = ({plan, next_billing, cancel_at, trial_ends_at} : {
                     <div className="pb-13 mb-13 border-bottom d-md-flex align-items-start justify-content-between">
                       <div className="mb-3 mb-md-0">
                         <div className="d-flex align-items-center gap-6 mb-3">
-                          <img src={plan.logo ?? ''} alt="" width="48" height="48" />
+                          <img src={plan.logo ?? ''} alt="plan logo" width="48" height="48" />
                           <p className="text-dark fs-5 mb-0">{plan.name}</p>
                         </div>
                         { plan.type !== 'free' &&
@@ -78,7 +78,7 @@ className="btn btn-primary border btn-white text-white d-block mb-2"
                                                             plan.features.map((feature : any, index) => (
 
                         <li className="d-flex align-items-start gap-2" key={index}>
-                          <img src="../images/svgs/icon-check-filled.svg" alt="" className="flex-shrink-0" />
+                          <img src="../images/svgs/icon-check-filled.svg" alt="check" className="flex-shrink-0" />
                           <h5 className="fs-3 mb-0 font-work-sans fw-normal">{feature.name}</h5>
                         </li>
                                                             ))

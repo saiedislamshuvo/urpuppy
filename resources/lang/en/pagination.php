@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'previous' => '<span class="page-link p-0 border-0 w-auto h-auto d-flex align-items-center gap-2 text-dark"><img src="/images/svgs/icon-chev-left.svg" alt=""> Previous</span>',
-    'next' => '<span class="page-link p-0 border-0 w-auto h-auto d-flex align-items-center text-dark gap-2">Next <img src="/images/svgs/icon-chev-right.svg" alt=""> </span>',
+    'previous' => '<span class="page-link p-0 border-0 w-auto h-auto d-flex align-items-center gap-2 text-dark"><img src="/images/svgs/icon-chev-left.svg" alt="previous"> Previous</span>',
+    'next' => '<span class="page-link p-0 border-0 w-auto h-auto d-flex align-items-center text-dark gap-2">Next <img src="/images/svgs/icon-chev-right.svg" alt="next"> </span>',
 
 ];

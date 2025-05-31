@@ -50,7 +50,7 @@ const Show = ({breeder, puppies} : {
                   <div className="col-xl-7 mb-4 mb-md-5 mb-xl-5">
                     <div
                                                     className="breeders-detail-img position-relative overflow-hidden rounded-1 me-xl-4">
-                      <img src={breeder?.company_logo ?? ""} alt="" className="w-100 object-fit-cover"/>
+                      <img src={breeder?.company_logo ?? ""} alt="company-logo" className="w-100 object-fit-cover"/>
                     </div>
                   </div>
                   <div className="col-xl-5">
@@ -154,7 +154,7 @@ const Show = ({breeder, puppies} : {
                                                 }} className="w-100 h-100 object-fit-cover" src={breeder.video_thumbnail ?? ""} />
                 <GenericModal buttonTitle={
                 <button type="button" className="position-absolute top-50 start-50 translate-middle z-2 btn btn-primary p-2 d-flex align-items-center justify-content-center round-72 rounded-circle flex-shrink-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                  <img src="../images/svgs/icon-play.svg" alt=""/>
+                  <img src="../images/svgs/icon-play.svg" alt="icon-play"/>
                 </button>
                     }>
                     <div>

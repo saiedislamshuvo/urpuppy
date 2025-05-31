@@ -71,7 +71,7 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
 
              { ( user?.roles?.includes('buyer')  ) && <>
             <Link className="position-relative me-1 d-xl-none" href="/favorites">
-              <img src="/icon-heart-white.svg" alt="" />
+              <img src="/icon-heart-white.svg" alt="urpuppy-img" />
             { /*
               <span className="position-absolute fs-1 p-1 top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 9+
@@ -128,7 +128,7 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
                 {
                                         user?.roles?.includes('buyer') &&
               <Link className="position-relative me-1" href="/favorites">
-                <img src="/icon-heart-white.svg" alt="" />
+                <img src="/icon-heart-white.svg" alt="urpuppy-img" />
               </Link>
                                     }
 
@@ -141,7 +141,7 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
                 Login
               </Link>
               <Link preserveScroll={false} prefetch className="btn btn-primary d-flex align-items-center gap-2" href="/register">
-                <img src="/icon-user.svg" alt="" /> Sign Up
+                <img src="/icon-user.svg" alt="urpuppy-img" /> Sign Up
               </Link>
 
                                         </>}
@@ -162,7 +162,7 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
         <div className="offcanvas-header">
           <div className="logo">
             <Link className="navbar-brand py-0 me-0" href="/">
-              <img src="/logo.svg" alt="" />
+              <img src="/logo.svg" alt="urpuppy-img" />
             </Link>
           </div>
           <button
@@ -239,7 +239,7 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
               Login
             </Link>
             <Link preserveScroll={false} prefetch  className="btn btn-primary d-flex align-items-center justify-content-center gap-2 w-100" href="/register">
-              <img src="/icon-user.svg" alt="" /> Sign Up
+              <img src="/icon-user.svg" alt="urpuppy-img" /> Sign Up
             </Link>
           </div>
 

@@ -21,17 +21,17 @@ const SellerCard = ({
                 {seller.is_breeder &&
                   <span
                     className="position-absolute bottom-0 end-0 d-block round-24 rounded-circle bg-primary d-flex align-items-center justify-content-center">
-                    <img src="/images/svgs/icon-paws.svg" alt="" width="16" height="16" />
+                    <img src="/images/svgs/icon-paws.svg" alt="urpuppy-img" width="16" height="16" />
                   </span>
                  }
                 </div>
                 <h5 className="fs-5 text-center">{seller.full_name}</h5>
                 <div className="d-flex align-items-center justify-content-center gap-2 mb-1">
-                  <img src="/images/svgs/icon-map-pin.svg" alt="" width="20" height="20" />
+                  <img src="/images/svgs/icon-map-pin.svg" alt="urpuppy-img" width="20" height="20" />
                   <p className="mb-0 fs-2">{seller.address}</p>
                 </div>
                 <div className="d-flex align-items-center justify-content-center gap-2 mb-4">
-                  <img src="/images/svgs/icon-user-dark.svg" alt="" width="14" height="14" />
+                  <img src="/images/svgs/icon-user-dark.svg" alt="urpuppy-img" width="14" height="14" />
                   <p className="mb-0 fs-2">Member since: {seller.member_since}</p>
                 </div>
 
@@ -44,7 +44,7 @@ const SellerCard = ({
           style={{ userSelect: "text" }}
           className="btn btn-outline-extralight btn-white text-dark hstack justify-content-center gap-2 mb-6 pointer"
         >
-          <img src="/images/svgs/icon-mail-dark.svg" alt="" />
+          <img src="/images/svgs/icon-mail-dark.svg" alt="urpuppy-img" />
           Show Email Address
         </span>
       ) : (
@@ -57,7 +57,7 @@ const SellerCard = ({
           onClick={() => setPhoneVisible(true)}
           className="btn btn-outline-extralight btn-white text-dark hstack justify-content-center gap-2 mb-4"
         >
-          <img src="/images/svgs/icon-call.svg" alt="" />
+          <img src="/images/svgs/icon-call.svg" alt="urpuppy-img" />
           Show Phone Number
         </span>
       ) : (

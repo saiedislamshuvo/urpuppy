@@ -42,7 +42,7 @@ const ReviewForm = ({breeder_id}: {breeder_id: number}) => {
             <div className="card border post-reviews">
               <div className="card-body">
                 <div className="d-flex align-items-center gap-3 mb-3 pb-1">
-                  <img src="/images/svgs/icon-user-circle.svg" alt="" className="flex-shrink-0"/>
+                  <img src="/images/svgs/icon-user-circle.svg" alt="urpuppy-img" className="flex-shrink-0"/>
                   <div>
                     <h6 className="fs-3 mb-0">Post a review</h6>
                     <p className="mb-0 fs-2">Your opinion matters</p>
@@ -66,7 +66,7 @@ const ReviewForm = ({breeder_id}: {breeder_id: number}) => {
         {errors.body && <span className="text-danger">{errors.body}</span>}
                   <div className="text-end">
                     <button className="btn btn-primary d-inline-flex align-items-center gap-2" >Submit a Review <img
-                        src="/images/svgs/icon-plus.svg" alt=""/></button>
+                        src="/images/svgs/icon-plus.svg" alt="urpuppy-img"/></button>
                   </div>
                 </form>
               </div>

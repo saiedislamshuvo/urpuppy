@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
             <div className="footer-logo">
               <Link href="/">
-                <img loading="lazy" src="/logo.svg" alt="" />
+                <img loading="lazy" src="/logo.svg" alt="urpuppy-img" />
               </Link>
             </div>
           </div>
@@ -70,17 +70,17 @@ const Footer = () => {
             <ul className="list-unstyled d-flex align-items-center gap-6 social-icon mb-0">
               <li>
                 <a href="https://x.com/UrpuppyDotCom" data-bs-toggle="tooltip" data-bs-title="Twitter" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
-                  <img loading="lazy" src="/images/svgs/icon-twitter.svg" alt="" />
+                  <img loading="lazy" src="/images/svgs/icon-twitter.svg" alt="urpuppy-img" />
                 </a>
               </li>
               <li>
                 <a href="https://www.facebook.com/UrPuppyLLC" target="_blank" data-bs-toggle="tooltip" data-bs-title="Facebook" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
-                  <img loading="lazy" src="/images/svgs/icon-facebook.svg" alt="" />
+                  <img loading="lazy" src="/images/svgs/icon-facebook.svg" alt="urpuppy-img" />
                 </a>
               </li>
               <li>
                 <a href="https://www.instagram.com/urpupppydotcom" data-bs-toggle="tooltip" data-bs-title="Instagram" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
-                  <img loading="lazy" src="/images/svgs/icon-instagram.svg" alt="" />
+                  <img loading="lazy" src="/images/svgs/icon-instagram.svg" alt="urpuppy-img" />
                 </a>
               </li>
             </ul>

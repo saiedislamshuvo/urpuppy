@@ -18,7 +18,7 @@ const Breadcrumb = ({
         {/* Home Breadcrumb */}
         <li className="breadcrumb-item fw-semibold d-flex align-items-center">
           <Link className="text-dark d-flex align-items-center" href="/">
-            <img src="/images/svgs/icon-home.svg" alt="" width="16" height="16" />
+            <img src="/images/svgs/icon-home.svg" alt="urpuppy-img" width="16" height="16" />
           </Link>
         </li>
 

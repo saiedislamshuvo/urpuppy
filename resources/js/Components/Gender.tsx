@@ -8,12 +8,12 @@ const Gender = ({gender} : {gender: string}) => {
             {
                 gender == 'Male' ? (
                       <>
-                        <img loading="lazy" src="/images/svgs/icon-male.svg" alt="" width="20" height="20" />
+                        <img loading="lazy" src="/images/svgs/icon-male.svg" alt="urpuppy-img" width="20" height="20" />
                         <p className="mb-0">{gender}</p>
 </>
                 ) : (
                         <>
-                        <img loading="lazy" src="/images/svgs/icon-female.svg" alt="" width="20" height="20" />
+                        <img loading="lazy" src="/images/svgs/icon-female.svg" alt="urpuppy-img" width="20" height="20" />
                         <p className="mb-0">{gender}</p>
 </>
                 )

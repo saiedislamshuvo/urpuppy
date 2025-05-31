@@ -12,9 +12,7 @@ const Show = ({breed} : {
   return (
   <>
             <Layout navType="secondary">
-
-            <MetaTags title={breed.name} description={breed.history_description ?? ""} image={breed.image}/>
-
+            <MetaTags title={breed.name ?? ''} description={breed.history_description ?? ""} image={breed.image}/>
              <BreedJsonLd breed={breed} />
 
               <div className="page-wrapper position-relative overflow-hidden">
@@ -40,7 +38,7 @@ const Show = ({breed} : {
                 <div className="information-img position-relative overflow-hidden rounded-1 mb-4 mb-lg-0">
                   <img style={{
                                                     height: '535px',
-                                                }}  src={breed.image} alt="" className="object-fit-cover w-100" />
+                                                }}  src={breed.image} alt={breed.name} className="object-fit-cover w-100" />
                 </div>
               </div>
               <div className="col-lg-7">
@@ -57,7 +55,7 @@ const Show = ({breed} : {
                     </Link>
                     <Link href={`/breeders?breed=${breed.name}`} className="btn btn-outline-extralight border btn-white text-dark d-flex align-items-center justify-content-center gap-2"
                       >
-                      <img className="w-auto" src="/images/svgs/icon-paws-dark.svg" alt="" width="15" height="15" />
+                      <img className="w-auto" src="/images/svgs/icon-paws-dark.svg" alt="icon-paw-dark" width="15" height="15" />
                       View {breed.name} Breeders</Link>
                   </div>
 

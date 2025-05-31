@@ -24,7 +24,7 @@ const ShareButton = ({
                         data-bs-toggle="dropdown"
                         aria-expanded="true"
                     >
-                        <img src="../images/svgs/icon-share.svg" alt="" />
+                        <img src="../images/svgs/icon-share.svg" alt="urpuppy-img" />
                     </button>
                     <ul
                         className="dropdown-menu dropdown-menu-end bg-primary social-icon px-6"
@@ -45,7 +45,7 @@ const ShareButton = ({
                                 >
                                     <img
                                         src="../images/svgs/icon-twitter.svg"
-                                        alt=""
+                                        alt="urpuppy-img"
                                         width="16"
                                         height="16"
                                     />
@@ -60,7 +60,7 @@ const ShareButton = ({
                                 >
                                     <img
                                         src="../images/svgs/icon-facebook.svg"
-                                        alt=""
+                                        alt="urpuppy-img"
                                         width="16"
                                         height="16"
                                     />

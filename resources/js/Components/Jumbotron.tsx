@@ -19,7 +19,7 @@ const Jumbotron = ({title, description, image} : { title: string, description: s
               </div>
             </div>
             <div className="col-lg-5 me-n1 text-end">
-              <img src={image} alt=""/>
+              <img src={image} alt="urpuppy-img"/>
             </div>
           </div>
         </div>

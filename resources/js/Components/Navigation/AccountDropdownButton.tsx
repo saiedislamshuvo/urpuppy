@@ -22,7 +22,7 @@ const AccountDropdownButton = ({user} : { user: App.Data.UserData }) => {
                 <div>
                   <h6 className="mb-0">{user.full_name}</h6>
                   <p className="mb-0 fs-2 d-flex align-items-center gap-2">
-                    <img src="/images/svgs/icon-mail-dark.svg" alt="" width="14" />
+                    <img src="/images/svgs/icon-mail-dark.svg" alt="urpuppy-img" width="14" />
                     <a className="text-muted" href="mailto:support@urpuppy.com">{user.email}</a>
                   </p>
                 </div>

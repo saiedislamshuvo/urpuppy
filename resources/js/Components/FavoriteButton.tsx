@@ -17,9 +17,9 @@ const FavoriteButton = ({puppyId, sellerId, isFavorite, uniqueId = null} : {
                             className="bg-white border d-flex align-items-center justify-content-center round-40 rounded-circle">
                 {
                     isFavorite ? (
-                        <img src="/images/svgs/icon-heart-red.svg" alt="" />
+                        <img src="/images/svgs/icon-heart-red.svg" alt="urpuppy-img" />
                     ) : (
-                        <img src="/images/svgs/icon-heart.svg" alt="" />
+                        <img src="/images/svgs/icon-heart.svg" alt="urpuppy-img" />
                     )
                 }
                           </Link>

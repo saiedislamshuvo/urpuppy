@@ -36,11 +36,11 @@ const TopPicks = ({puppy}: { puppy: App.Data.PuppyData }) => {
               </div>
               <div className="d-flex align-items-center mb-4">
                 <div className="d-flex align-items-center gap-2 border-end pe-3">
-                  <img src="/images/svgs/icon-map-pin.svg" alt="" width="20" height="20" />
+                  <img src="/images/svgs/icon-map-pin.svg" alt="urpuppy-img" width="20" height="20" />
                   <p className="mb-0">{puppy.seller.address}</p>
                 </div>
                 <div className="d-flex align-items-center gap-2 border-end pe-3 ps-3">
-                  <img src="/images/svgs/icon-calendar.svg" alt="" width="20" height="20"/>
+                  <img src="/images/svgs/icon-calendar.svg" alt="urpuppy-img" width="20" height="20"/>
                   <p className="mb-0">{puppy.age}</p>
                 </div>
                 <Gender gender={puppy.gender} />
@@ -52,7 +52,7 @@ const TopPicks = ({puppy}: { puppy: App.Data.PuppyData }) => {
                 </div>
 
                 <Link prefetch   className="btn btn-primary d-flex align-items-center gap-2" href={`/puppies/${puppy.slug}`}>
-                  <img src="/images/svgs/icon-paws.svg" alt="" />
+                  <img src="/images/svgs/icon-paws.svg" alt="urpuppy-img" />
                   View more
                 </Link>
               </div>
@@ -60,7 +60,7 @@ const TopPicks = ({puppy}: { puppy: App.Data.PuppyData }) => {
               <p className="mb-3">{puppy.description}</p>
                             {/*
               <div className="rounded-pill px-3 py-6 d-flex align-items-center align-items-start gap-6 bg-extralight">
-                <img src="/images/svgs/icon-heart-plus.svg" alt="" />
+                <img src="/images/svgs/icon-heart-plus.svg" alt="urpuppy-img" />
 
                 <p className="mb-0 text-dark">Charlie will be current on vaccinations & vet exams before going home</p>
               </div>
