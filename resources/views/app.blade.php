@@ -11,8 +11,6 @@
     <link fetchpriority="high" rel="preload" as="image" href="{{ asset('banner-bg.webp') }}">
     <link rel="icon" type="image/png" href="{{ asset('images/logos/favicon.png') }}">
 
-    @viteReactRefresh
-    @vite(['resources/js/app.tsx', "resources/js/Pages/{$page['component']}.tsx"])
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2165217194424630"
         crossorigin="anonymous"></script>
@@ -30,11 +28,16 @@
                 "@type": "ContactPoint",
                 "areaServed": "US"
             },
-            "image": "https://urpuppy.com/logo.png"
+            "image": "https://urpuppy.com/logo.svg"
         }
     </script>
 
 
+
+    <title inertia>{{ config('app.name', 'UrPuppy') }}</title>
+
+    @viteReactRefresh
+    @vite(['resources/js/app.tsx', "resources/js/Pages/{$page['component']}.tsx"])
     @inertiaHead
 </head>
 
