@@ -79,6 +79,7 @@ export default function UpdateProfileInformation({
                         <p className="mt-2 text-sm text-gray-800">
                             Your email address is unverified.
                             <Link
+                                aria-label='Resend verification email'
                                 href={route('verification.send')}
                                 method="post"
                                 as="button"

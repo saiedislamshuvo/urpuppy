@@ -73,7 +73,7 @@ const ReviewForm = ({breeder_id}: {breeder_id: number}) => {
             </div>
   ) : <div>
 
-            <Link href={`/login?redirect=back`}> Login </Link>to post a review
+            <Link aria-label="Click to login" href={`/login?redirect=back`}> Login </Link>to post a review
 
         </div>
 }

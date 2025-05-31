@@ -99,6 +99,7 @@ ${heading === link.name ? "md:hidden" : "hidden"}
                                                             (sublink) => (
                                                                 <li>
                                                                     <Link
+                                                                        aria-label={sublink.name}
                                                                         href={
                                                                             sublink.link
                                                                         }

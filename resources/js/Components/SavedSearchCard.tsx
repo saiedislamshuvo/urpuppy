@@ -35,7 +35,7 @@ const SavedSearchCard = ({saved_search} : {
         <h6 className="mb-4">{saved_search.name ?? saved_search.created_at}</h6>
         <div className="d-flex align-items-center gap-6">
           <Button type="button" onClick={handleSearch} className="btn btn-primary fs-2" href="#">View Search</Button>
-          <Link className="btn btn-outline-extralight border btn-white text-dark fs-2" href={`/saved-search/${saved_search.id}`}>Delete</Link>
+          <Link aria-label="Delete saved search" className="btn btn-outline-extralight border btn-white text-dark fs-2" href={`/saved-search/${saved_search.id}`}>Delete</Link>
         </div>
       </div>
     </div>

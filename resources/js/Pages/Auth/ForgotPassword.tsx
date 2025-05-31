@@ -48,7 +48,7 @@ export default function ForgotPassword({ status, puppy }: { status?: string, pup
             </form>
                 <div className="d-flex align-items-center">
                   <p className="fs-4 mb-0">I have an account?</p>
-                  <Link className="text-dark fw-semibold text-decoration-underline ms-2" href="/login">Login</Link>
+                  <Link aria-label='Login' className="text-dark fw-semibold text-decoration-underline ms-2" href="/login">Login</Link>
                 </div>
 
 </GuestLayout>

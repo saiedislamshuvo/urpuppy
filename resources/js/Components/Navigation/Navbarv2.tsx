@@ -70,7 +70,7 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
           <div className="d-xl-none d-flex align-items-center gap-3">
 
              { ( user?.roles?.includes('buyer')  ) && <>
-            <Link className="position-relative me-1 d-xl-none" href="/favorites">
+            <Link aria-label="Favorites" className="position-relative me-1 d-xl-none" href="/favorites">
               <img src="/icon-heart-white.svg" alt="urpuppy-img" />
             { /*
               <span className="position-absolute fs-1 p-1 top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -96,17 +96,17 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
             <ul className="navbar-nav align-items-center">
               <li className="nav-item nav-item-line ms-4"></li>
               <li className="nav-item">
-                <Link prefetch  className={`nav-link ${page.startsWith('/puppies') ? 'active' : '' }`} href="/puppies">
+                <Link aria-label="Puppies for Sale"  prefetch  className={`nav-link ${page.startsWith('/puppies') ? 'active' : '' }`} href="/puppies">
                   Puppies for Sale
                 </Link>
               </li>
               <li className="nav-item">
-                <Link prefetch  className={`nav-link ${page.startsWith('/breeds') ? 'active' : '' }`} href="/breeds">
+                <Link aria-label="Breeds" prefetch  className={`nav-link ${page.startsWith('/breeds') ? 'active' : '' }`} href="/breeds">
                 Breeds
               </Link>
               </li>
               <li className="nav-item">
-                <Link prefetch className={`nav-link ${page.startsWith('/breeders')  ? 'active' : '' }`} href="/breeders">
+                <Link aria-label="Breeders" prefetch className={`nav-link ${page.startsWith('/breeders')  ? 'active' : '' }`} href="/breeders">
                   Breeders
                 </Link>
               </li>
@@ -114,7 +114,7 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
                             {
                      (user?.roles?.includes('breeder') || user?.roles?.includes('seller') || !user) &&
               <li className="nav-item">
-                <Link prefetch  className={`nav-link ${page == '/seller/create' ? 'active' : '' }`} aria-current="page" href="/seller/create">
+                <Link aria-label="List Ur Puppy" prefetch  className={`nav-link ${page == '/seller/create' ? 'active' : '' }`} aria-current="page" href="/seller/create">
                   + List Ur Puppy
                 </Link>
               </li>
@@ -127,7 +127,7 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
                                 <>
                 {
                                         user?.roles?.includes('buyer') &&
-              <Link className="position-relative me-1" href="/favorites">
+              <Link aria-label="Favorites" className="position-relative me-1" href="/favorites">
                 <img src="/icon-heart-white.svg" alt="urpuppy-img" />
               </Link>
                                     }
@@ -137,10 +137,10 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
                 ) : (
                                     <>
               {!user && <>
-              <Link preserveScroll={false} prefetch  className="btn btn-white bg-white text-dark" href="/login">
+              <Link aria-label="Login" preserveScroll={false} prefetch  className="btn btn-white bg-white text-dark" href="/login">
                 Login
               </Link>
-              <Link preserveScroll={false} prefetch className="btn btn-primary d-flex align-items-center gap-2" href="/register">
+              <Link aria-label="Sign Up" preserveScroll={false} prefetch className="btn btn-primary d-flex align-items-center gap-2" href="/register">
                 <img src="/icon-user.svg" alt="urpuppy-img" /> Sign Up
               </Link>
 
@@ -161,7 +161,7 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
             id="offcanvasSidebar" aria-labelledby="offcanvasExampleLabel">
         <div className="offcanvas-header">
           <div className="logo">
-            <Link className="navbar-brand py-0 me-0" href="/">
+            <Link aria-label='urpuppy' className="navbar-brand py-0 me-0" href="/">
               <img src="/logo.svg" alt="urpuppy-img" />
             </Link>
           </div>
@@ -176,24 +176,24 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
         <div className="offcanvas-body pt-0">
           <ul className="navbar-nav">
             <li className="nav-item">
-                <Link prefetch  className="nav-link text-white" href="/puppies">
+                <Link aria-label="Puppies for Sale"  prefetch  className="nav-link text-white" href="/puppies">
                   Puppies for Sale
                 </Link>
             </li>
             <li className="nav-item">
-            <Link prefetch  className="nav-link text-white" href="/breeds">
+            <Link aria-label="Breeds" prefetch  className="nav-link text-white" href="/breeds">
                 Breeds
               </Link>
             </li>
             <li className="nav-item">
-              <Link  className="nav-link text-white" href="/breeders">
+              <Link aria-label="Breeders" prefetch  className="nav-link text-white" href="/breeders">
                 Breeders
               </Link>
             </li>
             {
                      (user?.roles?.includes('seller') || !user) &&
             <li className="nav-item">
-              <Link prefetch  className="nav-link text-white" href="/seller/create">
+              <Link aria-label="List Ur Puppy" prefetch  className="nav-link text-white" href="/seller/create">
                 + List Ur Puppy
               </Link>
             </li>
@@ -235,10 +235,10 @@ const Navbarv2 = ({type} : {type?: string|undefined}) => {
 
           <div className="d-flex align-items-center flex-column gap-3 mt-4">
 
-            <Link preserveScroll={false} prefetch  className="btn btn-white bg-white text-dark w-100" href="/login">
+            <Link aria-label="Login" preserveScroll={false} prefetch  className="btn btn-white bg-white text-dark w-100" href="/login">
               Login
             </Link>
-            <Link preserveScroll={false} prefetch  className="btn btn-primary d-flex align-items-center justify-content-center gap-2 w-100" href="/register">
+            <Link aria-label="Sign Up" preserveScroll={false} prefetch  className="btn btn-primary d-flex align-items-center justify-content-center gap-2 w-100" href="/register">
               <img src="/icon-user.svg" alt="urpuppy-img" /> Sign Up
             </Link>
           </div>

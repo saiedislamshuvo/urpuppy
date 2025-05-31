@@ -175,12 +175,12 @@ export default function RegisterBreeder({puppy}: {
                   </div>
                 </div>
                 <p className="mb-4">By signing up for a urpuppy account, you confirm that you have read, understand and
-                  agreed <Link className="text-decoration-underline fw-semibold" href="/terms-of-use">Terms of Service</Link></p>
+                  agreed <Link aria-label='Terms of Service' className="text-decoration-underline fw-semibold" href="/terms-of-use">Terms of Service</Link></p>
                 <Button disabled={processing} size="full" href="" type="button" >Signup</Button>
 
                 <div className="d-flex align-items-center">
                   <p className="fs-4 mb-0">I already have an account?</p>
-                  <Link className="text-dark fw-semibold text-decoration-underline ms-2" href="/login">Login</Link>
+                  <Link aria-label='Login' className="text-dark fw-semibold text-decoration-underline ms-2" href="/login">Login</Link>
                 </div>
               </form>
             </div>
@@ -189,7 +189,7 @@ export default function RegisterBreeder({puppy}: {
             <div
               className="login-right-bg signup-right-bg position-relative overflow-hidden h-100 d-flex align-items-center justify-content-center p-4 p-lg-5 pt-9">
               <div className="p-4 pb-0 position-absolute top-0 end-0">
-                <Link href="/"><img src="/images/logos/logo-white.svg" alt={puppy?.name} /></Link>
+                <Link aria-label='Home' href="/"><img src="/images/logos/logo-white.svg" alt={puppy?.name} /></Link>
               </div>
               <div className="card login-right-card mb-0">
                 <div className="card-body">

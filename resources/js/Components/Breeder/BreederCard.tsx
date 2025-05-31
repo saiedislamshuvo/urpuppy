@@ -11,7 +11,7 @@ const BreederCard = ({breeder, hasBorder=false }: { breeder: App.Data.BreederFul
               data-aos-duration="1000">
               <div className="row">
                 <div className="col-xl-4 d-flex align-items-lg-stretch">
-                  <Link preserveState href={`/breeders/${breeder.slug}`} className="trusted-breeders-img position-relative overflow-hidden w-100">
+                  <Link aria-label="Click to view breeder" preserveState href={`/breeders/${breeder.slug}`} className="trusted-breeders-img position-relative overflow-hidden w-100">
                     <img loading="lazy" className="w-100 object-fit-cover product-card-responsive-height"
                       src={breeder.company_logo ?? breeder.avatar} alt="urpuppy-img" />
                   </Link>
@@ -20,7 +20,7 @@ const BreederCard = ({breeder, hasBorder=false }: { breeder: App.Data.BreederFul
                   <div
                     className="trusted-breeders-details card-body ps-xl-0 pe-4 d-flex align-items-start justify-content-between gap-3">
                     <div>
-                      <Link preserveState href={`/breeders/${breeder.slug}`}>
+                      <Link aria-label="Click to view breeder" preserveState href={`/breeders/${breeder.slug}`}>
                         <h6 className="btn-link fs-5 font-work-sans mb-6">{breeder.company_name}</h6>
                       </Link>
                         {breeder.breeds.length &&

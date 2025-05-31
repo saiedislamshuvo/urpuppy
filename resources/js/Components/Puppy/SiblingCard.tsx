@@ -5,7 +5,7 @@ const SiblingCard = ({puppy} : { puppy: App.Data.PuppySiblingData }) => {
   return (
                   <div className="col-6 mb-3 pb-1">
                     <div className="charlies-siblings">
-                <Link href={`/puppies/${puppy.slug}`}>
+                <Link aria-label="urpuppy-img" href={`/puppies/${puppy.slug}`}>
                       <div className="charlies-siblings-img position-relative overflow-hidden rounded-1 mb-2">
                         <img src={puppy.image} alt="urpuppy-img"
                         style={{
@@ -14,7 +14,7 @@ const SiblingCard = ({puppy} : { puppy: App.Data.PuppySiblingData }) => {
                           className="object-fit-cover w-100 " />
                       </div>
 </Link>
-                <Link href={`/puppies/${puppy.slug}`}>
+                <Link aria-label="urpuppy-img" href={`/puppies/${puppy.slug}`}>
                       <h6 className="mb-1">{puppy.name}</h6>
                 </Link>
                       <div className="d-flex align-items-center gap-1">

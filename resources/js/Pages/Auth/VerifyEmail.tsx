@@ -64,6 +64,7 @@ export default function VerifyEmail({ status, puppy }: { status?: string, puppy:
                     </Button>
 
                     <Link
+                        aria-label="Log Out"
                         href={"/logout"}
                         method="post"
                         as="button"

@@ -42,7 +42,7 @@ const Show = ({breeder, puppies, url} : {
       <div className="container">
 
                         <div className="mb-2">
-        <Link href="/breeders" className="text-primary">Back</Link>
+        <Link aria-label='Back' href="/breeders" className="text-primary">Back</Link>
 
 </div>
         <div className="row">

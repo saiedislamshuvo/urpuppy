@@ -77,7 +77,7 @@ export default function Edit({
                         <AlertDismissible variant="danger" heading="Your Breeder Request has been rejected" message={<> <p>
                                     {breeder_requests.message}
                                                 <br/>
-                                    <Link method="post"
+                                    <Link aria-label='Retry' method="post"
   className="border-0 bg-transparent text-primary text-decoration-underline "
                                                     href="/breeder/request/retry"> Request Again</Link>
                                 </p> </>} />
@@ -100,6 +100,7 @@ export default function Edit({
                             mustVerifyEmail && user.email_verified_at == null &&
                         <AlertDismissible variant="primary" heading="Verify your email" message={<> <p> Before you get started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.
   <Link
+                                        aria-label='Resend verification email'
                                 href="/email/verification-notification"
                                 method="post"
                                 as="button"
@@ -184,11 +185,11 @@ export default function Edit({
                     <div className="row">
 
                 { ( user?.roles?.includes('seller') && user?.profile_completed ) && <h6 className="mb-4">
-                <Link href="/plans" method="get" as="button" className="btn btn-primary">Choose Plan</Link>
+                <Link aria-label='Choose Plan' href="/plans" method="get" as="button" className="btn btn-primary">Choose Plan</Link>
                                                                     </h6>  }
 
                 { ( user?.roles?.includes('breeder') && user?.profile_completed ) && <h6 className="mb-4">
-                <Link href="/plans/breeder" method="get" as="button" className="btn btn-primary">Choose Plan</Link>
+                <Link aria-label='Choose Plan' href="/plans/breeder" method="get" as="button" className="btn btn-primary">Choose Plan</Link>
                                                                     </h6>  }
 
                 { ( !user?.profile_completed ) && <h6 className="mb-4">
@@ -196,7 +197,7 @@ export default function Edit({
                                             user?.roles?.includes('breeder') && <>
 
                                                                 <h6>
-                                                                            <Link href="/breeders/create" method="get" as="button" className="btn btn-primary">Complete Profile</Link>
+                                                                            <Link aria-label='Complete Profile' href="/breeders/create" method="get" as="button" className="btn btn-primary">Complete Profile</Link>
 
                                                                             </h6>
 
@@ -208,7 +209,7 @@ export default function Edit({
                                             user?.roles?.includes('seller') && <>
                                                                             <h6>
 
-                                                                            <Link href="/seller/create" method="get" as="button" className="btn btn-primary">Complete Profile</Link>
+                                                                            <Link aria-label='Complete Profile' href="/seller/create" method="get" as="button" className="btn btn-primary">Complete Profile</Link>
                                                                             </h6>
 
                                                                         </>

@@ -120,6 +120,7 @@ export default function Login({
 
                     {canResetPassword && (
                         <Link
+                                                    aria-label="Forgot Password"
                             href="/forgot-password"
                             className="text-dark fs-3 fw-semibold text-decoration-underline"
                         >
@@ -130,7 +131,7 @@ export default function Login({
                 <Button href="" type="button" className="btn btn-primary w-100 mb-3">Login</Button>
                 <div className="d-flex align-items-center">
                   <p className="fs-4 mb-0">I don’t have an account?</p>
-                  <Link className="text-dark fw-semibold text-decoration-underline ms-2" href="/register">Create Account</Link>
+                  <Link aria-label="Create Account" className="text-dark fw-semibold text-decoration-underline ms-2" href="/register">Create Account</Link>
                 </div>
               </form>
             </div>
@@ -139,7 +140,7 @@ export default function Login({
             <div
               className="login-right-bg position-relative overflow-hidden h-100 d-flex align-items-center justify-content-center p-4 pt-10 py-lg-10">
               <div className="p-4 pb-0 position-absolute top-0 end-0">
-                <Link prefetch cacheFor="5m" href="/"><img src="/images/logos/logo-white.svg" alt="logo" /></Link>
+                <Link aria-label="Home" prefetch cacheFor="5m" href="/"><img src="/images/logos/logo-white.svg" alt="logo" /></Link>
               </div>
               <div className="card login-right-card mb-0">
                 <div className="card-body">

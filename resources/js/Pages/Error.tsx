@@ -23,7 +23,7 @@ export default function ErrorPage({ status, puppy } : {
     <Guest puppy={puppy}>
       <h1>{title}</h1>
       <div>{description}</div>
-      <Link href="/">Go back</Link>
+      <Link aria-label="Go back" href="/">Go back</Link>
     </Guest>
   )
 }

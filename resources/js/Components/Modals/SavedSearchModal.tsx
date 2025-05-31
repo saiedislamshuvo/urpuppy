@@ -40,7 +40,7 @@ function SavedSearchModal({has_search} : any) {
           </form>
                     </Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">
-          <Link className="btn btn-primary" href="/saved-search" method="post" data={{
+          <Link aria-label="Save Search" className="btn btn-primary" href="/saved-search" method="post" data={{
                         name: searchTitle,
                         payload: JSON.stringify(Object.fromEntries(new URLSearchParams(window.location.search)))
             }}  onClick={handleClose}>

@@ -27,10 +27,10 @@ const AccountDropdownButton = ({user} : { user: App.Data.UserData }) => {
                   </p>
                 </div>
               </div>
-              <li><Link prefetch className="dropdown-item rounded py-2" href="/profile">Settings</Link></li>
+              <li><Link aria-label="Settings" prefetch className="dropdown-item rounded py-2" href="/profile">Settings</Link></li>
                 {
                     (!user?.roles?.includes('buyer')) &&
-              <li><Link className="dropdown-item rounded py-2" href="/profile" data={{
+              <li><Link aria-label="My Subscription" className="dropdown-item rounded py-2" href="/profile" data={{
                     tab: 'My Subscription'
                 }}>My Subscriptions</Link></li>
                 }
@@ -38,7 +38,7 @@ const AccountDropdownButton = ({user} : { user: App.Data.UserData }) => {
 
                 {
                     user?.roles?.includes('buyer') &&
-              <li><Link className="dropdown-item rounded py-2" href="/profile" data={{
+              <li><Link aria-label="Saved Search" className="dropdown-item rounded py-2" href="/profile" data={{
                     tab: 'Saved Search'
                 }} >Saved Search</Link></li>
                 }
@@ -46,13 +46,14 @@ const AccountDropdownButton = ({user} : { user: App.Data.UserData }) => {
                 {
 
               (!user?.roles?.includes('buyer')) &&
-              <li><Link className="dropdown-item rounded py-2" href="/profile" data={{
+              <li><Link aria-label="My Puppies" className="dropdown-item rounded py-2" href="/profile" data={{
                     tab: 'My Puppies'
                 }} >My Puppies</Link></li>
                 }
 
               <div className="mt-3">
                                                                         <Link
+                        aria-label="Logout"
                                                                             method="post"
                                                                             as="button"
                                                                             href="/logout"

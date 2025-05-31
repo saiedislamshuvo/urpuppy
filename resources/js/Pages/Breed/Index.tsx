@@ -44,7 +44,7 @@ const Index = ({breeds, letter_param = 'A'} : {
                     <BreedFilter setBreed={setFilter}/>
                 </div>
 
-                <Link href={`/breeds/${filter.breed.value}`}
+                <Link aria-label='search' href={`/breeds/${filter.breed.value}`}
                   className="btn btn-primary round-48 flex-shrink-0 p-2 d-flex align-items-center justify-content-center">
                   <img src="/images/svgs/icon-search.svg" alt="icon-search" />
                 </Link>
@@ -72,6 +72,7 @@ const Index = ({breeds, letter_param = 'A'} : {
                                             preserveScroll
                                             prefetch
                                             cacheFor="1m"
+                                            aria-label='search'
 
                                             href={`/breeds?filter[name]=${letter}`}
                                             as="button"
@@ -95,7 +96,7 @@ const Index = ({breeds, letter_param = 'A'} : {
                                     {
     breeds.map((breed: App.Data.BreedData, index: number) => (
                 <div key={index} className="col-sm-6 col-lg-4 col-xl-3">
-                  <Link prefetch cacheFor="1m" href={`/breeds/${breed.slug}`}
+                  <Link aria-label='search' prefetch cacheFor="1m" href={`/breeds/${breed.slug}`}
                     className="breeds-items d-flex align-items-center gap-6 py-3 px-6 d-block rounded-1">
                     <div className="breeds-items-img  flex-shrink-0 round-40 rounded position-relative overflow-hidden">
                       <img src={breed.image} className="w-100 h-100 object-fit-cover" alt={breed.name} />

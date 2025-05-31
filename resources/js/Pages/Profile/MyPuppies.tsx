@@ -22,8 +22,9 @@ const MyPuppies = ({puppies} : {
 
                         <PuppyCard className="" puppy={puppy}/>
 
-                        <Link className="btn btn-primary mt-2 btn-sm" style={{marginRight: "4px"}} href={`/seller/create/${puppy.id}`}>Edit </Link>
+                        <Link aria-label='Edit' className="btn btn-primary mt-2 btn-sm" style={{marginRight: "4px"}} href={`/seller/create/${puppy.id}`}>Edit </Link>
                                 <Link
+                                aria-label='Delete'
   href="/subscriptions"
   method="delete"
   as="button"

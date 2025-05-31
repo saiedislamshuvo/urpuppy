@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="row">
           <div className="col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
             <div className="footer-logo">
-              <Link href="/">
+              <Link aria-label="urpuppy" href="/">
                 <img loading="lazy" src="/logo.svg" alt="urpuppy-img" />
               </Link>
             </div>
@@ -19,10 +19,10 @@ const Footer = () => {
             <h6 className="fw-semibold font-work-sans mb-6 text-white">Find A Puppy</h6>
             <ul className="list-unstyled footer-memu mb-0">
               <li className="mb-6">
-                <Link href="/puppies" className="fs-3 d-block fw-normal">View All Puppies</Link>
+                <Link aria-label="View All Puppies" href="/puppies" className="fs-3 d-block fw-normal">View All Puppies</Link>
               </li>
               <li>
-                <Link href="/breeds" className="fs-3 d-block fw-normal">View All Breeds</Link>
+                <Link aria-label="View All Breeds" href="/breeds" className="fs-3 d-block fw-normal">View All Breeds</Link>
               </li>
             </ul>
           </div>
@@ -33,7 +33,7 @@ const Footer = () => {
                      (user?.roles?.includes('breeder') || !user) &&
 
               <li>
-               <Link href="/breeders/create" className="fs-3 d-block fw-normal">Breeder Register</Link>
+               <Link aria-label="Breeder Register" href="/breeders/create" className="fs-3 d-block fw-normal">Breeder Register</Link>
               </li>
 
                                 }
@@ -43,13 +43,13 @@ const Footer = () => {
             <h6 className="fw-semibold font-work-sans mb-6 text-white">About urpuppy</h6>
             <ul className="list-unstyled footer-memu mb-0">
               <li className="mb-6">
-                <Link href="/posts" className="fs-3 d-block fw-normal">Blog</Link>
+                <Link aria-label="Blog" href="/posts" className="fs-3 d-block fw-normal">Blog</Link>
               </li>
               <li className="mb-6">
-                <Link href="/about-us" className="fs-3 d-block fw-normal">About Us</Link>
+                <Link aria-label="About Us" href="/about-us" className="fs-3 d-block fw-normal">About Us</Link>
               </li>
               <li>
-                <Link href="/contact-us" className="fs-3 d-block fw-normal">Contact Us</Link>
+                <Link aria-label="Contact Us" href="/contact-us" className="fs-3 d-block fw-normal">Contact Us</Link>
               </li>
             </ul>
           </div>
@@ -57,10 +57,10 @@ const Footer = () => {
             <h6 className="fw-semibold font-work-sans mb-6 text-white">Other</h6>
             <ul className="list-unstyled footer-memu mb-0">
               <li className="mb-6">
-                <Link href="/privacy-policy" className="fs-3 d-block fw-normal">Privacy Policy</Link>
+                <Link aria-label="Privacy Policy" href="/privacy-policy" className="fs-3 d-block fw-normal">Privacy Policy</Link>
               </li>
               <li className="mb-6">
-                <Link href="/terms-of-use" className="fs-3 d-block fw-normal">Terms of Use</Link>
+                <Link aria-label="Terms of Use" href="/terms-of-use" className="fs-3 d-block fw-normal">Terms of Use</Link>
               </li>
 
             </ul>

@@ -113,7 +113,10 @@ const Breeder = ({plan, discount} : {
                       <div className="row align-items-center">
                         <div className="col-5">
 
-                          <Link href={`/checkout/${plan.id}`} className="btn btn-primary d-block px-2">Get a Plan</Link>
+                          <Link
+
+                                                            aria-label='Get a Plan'
+                                                            href={`/checkout/${plan.id}`} className="btn btn-primary d-block px-2">Get a Plan</Link>
                         </div>
                         <div className="col-7 border-start">
                           <p className="mb-0 fs-2">Join Urpuppy.com today and elevate your

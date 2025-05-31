@@ -46,7 +46,7 @@ const Index = ({breeders} : {
                     <StateFilter setState={setFilter}/>
                 </div>
 
-                <Link preserveState href={`/breeders?breed=${filter?.breed?.value}&state=${filter?.state?.value}`}
+                <Link aria-label='Search' preserveState href={`/breeders?breed=${filter?.breed?.value}&state=${filter?.state?.value}`}
                   className="btn btn-primary round-48 flex-shrink-0 p-2 d-flex align-items-center justify-content-center">
                   <img src="/images/svgs/icon-search.svg" alt="urpuppy-img" />
                 </Link>

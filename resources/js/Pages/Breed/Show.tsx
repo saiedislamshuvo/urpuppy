@@ -47,7 +47,7 @@ const Show = ({breed, url} : {
                 <div className="information-details ms-xl-4">
                   <h1 className="fs-10 mb-4">{breed.name}</h1>
                   <div className="d-xl-flex align-items-center gap-3 mb-4">
-                    <Link href={`/puppies?filter[breed]=${breed.name}`}
+                    <Link aria-label='Puppies for sale' href={`/puppies?filter[breed]=${breed.name}`}
                       className="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2 mb-3 mb-xl-0"><svg
                         width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -55,7 +55,7 @@ const Show = ({breed, url} : {
                           stroke="#E88325" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"></path>
                       </svg>View {breed.name} Puppies For Sale
                     </Link>
-                    <Link href={`/breeders?breed=${breed.name}`} className="btn btn-outline-extralight border btn-white text-dark d-flex align-items-center justify-content-center gap-2"
+                    <Link aria-label='View Breeders' href={`/breeders?breed=${breed.name}`} className="btn btn-outline-extralight border btn-white text-dark d-flex align-items-center justify-content-center gap-2"
                       >
                       <img className="w-auto" src="/images/svgs/icon-paws-dark.svg" alt="icon-paw-dark" width="15" height="15" />
                       View {breed.name} Breeders</Link>

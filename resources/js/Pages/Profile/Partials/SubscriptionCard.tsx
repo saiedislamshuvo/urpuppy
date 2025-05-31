@@ -51,6 +51,7 @@ className="btn btn-primary border btn-white text-white d-block mb-2"
                         {!cancel_at &&
                             <>
                                 <Link
+                                    aria-label="Cancel Subscription"
   href="/subscriptions"
   method="delete"
   as="button"
