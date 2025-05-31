@@ -107,7 +107,7 @@ const renderMobileFilters = React.useCallback(() => (
                         <img src="/images/svgs/icon-breed.svg" alt="urpuppy-img" />
                     </span>
                     <div className="text-start">
-                        <h3 className="font-work-sans mb-0">Find your puppy</h3>
+                        <h2 className="font-work-sans mb-0">Find your puppy</h2>
                         <p className="mb-0 fs-2 text-muted fw-normal">{renderFilterLabel()}</p>
                     </div>
                 </div>

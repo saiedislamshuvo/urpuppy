@@ -16,8 +16,8 @@ const Footer = () => {
             </div>
           </div>
           <div className="col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0 ps-lg-7">
-            <h6 className="fw-semibold font-work-sans mb-6 text-white">Find A Puppy</h6>
-            <ul className="list-unstyled footer-memu mb-0">
+            <span className="fw-semibold font-work-sans mb-6 text-white">Find A Puppy</span>
+            <ul className="list-unstyled footer-memu mb-0 mt-2">
               <li className="mb-6">
                 <Link aria-label="View All Puppies" href="/puppies" className="fs-3 d-block fw-normal">View All Puppies</Link>
               </li>
@@ -27,8 +27,8 @@ const Footer = () => {
             </ul>
           </div>
           <div className="col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
-            <h6 className="fw-semibold font-work-sans mb-6 text-white">Customers</h6>
-            <ul className="list-unstyled footer-memu mb-0">
+            <span className="fw-semibold font-work-sans mb-6 text-white">Customers</span>
+            <ul className="list-unstyled footer-memu mb-0 mt-2">
                 {
                      (user?.roles?.includes('breeder') || !user) &&
 
@@ -40,8 +40,8 @@ const Footer = () => {
             </ul>
           </div>
           <div className="col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
-            <h6 className="fw-semibold font-work-sans mb-6 text-white">About urpuppy</h6>
-            <ul className="list-unstyled footer-memu mb-0">
+            <span className="fw-semibold font-work-sans mb-6 text-white">About urpuppy</span>
+            <ul className="list-unstyled footer-memu mb-0 mt-2">
               <li className="mb-6">
                 <Link aria-label="Blog" href="/posts" className="fs-3 d-block fw-normal">Blog</Link>
               </li>
@@ -54,8 +54,8 @@ const Footer = () => {
             </ul>
           </div>
           <div className="col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
-            <h6 className="fw-semibold font-work-sans mb-6 text-white">Other</h6>
-            <ul className="list-unstyled footer-memu mb-0">
+            <span className="fw-semibold font-work-sans mb-6 text-white">Other</span>
+            <ul className="list-unstyled footer-memu mb-0 mt-2">
               <li className="mb-6">
                 <Link aria-label="Privacy Policy" href="/privacy-policy" className="fs-3 d-block fw-normal">Privacy Policy</Link>
               </li>
@@ -66,8 +66,8 @@ const Footer = () => {
             </ul>
           </div>
           <div className="col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
-            <h6 className="fw-semibold font-work-sans mb-6 text-white">Socials</h6>
-            <ul className="list-unstyled d-flex align-items-center gap-6 social-icon mb-0">
+            <span className="fw-semibold font-work-sans mb-6 text-white">Socials</span>
+            <ul className="list-unstyled d-flex align-items-center gap-6 social-icon mb-0 mt-2">
               <li>
                 <a href="https://x.com/UrpuppyDotCom" data-bs-toggle="tooltip" data-bs-title="Twitter" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
                   <img loading="lazy" src="/images/svgs/icon-twitter.svg" alt="urpuppy-img" />
