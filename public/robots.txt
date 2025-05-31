@@ -1,2 +1,17 @@
 User-agent: *
-Disallow:
+Disallow: /puppies/create
+Disallow: /breeder/create
+Disallow: /register/seller
+Disallow: /register/breeder
+Disallow: /seller/create
+Disallow: /seller/*
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /admin/*
+Disallow: /favorites/*
+Disallow: /subscriptions/*
+Disallow: /checkout/*
+Disallow: /billing/*
+Disallow: /saved-search/*
+
+Sitemap: https://d1ycq56gu6gk7x.cloudfront.net/sitemap.xml
