@@ -1,6 +1,5 @@
-import React from 'react';
-import { Head, usePage } from '@inertiajs/react';
-
+import React, { useEffect, useState } from 'react';
+import { Head } from '@inertiajs/react';
 
 const MetaTags = ({
   title = "UrPuppy",
@@ -10,8 +9,13 @@ const MetaTags = ({
   twitterHandle = "@UrpuppyDotCom",
   siteName = "UrPuppy"
 }) => {
+  const [currentUrl, setCurrentUrl] = useState(url);
 
-    const current_url = usePage().props.url as string ?? url;
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentUrl(window.location.href);
+    }
+  }, []);
 
   return (
     <Head title={title}>
@@ -29,7 +33,7 @@ const MetaTags = ({
       <meta property="og:type" content="website" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:url" content={current_url} />
+      <meta property="og:url" content={currentUrl} />
       <meta property="og:image" content={image} />
       <meta property="og:image:alt" content={title} />
       <meta property="og:site_name" content={siteName} />
@@ -37,7 +41,7 @@ const MetaTags = ({
       {/* Default Image Tag for Google */}
       <link rel="image_src" href={image} />
 
-     <meta name="keywords" content="Buy puppies online, sell puppies online, dog breeders directory, find dog breeders, puppies for sale, sell dogs online, buy dogs online, registered dog breeders, puppy marketplace, dog adoption services, purebred puppies for sale, licensed dog breeders" />
+      <meta name="keywords" content="Buy puppies online, sell puppies online, dog breeders directory, find dog breeders, puppies for sale, sell dogs online, buy dogs online, registered dog breeders, puppy marketplace, dog adoption services, purebred puppies for sale, licensed dog breeders" />
     </Head>
   );
 };
