@@ -7,7 +7,7 @@ const AccountDropdownButton = ({user} : { user: App.Data.UserData }) => {
   return (
 
       <div className="dropdown position-relative user-profile-dropdown">
-            <a className="btn btn-primary p-0 round-44 overflow-hidden rounded-circle d-flex align-items-center justify-content-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a rel='nofollow' className="btn btn-primary p-0 round-44 overflow-hidden rounded-circle d-flex align-items-center justify-content-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <Avatar image_url={user.avatar} initial_name={user.initial_name} size={'sm'}  />
             </a>
             <ul className="dropdown-menu dropdown-menu-end p-3" style={{
@@ -23,7 +23,7 @@ const AccountDropdownButton = ({user} : { user: App.Data.UserData }) => {
                   <h6 className="mb-0">{user.full_name}</h6>
                   <p className="mb-0 fs-2 d-flex align-items-center gap-2">
                     <img src="/images/svgs/icon-mail-dark.svg" alt="urpuppy-img" width="14" />
-                    <a className="text-muted" href="mailto:support@urpuppy.com">{user.email}</a>
+                    <a rel='nofollow' className="text-muted" href="mailto:support@urpuppy.com">{user.email}</a>
                   </p>
                 </div>
               </div>

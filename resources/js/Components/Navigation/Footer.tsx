@@ -69,17 +69,17 @@ const Footer = () => {
             <span className="fw-semibold font-work-sans mb-6 text-white">Socials</span>
             <ul className="list-unstyled d-flex align-items-center gap-6 social-icon mb-0 mt-2">
               <li>
-                <a href="https://x.com/UrpuppyDotCom" data-bs-toggle="tooltip" data-bs-title="Twitter" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
+                <a rel='nofollow' href="https://x.com/UrpuppyDotCom" data-bs-toggle="tooltip" data-bs-title="Twitter" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
                   <img loading="lazy" src="/images/svgs/icon-twitter.svg" alt="urpuppy-img" />
                 </a>
               </li>
               <li>
-                <a href="https://www.facebook.com/UrPuppyLLC" target="_blank" data-bs-toggle="tooltip" data-bs-title="Facebook" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
+                <a rel='nofollow' href="https://www.facebook.com/UrPuppyLLC" target="_blank" data-bs-toggle="tooltip" data-bs-title="Facebook" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
                   <img loading="lazy" src="/images/svgs/icon-facebook.svg" alt="urpuppy-img" />
                 </a>
               </li>
               <li>
-                <a href="https://www.instagram.com/urpupppydotcom" data-bs-toggle="tooltip" data-bs-title="Instagram" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
+                <a rel='nofollow' href="https://www.instagram.com/urpupppydotcom" data-bs-toggle="tooltip" data-bs-title="Instagram" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
                   <img loading="lazy" src="/images/svgs/icon-instagram.svg" alt="urpuppy-img" />
                 </a>
               </li>

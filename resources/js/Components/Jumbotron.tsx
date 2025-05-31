@@ -10,7 +10,7 @@ const Jumbotron = ({title, description, image} : { title: string, description: s
                 <p className="fs-4">
                             {description}
                 </p>
-                <a href="#"
+                <a rel='nofollow' href="#"
                   className="link text-decoration-underline fs-4 text-dark fw-semibold d-flex align-items-center gap-6">Subscribe Now
                   <svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 7.5H15M15 7.5L9 13.5M15 7.5L9 1.5" stroke="#08314E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

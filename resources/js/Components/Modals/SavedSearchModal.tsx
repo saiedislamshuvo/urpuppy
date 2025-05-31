@@ -22,7 +22,7 @@ function SavedSearchModal({has_search} : any) {
            <div className="mb-8 text-end">
                         {
                             (user && user.roles?.includes('buyer') ) &&
-      <a onClick={handleShow} href="#" className="btn btn-outline-extralight border btn-white text-dark" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Save This Search</a>
+      <a rel='nofollow' onClick={handleShow} href="#" className="btn btn-outline-extralight border btn-white text-dark" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Save This Search</a>
                         }
 
       <Modal show={show} onHide={handleClose}>
@@ -46,7 +46,7 @@ function SavedSearchModal({has_search} : any) {
             }}  onClick={handleClose}>
             Save Search
           </Link>
-          <a onClick={handleClose} href="#" className="btn btn-outline-extralight border btn-white text-dark" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Cancel</a>
+          <a rel='nofollow' onClick={handleClose} href="#" className="btn btn-outline-extralight border btn-white text-dark" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Cancel</a>
         </Modal.Footer>
       </Modal>
       </div>

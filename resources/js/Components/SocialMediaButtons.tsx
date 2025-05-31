@@ -17,7 +17,7 @@ const SocialMediaButtons = ({igUrl, xUrl, fbUrl, tiktokUrl, webUrl} : {
                                 <Tooltip
                                             tooltipMessage="Facebook"
                                             content={
-                    <a target="_blank" href={fbUrl}
+                    <a rel='nofollow' target="_blank" href={fbUrl}
                       className="border d-flex align-items-center justify-content-center round-36 rounded-circle">
                       <img src="/images/svgs/icon-facebook-dark.svg" alt="urpuppy-img" />
                     </a>
@@ -33,7 +33,7 @@ const SocialMediaButtons = ({igUrl, xUrl, fbUrl, tiktokUrl, webUrl} : {
                                 <Tooltip
                                             tooltipMessage="X"
                                             content={
-                    <a target="_blank" href={xUrl} data-bs-toggle="tooltip" data-bs-title="Twitter"
+                    <a rel='nofollow' target="_blank" href={xUrl} data-bs-toggle="tooltip" data-bs-title="Twitter"
                       className="border d-flex align-items-center justify-content-center round-36 rounded-circle">
                       <img src="/images/svgs/icon-twitter-dark.svg" alt="urpuppy-img"/>
                     </a>
@@ -46,7 +46,7 @@ const SocialMediaButtons = ({igUrl, xUrl, fbUrl, tiktokUrl, webUrl} : {
                                 <Tooltip
                                             tooltipMessage="Tiktok"
                                             content={
-                    <a target="_blank" href={tiktokUrl} data-bs-toggle="tooltip" data-bs-title="Tiktok"
+                    <a rel='nofollow' target="_blank" href={tiktokUrl} data-bs-toggle="tooltip" data-bs-title="Tiktok"
                       className="border d-flex align-items-center justify-content-center round-36 rounded-circle">
                       <img src="/images/svgs/icon-tiktok-dark.svg" alt="urpuppy-img" />
                     </a> } id="tiktokurl" />
@@ -58,7 +58,7 @@ const SocialMediaButtons = ({igUrl, xUrl, fbUrl, tiktokUrl, webUrl} : {
                                 <Tooltip
                                             tooltipMessage="Instagram"
                                             content={
-                    <a target="_blank" href={igUrl} data-bs-toggle="tooltip" data-bs-title="Instagram"
+                    <a rel='nofollow' target="_blank" href={igUrl} data-bs-toggle="tooltip" data-bs-title="Instagram"
                       className="border d-flex align-items-center justify-content-center round-36 rounded-circle">
                       <img src="/images/svgs/icon-instagram-dark.svg" alt="urpuppy-img" />
                     </a>
@@ -72,7 +72,7 @@ const SocialMediaButtons = ({igUrl, xUrl, fbUrl, tiktokUrl, webUrl} : {
                                 <Tooltip
                                 tooltipMessage="Website"
                                 content={
-                    <a target="_blank" href={webUrl} data-bs-toggle="tooltip" data-bs-title="Website"
+                    <a rel='nofollow' target="_blank" href={webUrl} data-bs-toggle="tooltip" data-bs-title="Website"
                       className="border d-flex align-items-center justify-content-center round-36 rounded-circle">
                       <img src="/images/svgs/icon-globe-dark.svg" alt="urpuppy-img" />
                     </a>

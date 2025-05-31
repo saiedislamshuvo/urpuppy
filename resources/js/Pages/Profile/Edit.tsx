@@ -170,7 +170,7 @@ export default function Edit({
                 <div className="card border">
                   <div className="card-body">
 
-                                                                        <a className="btn btn-secondary" href="/billing" >Manage subscription</a>
+                                                                        <a rel='nofollow' className="btn btn-secondary" href="/billing" >Manage subscription</a>
 
 
                     </div>

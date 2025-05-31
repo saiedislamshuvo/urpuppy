@@ -168,12 +168,12 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked, url }
                             <div className="d-flex gap-2 justify-content-center">
                                 <CopyToClipboard link={currentUrl} />
                                 <FacebookShareButton url={currentUrl}>
-                                    <a href="" data-bs-toggle="tooltip" data-bs-title="Instagram" className="bg-white border bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
+                                    <a rel='nofollow' href="" data-bs-toggle="tooltip" data-bs-title="Instagram" className="bg-white border bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
                                         <img loading="lazy" src="/images/svgs/icon-facebook-dark.svg" alt="facebook" />
                                     </a>
                                 </FacebookShareButton>
                                 <TwitterShareButton url={currentUrl}>
-                                    <a href="#" data-bs-toggle="tooltip" data-bs-title="Instagram" className="bg-white border bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
+                                    <a rel='nofollow' href="#" data-bs-toggle="tooltip" data-bs-title="Instagram" className="bg-white border bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
                                         <img loading="lazy" src="/images/svgs/icon-twitter-dark.svg" alt="twitter" />
                                     </a>
                                 </TwitterShareButton>

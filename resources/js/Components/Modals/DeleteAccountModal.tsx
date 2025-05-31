@@ -30,7 +30,7 @@ function DeleteAccountModal() {
     <>
 
    <div className="mb-8 text-end">
-      <a onClick={handleShow} href="#" className="btn btn-outline-extralight border btn-white text-dark" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Delete Account</a>
+      <a rel='nofollow' onClick={handleShow} href="#" className="btn btn-outline-extralight border btn-white text-dark" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Delete Account</a>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Body className="py-8 px-4">
@@ -49,7 +49,7 @@ function DeleteAccountModal() {
                     </Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">
           <button onClick={handleDeleteAccount}  className="btn btn-danger border btn-white text-white" >Confirm</button>
-          <a onClick={handleClose} href="#" className="btn btn-outline-extralight border btn-white text-dark" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Cancel</a>
+          <a rel='nofollow' onClick={handleClose} href="#" className="btn btn-outline-extralight border btn-white text-dark" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Cancel</a>
         </Modal.Footer>
       </Modal>
       </div>

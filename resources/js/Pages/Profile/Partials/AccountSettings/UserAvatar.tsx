@@ -83,6 +83,7 @@ const AvatarInput: React.FC<AvatarInputProps> = ({ onChange }) => {
           />
         </div>
         <a
+                    rel='nofollow'
           className="btn btn-outline-extralight border btn-white text-dark d-block"
           href="#"
           onClick={handleDeletePicture}

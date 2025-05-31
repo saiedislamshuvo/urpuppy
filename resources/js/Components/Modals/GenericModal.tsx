@@ -50,10 +50,10 @@ function GenericModal({ title, buttonTitle, children, setIsModalOpen, handleOk, 
                         {children}
                     </Modal.Body>
                     <Modal.Footer className="d-flex justify-content-between">
-                        <a onClick={handleClose} href="#" className="btn btn-outline-extralight border btn-white text-dark" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Cancel</a>
+                        <a rel='nofollow' onClick={handleClose} href="#" className="btn btn-outline-extralight border btn-white text-dark" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Cancel</a>
                         {
                             handleOk &&
-                        <a onClick={handleClose} href="#" className="btn  border btn-primary text-white" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Select</a>
+                        <a rel='nofollow' onClick={handleClose} href="#" className="btn  border btn-primary text-white" data-bs-toggle="modal" data-bs-target="#SaveThisSearch">Select</a>
                         }
                     </Modal.Footer>
                 </Modal>

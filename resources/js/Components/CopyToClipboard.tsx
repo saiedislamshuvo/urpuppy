@@ -19,6 +19,7 @@ export default function CopyToClipboard({link} : {
   return (
     <a
       href="#"
+            rel='nofollow'
       onClick={handleCopy}
       className="btn btn-outline-extralight border btn-white text-dark d-flex align-items-center gap-2"
     >
