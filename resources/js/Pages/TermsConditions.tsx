@@ -5,10 +5,10 @@ import MetaTags from '@/Components/MetaTags'
 import Layout from '@/Layouts/Layout'
 import React from 'react'
 
-const TermsConditions = () => {
+const TermsConditions = ({url}: {url: string}) => {
   return (
   <Layout navType="secondary">
-            <MetaTags title="Terms of Use"/>
+            <MetaTags url={url} title="Terms of Use"/>
               <div className="page-wrapper position-relative overflow-hidden">
     <section className="information pt-4 pb-9">
       <div className="container">

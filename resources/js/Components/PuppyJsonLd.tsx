@@ -3,14 +3,14 @@ import { Head } from '@inertiajs/react'
 
 
 
-const BreedJsonLd = ({ breed, url }: { breed: App.Data.BreedFullData, url: string }) => {
+const PuppyJsonLd = ({ puppy, url }: { puppy: App.Data.PuppyData, url: string }) => {
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'DogBreed',
-    name: breed.seo_title,
-    description: breed.seo_description ?? '',
-    image: breed.image,
+    '@type': 'Puppy',
+    name: puppy.seo_title,
+    description: puppy.seo_description ?? '',
+    image: puppy.image,
     url: url,
   }
 
@@ -24,5 +24,5 @@ const BreedJsonLd = ({ breed, url }: { breed: App.Data.BreedFullData, url: strin
   )
 }
 
-export default BreedJsonLd
+export default PuppyJsonLd
 

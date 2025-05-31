@@ -16,9 +16,10 @@ interface ShowProps {
     comments: PaginatedCollection<App.Data.CommentData>;
     is_liked: boolean;
     is_unliked: boolean;
+    url: string
 }
 
-const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked }) => {
+const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked, url }) => {
     const { props } = usePage();
     const user = props.auth.user;
     const currentUrl = `https://urpuppy.com/posts/${post.slug}`;

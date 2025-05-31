@@ -11,8 +11,10 @@ import List from '@/Components/List';
 import { Head, Link } from '@inertiajs/react';
 import MetaTags from '@/Components/MetaTags';
 import Tooltip from '@/Components/Tooltip';
+import PuppyJsonLd from '@/Components/PuppyJsonLd';
 
-const Show = ({ related_puppies, puppy, siblings }: {
+const Show = ({ related_puppies, puppy, siblings, url }: {
+    url: string
     related_puppies: App.Data.PuppyData[]
     puppy: App.Data.PuppyData,
     siblings: App.Data.PuppyData[]
@@ -20,7 +22,9 @@ const Show = ({ related_puppies, puppy, siblings }: {
 
     return (
             <Layout>
-            <MetaTags title={`${puppy?.breeds[0]?.name} - ${puppy.name}`} description={puppy.description} image={puppy.preview_images[0]} />
+            <MetaTags url={url} title={`${puppy?.breeds[0]?.name} - ${puppy.seo_title}`} description={puppy.seo_description ?? ""} image={puppy.preview_images[0]} />
+            <PuppyJsonLd puppy={puppy} url={url} />
+
   <div className="page-wrapper position-relative overflow-hidden">
 
     <section

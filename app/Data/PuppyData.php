@@ -41,6 +41,9 @@ class PuppyData extends Data
         /** @var string[] */
         public ?Collection $characteristics,
 
+        public ?string $seo_title,
+        public ?string $seo_description,
+
     ) {}
 
     public function setIsFavorite(bool $isFavorite): self

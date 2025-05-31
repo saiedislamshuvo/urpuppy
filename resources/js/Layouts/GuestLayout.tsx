@@ -1,5 +1,4 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
-import MetaTags from '@/Components/MetaTags';
 import PuppyCard from '@/Components/Puppy/Card';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, useEffect } from 'react';

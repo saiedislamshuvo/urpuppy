@@ -7,7 +7,7 @@ import Layout from '@/Layouts/Layout'
 import { useForm } from '@inertiajs/react'
 import React from 'react'
 
-const ContactUs = () => {
+const ContactUs = ({url} : {url: string}) => {
 
     const {data, setData, reset, post, processing, errors} = useForm({
         first_name: '',
@@ -27,7 +27,7 @@ const ContactUs = () => {
   return (
   <Layout>
 
-            <MetaTags title="Contact us"/>
+            <MetaTags url={url} title="Contact us"/>
             <Hero title="Contact us" bgImage="/images/contact/contact-bg.jpg"/>
                 <section className="get-in-touch py-7 py-md-5 py-xl-9">
       <div className="container">

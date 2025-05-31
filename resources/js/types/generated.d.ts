@@ -85,6 +85,8 @@ description: string | null;
 breeds: Array<any>;
 gallery: Array<any>;
 comments: Array<App.Data.CommentData> | null;
+seo_title: string | null;
+seo_description: string | null;
 };
 export type CityData = {
 id: number;
@@ -213,6 +215,8 @@ puppy_colors: Array<App.Data.PuppyColorData> | null;
 published_at: string | null;
 features: Array<string> | null;
 characteristics: Array<string> | null;
+seo_title: string | null;
+seo_description: string | null;
 };
 export type PuppyEditData = {
 id: number;
@@ -257,12 +261,6 @@ gender: string;
 };
 export type RoleData = {
 name: Array<string>;
-};
-export type SEOData = {
-title: Array<string>;
-description: string;
-image: string;
-url: string;
 };
 export type SavedSearchData = {
 id: number;

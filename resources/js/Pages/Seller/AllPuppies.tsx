@@ -5,13 +5,14 @@ import MetaTags from '@/Components/MetaTags'
 import { PaginatedCollection } from '@/types/global'
 import Pagination from '@/Components/Pagination'
 
-const AllPuppies = ({seller_name, all_puppies}: {
+const AllPuppies = ({seller_name, all_puppies, url}: {
     seller_name: string,
-    all_puppies: PaginatedCollection<App.Data.PuppyData>
+    all_puppies: PaginatedCollection<App.Data.PuppyData>,
+    url: string
 }) => {
   return (
   <Layout>
-    <MetaTags title="Favorites" />
+    <MetaTags url={url} title="Favorites" />
    <section
     className="hero-section position-relative d-flex align-items-center pt-11 pb-10">
       <div className="container position-relative z-1 pt-lg-1 mt-lg-3 mb-lg-4">

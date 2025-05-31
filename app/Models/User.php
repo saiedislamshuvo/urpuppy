@@ -519,4 +519,14 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, M
         return $this->breeder_requests()->where('status', 'approved')->latest()->first() ? true : false;
 
     }
+
+    public function getSeoTitleAttribute()
+    {
+        return strip_tags($this->company_name ?? "");
+    }
+
+    public function getSeoDescriptionAttribute()
+    {
+        return strip_tags($this->description ?? "");
+    }
 }

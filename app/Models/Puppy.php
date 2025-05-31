@@ -480,4 +480,16 @@ class Puppy extends Model implements HasMedia, Sitemapable
     {
         return $this->created_at->diffInDays(now()) <= 5 ? true : false;
     }
+
+
+    public function getSeoTitleAttribute()
+    {
+        return strip_tags($this->name ?? "");
+    }
+
+    public function getSeoDescriptionAttribute()
+    {
+        return strip_tags($this->description ?? "");
+    }
+
 }

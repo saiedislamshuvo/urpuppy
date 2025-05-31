@@ -5,4 +5,11 @@ Disallow: /register/seller
 Disallow: /register/breeder
 Disallow: /seller/*
 Disallow: /dashboard
+Disallow: /profile
+Disallow: /admin/*
+Disallow: /favorites/*
+Disallow: /subscriptions/*
+Disallow: /checkout/*
+Disallow: /billing/*
+Disallow: /saved-search/*
 

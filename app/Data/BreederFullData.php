@@ -53,6 +53,9 @@ class BreederFullData extends Data
         public Collection $gallery,
 
         /** @var \App\Data\CommentData[] */
-        public ?DataCollection $comments
+        public ?DataCollection $comments,
+
+        public ?string $seo_title,
+        public ?string $seo_description,
     ) {}
 }

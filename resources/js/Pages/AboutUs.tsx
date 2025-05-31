@@ -6,11 +6,11 @@ import Layout from '@/Layouts/Layout'
 import { url } from 'inspector'
 import React from 'react'
 
-const AboutUs = () => {
+const AboutUs = ({url}: {url: string}) => {
   return (
   <Layout navType="secondary">
 
-            <MetaTags title="Privacy Policy"/>
+            <MetaTags url={url} title="About Us"/>
               <div className="page-wrapper position-relative overflow-hidden">
     <section className="information pt-4 pb-9">
       <div className="container">

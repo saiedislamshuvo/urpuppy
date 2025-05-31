@@ -1,6 +1,7 @@
 import BreederCard from '@/Components/Breeder/BreederCard'
 import ReviewCard from '@/Components/Breeder/ReviewCard'
 import ReviewForm from '@/Components/Breeder/ReviewForm'
+import BreederJsonLd from '@/Components/BreederJsonLd'
 import MetaTags from '@/Components/MetaTags'
 import GenericModal from '@/Components/Modals/GenericModal'
 import PuppyCard from '@/Components/Puppy/Card'
@@ -13,15 +14,17 @@ import Layout from '@/Layouts/Layout'
 import { Head, Link } from '@inertiajs/react'
 import React from 'react'
 
-const Show = ({breeder, puppies} : {
+const Show = ({breeder, puppies, url} : {
     breeder: App.Data.BreederFullData
-    puppies: App.Data.PuppyData[]
+    puppies: App.Data.PuppyData[],
+    url: string
 }) => {
 
   return (
             <Layout>
 
-            <MetaTags title={breeder.full_name} description={breeder.company_about ?? ""} image={breeder.company_logo ?? "/logo.svg"} />
+            <MetaTags url={url} title={breeder.seo_title ?? breeder.full_name} description={breeder.seo_description ?? ""} image={breeder.company_logo ?? "/logo.svg"} />
+            <BreederJsonLd breeder={breeder} url={url} />
   <div className="page-wrapper position-relative overflow-hidden">
 
     <section className="hero-section position-relative d-flex align-items-center pt-11 pb-10">
