@@ -135,6 +135,14 @@ class Puppy extends Model implements HasMedia, Sitemapable
 
     public function toSitemapTag(): Url|string|array
     {
+        if ($this->status !== 'published') {
+            return [];
+        }
+
+        if (!$this->user->is_subscribed) {
+            return [];
+        }
+
         return route('puppies.show', $this->slug);
     }
 

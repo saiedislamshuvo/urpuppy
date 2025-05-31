@@ -139,6 +139,19 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, M
 
     public function toSitemapTag(): Url|string|array
     {
+     if ($this->status !== 'published') {
+            return [];
+        }
+
+        if (!$this->user->is_subscribed) {
+            return [];
+        }
+
+        if (!$this->user->hasRole('breeder')) {
+            return [];
+        }
+
+
         return route('breeders.show', $this->slug);
     }
 

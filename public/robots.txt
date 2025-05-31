@@ -3,6 +3,8 @@ Disallow: /puppies/create
 Disallow: /breeder/create
 Disallow: /register/seller
 Disallow: /register/breeder
+Disallow: /register-breeder
+Disallow: /register-seller
 Disallow: /seller/create
 Disallow: /seller/*
 Disallow: /dashboard

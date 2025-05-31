@@ -220,7 +220,7 @@ class BreederController extends Controller
         if ($breeder?->breeder_plan === null) {
             return redirect()->back()->with([
                 'message.error' => 'This user is not a breeder',
-            ], 301);
+            ])->setStatusCode(301);
         }
 
         return inertia('Breeders/Show', [
