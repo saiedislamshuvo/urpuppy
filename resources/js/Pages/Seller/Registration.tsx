@@ -3,6 +3,7 @@ import SellerRegistrationForm from '@/Components/Forms/SellerRegistrationForm'
 import Heading from '@/Components/Heading'
 import MetaTags from '@/Components/MetaTags'
 import Layout from '@/Layouts/Layout'
+import { Head } from '@inertiajs/react'
 import React from 'react'
 
 const Registration = ({url, puppy_count, puppy_edit}: {url: string, puppy_count: number, puppy_edit: App.Data.PuppyEditData | null}) => {
@@ -10,6 +11,9 @@ const Registration = ({url, puppy_count, puppy_edit}: {url: string, puppy_count:
   <Layout navType="secondary">
 
             <MetaTags  title="Seller Registration" url={url} />
+            <Head>
+                <meta name="robots" content="noindex"/>
+            </Head>
               <div className="page-wrapper position-relative overflow-hidden">
 
     <section className="information pt-4 pb-8 pb-lg-9">

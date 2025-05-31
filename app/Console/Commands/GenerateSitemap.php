@@ -6,6 +6,7 @@ use App\Models\Breed;
 use App\Models\Puppy;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Sitemap\SitemapGenerator;
 
 class GenerateSitemap extends Command
@@ -29,12 +30,24 @@ class GenerateSitemap extends Command
      */
     public function handle()
     {
-        SitemapGenerator::create(config('app.url'))
+        $sitemap = SitemapGenerator::create(config('app.url'))
             ->getSitemap()
             ->add(Puppy::all())
             ->add(route('breeds.index'))
             ->add(Breed::all())
-            ->add(User::all())
-            ->writeToFile(public_path('sitemap.xml'));
+            ->add(User::all());
+
+        // Create a temporary file handle
+        $tempFile = tmpfile();
+        fwrite($tempFile, $sitemap->render());
+        rewind($tempFile);
+
+        // Stream to S3
+        Storage::disk('s3')->writeStream('sitemap.xml', $tempFile);
+
+        // Close the file handle
+        fclose($tempFile);
+
+        $this->info('Sitemap generated and uploaded to S3 successfully!');
     }
 }

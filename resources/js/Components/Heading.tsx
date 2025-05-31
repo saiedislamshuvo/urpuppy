@@ -6,7 +6,7 @@ const Heading = ({title, description} : {
 }) => {
   return (
     <div>
-      <h3 className="mb-1 fs-8">{title}</h3>
+      <h1 className="mb-1 fs-8">{title}</h1>
         {description &&
       <p className="mb-0">{description}</p>
         }

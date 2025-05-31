@@ -59,7 +59,7 @@ export default function RegisterBreeder({puppy}: {
         <div className="row">
           <div className="col-lg-7 order-last order-lg-first">
             <div className="login-info d-flex flex-column justify-content-center h-100 py-5 px-3 ps-lg-0">
-              <h2>Breeder Registration</h2>
+              <h1>Breeder Registration</h1>
               <p className="mb-4 pb-2">Become a Part of Our Breeding Community – List Your Business!</p>
             <form onSubmit={submit}>
                 <div className="row">
@@ -189,7 +189,7 @@ export default function RegisterBreeder({puppy}: {
             <div
               className="login-right-bg signup-right-bg position-relative overflow-hidden h-100 d-flex align-items-center justify-content-center p-4 p-lg-5 pt-9">
               <div className="p-4 pb-0 position-absolute top-0 end-0">
-                <Link aria-label='Home' href="/"><img src="/images/logos/logo-white.svg" alt={puppy?.name} /></Link>
+                <Link aria-label='Home' href="/"><img src="/images/logos/logo-white.svg" alt="logo-white" /></Link>
               </div>
               <div className="card login-right-card mb-0">
                 <div className="card-body">

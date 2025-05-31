@@ -69,7 +69,7 @@ export default function Login({
         <div className="row">
           <div className="col-lg-7 order-last order-lg-first">
             <div className="login-info d-flex flex-column justify-content-center h-100 py-7 py-lg-0 px-3 ps-lg-0">
-              <h2>Let's Login</h2>
+              <h1>Let's Login</h1>
               <p className="mb-4 pb-2">Explore the best dog breeds! Log in now
                 to discover more.</p>
             <form onSubmit={submit}>

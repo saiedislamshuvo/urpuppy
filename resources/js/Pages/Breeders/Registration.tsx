@@ -4,12 +4,16 @@ import SellerRegistrationForm from '@/Components/Forms/SellerRegistrationForm'
 import Heading from '@/Components/Heading'
 import MetaTags from '@/Components/MetaTags'
 import Layout from '@/Layouts/Layout'
+import { Head } from '@inertiajs/react'
 import React from 'react'
 
 const Registration = ({breeds}: { breeds: App.Data.BreedOptionData[]} ) => {
   return (
   <Layout navType="secondary">
             <MetaTags title="Registration" />
+            <Head>
+                <meta name="robots" content="noindex"/>
+            </Head>
               <div className="page-wrapper position-relative overflow-hidden">
 
     <section className="information pt-4 pb-8 pb-lg-9">

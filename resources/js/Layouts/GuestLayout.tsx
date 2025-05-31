@@ -36,7 +36,7 @@ export default function Guest({ variant = 'primary', children, puppy, header = "
           <div className="col-lg-7 order-last order-lg-first">
             <div className="login-info d-flex flex-column justify-content-center h-100 py-7 py-lg-0 px-3 ps-lg-0">
             {header !== "" &&
-              <h2>{header}</h2>
+              <h1>{header}</h1>
 }
               {subHeader != "" &&
               <p className="mb-4 pb-2">{subHeader}</p>

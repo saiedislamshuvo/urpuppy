@@ -41,6 +41,7 @@ export default function Index({
     return (
         <>
             <Layout>
+            <h1 className="visually-hidden">UrPuppy</h1>
             <Banner header={header_label} subheader={subheader_label}/>
             <MetaTags title="Home" />
             <div className="page-wrapper position-relative overflow-hidden">

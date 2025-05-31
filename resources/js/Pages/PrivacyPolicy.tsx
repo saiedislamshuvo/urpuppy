@@ -20,15 +20,15 @@ const PrivacyPolicy = ({url}: {url: string}) => {
 
         <div className="card border">
           <div className="card-body">
-            <h4>Effective Date: 10/1/2024</h4>
+            <h1>Effective Date: 10/1/2024</h1>
             <p className="mb-8">At Urpuppy.com, your privacy is important to us. This Privacy Policy outlines how we
               collect, use, disclose, and safeguard your information when you visit our website.
               Please read this policy carefully to understand our practices regarding your personal
               information.</p>
 
-            <h4>1. Information We Collect</h4>
+            <h2>1. Information We Collect</h2>
             <p className="mb-4">We may collect the following types of information:</p>
-            <h6>a. Personal Information</h6>
+            <h3>a. Personal Information</h3>
             <p className="mb-1">When you interact with our site, we may ask you to provide certain personally
               identifiable information, including but not limited to:</p>
             <ul className="mb-4">
@@ -39,7 +39,7 @@ const PrivacyPolicy = ({url}: {url: string}) => {
               <li>Billing information (credit card details)</li>
             </ul>
 
-            <h6>b. Non-Personal Information</h6>
+            <h2>b. Non-Personal Information</h2>
             <p className="mb-1">We may also collect non-personal information automatically when you visit our site,
               including:</p>
             <ul className="mb-4">
@@ -50,7 +50,7 @@ const PrivacyPolicy = ({url}: {url: string}) => {
               <li>Referring website</li>
             </ul>
 
-            <h4>2. How We Use Your Information</h4>
+            <h2>2. How We Use Your Information</h2>
             <p className="mb-1">We may use the information we collect from you for various purposes, including:</p>
             <ul className="mb-4">
               <li>To process your orders and manage your account</li>
@@ -62,7 +62,7 @@ const PrivacyPolicy = ({url}: {url: string}) => {
             </ul>
 
 
-            <h4>3. Information Sharing</h4>
+            <h2>3. Information Sharing</h2>
             <p>We do not sell, trade, or otherwise transfer your personal information to outside parties
               without your consent, except as required to fulfill your order or as necessary to operate
               our business. We may share your information with:</p>
@@ -73,20 +73,20 @@ const PrivacyPolicy = ({url}: {url: string}) => {
               </ul>
 
 
-              <h4>4. Cookies</h4>
+              <h2>4. Cookies</h2>
                 <p>Urpuppy.com uses cookies to enhance user experience. Cookies are small text files
                   placed on your device by websites you visit. You can choose to accept or decline
                   cookies through your browser settings. However, declining cookies may prevent you
                   from taking full advantage of our website.</p>
 
-            <h4>5. Data Security</h4>
+            <h2>5. Data Security</h2>
             <p>We implement a variety of security measures to maintain the safety of your personal
               information. However, please remember that no method of transmission over the
               internet or method of electronic storage is 100% secure. While we strive to use
               commercially acceptable means to protect your personal information, we cannot
               guarantee its absolute security.</p>
 
-              <h4>6. Your Rights</h4>
+              <h2>6. Your Rights</h2>
             <p className="mb-1">Depending on your jurisdiction, you may have the right to:</p>
             <ul className="mb-4">
               <li>Access, correct, or delete your personal information</li>
@@ -94,7 +94,7 @@ const PrivacyPolicy = ({url}: {url: string}) => {
               <li>Object to or restrict processing of your personal information To exercise these rights, please contact us using the information below.</li>
             </ul>
 
-            <h4>7. Third-Party Websites</h4>
+            <h2>7. Third-Party Websites</h2>
             <p className="mb-1">Our website may contain links to other websites that are not operated by us. If you click</p>
               <p className="mb-0">on a third-party link, you will be directed to that third party’s site.</p>
           </div>

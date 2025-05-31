@@ -137,7 +137,7 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
                             ))}
                         </div>
                       </div>
-                      <h3 className="mb-3 fs-8">About {puppy.name}</h3>
+                      <span className="mb-3 fs-8">About {puppy.name}</span>
                       <p className="mb-6">{puppy.description}</p>
                       <p className="mb-3"></p>
                       <div className="d-flex align-items-center align-items-start gap-2">
