@@ -67,7 +67,7 @@ class SellerController extends Controller
         ]);
 
         if (!$user) {
-            return error('register.seller', 'You are not logged in')->setStatusCode(301);
+            return error('register.seller', 'You are not logged in');
         }
 
         if (!$isVerified) {
