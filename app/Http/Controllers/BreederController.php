@@ -69,7 +69,7 @@ class BreederController extends Controller
     public function create(Request $request)
     {
         if (! $request->user()) {
-            return redirect()->to(route('register.breeder'));
+            return redirect()->to(route('register.breeder'))->setStatusCode(301);
         }
 
         if (! $request->user()->email_verified_at) {
