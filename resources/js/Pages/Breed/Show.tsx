@@ -12,8 +12,6 @@ const Show = ({breed} : {
   return (
   <>
             <Layout navType="secondary">
-            <MetaTags title={breed.name ?? ''} description={breed.history_description ?? ""} image={breed.image}/>
-             <BreedJsonLd breed={breed} />
 
               <div className="page-wrapper position-relative overflow-hidden">
 
