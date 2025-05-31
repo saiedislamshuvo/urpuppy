@@ -32,7 +32,7 @@
         "league/flysystem-aws-s3-v3": "^3.29",
         "mavinoo/laravel-batch": "^2.4",
         "nnjeim/world": "^1.1",
-        "opcodesio/log-viewer": "^3.11",
+        "opcodesio/log-viewer": "^3.17.1",
         "overtrue/laravel-favorite": "^5.3.2",
         "pelmered/filament-money-field": "^1.4",
         "php-ffmpeg/php-ffmpeg": "^1.3",

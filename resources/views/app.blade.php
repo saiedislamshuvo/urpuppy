@@ -13,7 +13,6 @@
 
     @viteReactRefresh
     @vite(['resources/js/app.tsx', "resources/js/Pages/{$page['component']}.tsx"])
-    @inertiaHead
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2165217194424630"
         crossorigin="anonymous"></script>
@@ -34,6 +33,9 @@
             "image": "https://urpuppy.com/logo.png"
         }
     </script>
+
+
+    @inertiaHead
 </head>
 
 <body class="font-sans antialiased">

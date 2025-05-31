@@ -48,7 +48,7 @@ const AgeFilter: React.FC<AgeFilterProps> = ({ setAge, defaultValue }) => {
       <span className="flex-shrink-0">
         <img src="/images/svgs/icon-calendar.svg" alt="urpuppy-img" />
       </span>
-      <div id="filter-box">
+      <div className="filter-box">
         <h6 className="font-work-sans mb-0">Age</h6>
                 <SelectMobile
                     title="Age"

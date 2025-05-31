@@ -76,7 +76,7 @@ const BreedFilter: React.FC<BreedFilterProps> = ({ setBreed, title = "Breed", de
       <span className="flex-shrink-0">
         <img src="/images/svgs/icon-breed.svg" alt="Breed Icon" />
       </span>
-      <div id="filter-box" style={{
+      <div className="filter-box" style={{
                 paddingRight: '20px'
             }}>
         <h6 className="font-work-sans mb-0">{title}</h6>
