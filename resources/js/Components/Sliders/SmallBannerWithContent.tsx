@@ -21,7 +21,7 @@ const SmallBannerWithContent = ({
                 <div className="container position-relative z-2 pb-4 pb-lg-0">
                   <div>
                     <span className="badge text-bg-info mb-6">{pill}</span>
-                    <h3 className="text-white fs-10 mb-3">{title}</h3>
+                    <h1 className="text-white fs-10 mb-3">{title}</h1>
                     <div className="d-lg-flex align-items-center gap-3">
                         {children}
                     </div>
