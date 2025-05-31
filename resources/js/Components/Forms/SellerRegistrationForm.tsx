@@ -109,7 +109,7 @@ const SellerRegistrationForm = ({
                     {  !puppy_count &&
                     <>
               <div className="contact-details border-bottom mb-4">
-                <h6 className="fs-5 mb-3 pb-1">Contact Details</h6>
+                <h1 className="fs-5 mb-3 pb-1">Contact Details</h1>
                 <div className="row">
                   <div className="col-lg-4">
                     <div className="mb-4">

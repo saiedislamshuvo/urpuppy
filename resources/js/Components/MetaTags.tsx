@@ -30,6 +30,7 @@ const MetaTags = ({
       <meta property="og:image" content={image} />
       <meta property="og:image:alt" content={title} />
       <meta property="og:site_name" content={siteName} />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
 
       {/* Default Image Tag for Google */}
       <link rel="image_src" href={image} />
