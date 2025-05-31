@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Head } from '@inertiajs/react'
 
-type BreedJsonLdProps = {
-  breed: {
-    name: string
-    slug: string
-    image: string
-    history_description?: string | null
-  }
-}
 
-const BreedJsonLd: React.FC<BreedJsonLdProps> = ({ breed }) => {
+
+const BreedJsonLd = ({ breed, url }: { breed: App.Data.BreedFullData, url: string }) => {
   const [origin, setOrigin] = useState('')
 
   useEffect(() => {
@@ -24,10 +17,10 @@ const BreedJsonLd: React.FC<BreedJsonLdProps> = ({ breed }) => {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'DogBreed',
-    name: breed.name,
-    description: breed.history_description ?? '',
+    name: breed.seo_title,
+    description: breed.seo_description ?? '',
     image: breed.image,
-    url: `${origin}/breeds/${breed.slug}`,
+    url: url,
   }
 
   return (

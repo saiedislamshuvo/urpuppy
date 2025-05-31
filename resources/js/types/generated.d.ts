@@ -22,6 +22,8 @@ coat_description: string | null;
 temperament_description: string | null;
 lifestyle_description: string | null;
 activities_description: string | null;
+seo_title: string | null;
+seo_description: string | null;
 };
 export type BreedOptionData = {
 value: number;
@@ -255,6 +257,12 @@ gender: string;
 };
 export type RoleData = {
 name: Array<string>;
+};
+export type SEOData = {
+title: Array<string>;
+description: string;
+image: string;
+url: string;
 };
 export type SavedSearchData = {
 id: number;

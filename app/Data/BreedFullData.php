@@ -17,6 +17,9 @@ class BreedFullData extends Data
         public ?string $coat_description,
         public ?string $temperament_description,
         public ?string $lifestyle_description,
-        public ?string $activities_description
+        public ?string $activities_description,
+
+        public ?string $seo_title,
+        public ?string $seo_description,
     ) {}
 }

@@ -85,4 +85,15 @@ class Breed extends Model implements HasMedia, Sitemapable
     {
         return $this->belongsToMany(Puppy::class);
     }
+
+    public function getSeoTitleAttribute()
+    {
+        return strip_tags($this->name);
+    }
+
+    public function getSeoDescriptioneAttribute()
+    {
+        return strip_tags($this->description);
+    }
+
 }
