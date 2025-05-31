@@ -82,12 +82,12 @@ const FilterBox = () => {
                 <div className="state d-flex gap-2">
                     <StateFilter setState={setFilter} defaultValue={filter.state} />
                 </div>
-                <a
+                <span
                     onClick={handleSearch}
                     className="btn btn-primary round-48 flex-shrink-0 p-2 d-flex align-items-center justify-content-center"
                 >
                     <img src="/images/svgs/icon-search.svg" alt="urpuppy-img" />
-                </a>
+                </span>
             </div>
         </div>
 
@@ -111,12 +111,12 @@ const renderMobileFilters = React.useCallback(() => (
                         <p className="mb-0 fs-2 text-muted fw-normal">{renderFilterLabel()}</p>
                     </div>
                 </div>
-                <a
+                <span
                     onClick={handleSearch}
                     className="btn btn-primary round-48 flex-shrink-0 p-2 d-flex align-items-center justify-content-center"
                 >
                     <img src="/images/svgs/icon-search.svg" alt="urpuppy-img" />
-                </a>
+                </span>
             </button>
             <div className="dropdown-menu px-4 py-3 w-100 mt-n1" style={{ zIndex: '999999999!important' }}>
                 <div className="breed d-flex gap-2 border-bottom py-6">
@@ -134,9 +134,9 @@ const renderMobileFilters = React.useCallback(() => (
                 <div className="state d-flex gap-2 py-6">
                     <StateFilter setState={setFilter} defaultValue={filter.state} />
                 </div>
-                <a onClick={handleSearch} href="#" className="btn btn-primary w-100 d-flex align-items-center justify-content-center mt-3">
+                <span onClick={handleSearch} className="btn btn-primary w-100 d-flex align-items-center justify-content-center mt-3">
                     Search
-                </a>
+                </span>
             </div>
         </div>
 
