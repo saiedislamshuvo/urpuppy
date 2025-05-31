@@ -7,15 +7,8 @@ const MetaTags = ({
   url = "https://urpuppy.com",
   image = "https://urpuppy.com/images/email-template/home.png",
   twitterHandle = "@UrpuppyDotCom",
-  siteName = "UrPuppy"
+  siteName = "UrPuppy",
 }) => {
-  const [currentUrl, setCurrentUrl] = useState(url);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setCurrentUrl(window.location.href);
-    }
-  }, []);
 
   return (
     <Head title={title}>
@@ -33,7 +26,7 @@ const MetaTags = ({
       <meta property="og:type" content="website" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:url" content={currentUrl} />
+      <meta property="og:url" content={url} />
       <meta property="og:image" content={image} />
       <meta property="og:image:alt" content={title} />
       <meta property="og:site_name" content={siteName} />

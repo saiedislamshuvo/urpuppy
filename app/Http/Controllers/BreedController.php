@@ -57,6 +57,7 @@ class BreedController extends Controller
 
         return inertia()->render('Breed/Show', [
             'breed' => BreedFullData::from($breed),
+            'url' => url()->current()
         ]);
     }
 }

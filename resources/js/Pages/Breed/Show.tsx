@@ -6,13 +6,15 @@ import Layout from '@/Layouts/Layout'
 import { Link } from '@inertiajs/react'
 import React from 'react'
 
-const Show = ({breed} : {
-    breed: App.Data.BreedFullData
+const Show = ({breed, url} : {
+    breed: App.Data.BreedFullData,
+    url: string
+
 }) => {
   return (
   <>
             <Layout navType="secondary">
-                            <MetaTags title={breed.name ?? ''} description={breed.history_description ?? ""} image={breed.image}/>
+                            <MetaTags url={url} title={breed.name ?? ''} description={breed.history_description ?? ""} image={breed.image}/>
 
               <div className="page-wrapper position-relative overflow-hidden">
 
