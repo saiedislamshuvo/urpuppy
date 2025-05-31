@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Head } from '@inertiajs/react'
 
 type BreedJsonLdProps = {
@@ -11,13 +11,23 @@ type BreedJsonLdProps = {
 }
 
 const BreedJsonLd: React.FC<BreedJsonLdProps> = ({ breed }) => {
+  const [origin, setOrigin] = useState('')
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setOrigin(window.location.origin)
+    }
+  }, [])
+
+  if (!origin) return null // Prevent hydration mismatch
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'DogBreed',
     name: breed.name,
     description: breed.history_description ?? '',
     image: breed.image,
-    url: `${typeof window !== 'undefined' ? window.location.origin : ''}/breeds/${breed.slug}`,
+    url: `${origin}/breeds/${breed.slug}`,
   }
 
   return (
