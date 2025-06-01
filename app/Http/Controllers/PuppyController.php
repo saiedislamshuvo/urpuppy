@@ -106,7 +106,7 @@ class PuppyController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('home')->with([
                 'message.error' => 'This puppy is not available',
-            ])->setStatusCode(404);
+            ]);
         }
     }
 }
