@@ -32,7 +32,7 @@ class GenerateSitemap extends Command
     {
         $sitemap = SitemapGenerator::create(config('app.url'))
             ->getSitemap()
-            ->add(Puppy::where('status', 'published')->get())
+            ->add(Puppy::hasSubscribedUsers()->get())
             ->add(route('breeds.index'))
             ->add(Breed::all())
             ->add(User::breeders()->get());
