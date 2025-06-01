@@ -44,8 +44,8 @@ class PuppyController extends Controller
             'puppies' => $puppiesData,
             'has_search' => count($filters),
             'payload' => $filters,
-            'seo_title' => $seo_title,
-            'seo_description' => $seo_description,
+            'seo_title' => 'Puppy: ' . $seo_title,
+            'seo_description' => 'Puppy: ' . $seo_description,
         ]);
     }
 
