@@ -143,6 +143,7 @@ RUN composer install \
 FROM oven/bun:${BUN_VERSION} AS build
 
 ARG APP_ENV
+ARG STRIPE_KEY
 
 ENV ROOT=/var/www/html \
     APP_ENV=${APP_ENV} \
