@@ -16,7 +16,7 @@ class OptimizeBlogImages extends Command
     {
         // Initialize ImageManager with GD driver
         $manager = new ImageManager(new Driver());
-        $disk = Storage::disk('public');
+        $disk = Storage::disk('s3');
 
         // Step 1: Convert all images in blog/ folder to WebP
         $this->info("Step 1: Converting all images in blog/ folder to WebP...");
