@@ -13,7 +13,7 @@ class PostController extends Controller
     public function index()
     {
         return inertia()->render('Post/Index', [
-            'posts' => PostData::collect(Post::with(['category', 'author'])->paginate(12)),
+            'posts' => PostData::collect(Post::orderBy('created_at', 'desc')->with(['category', 'author'])->paginate(12)),
         ]);
     }
 
