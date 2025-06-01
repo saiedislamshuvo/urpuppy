@@ -146,6 +146,8 @@ ARG APP_ENV
 
 ENV ROOT=/var/www/html \
     APP_ENV=${APP_ENV} \
+    VITE_STRIPE_KEY=${STRIPE_KEY} \
+    STRIPE_KEY=${STRIPE_KEY} \
     NODE_ENV=${APP_ENV:-production}
 
 WORKDIR ${ROOT}
