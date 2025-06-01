@@ -21,6 +21,7 @@
         "filament/filament": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "3.3.8",
         "inertiajs/inertia-laravel": "2.0.1",
+        "intervention/image": "^3.11",
         "jenssegers/agent": "^2.6",
         "joaopaulolndev/filament-general-settings": "^1.0",
         "laravel/cashier": "^15.6.3",
