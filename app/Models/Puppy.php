@@ -489,7 +489,8 @@ class Puppy extends Model implements HasMedia, Sitemapable
 
     public function getSeoDescriptionAttribute()
     {
-        return strip_tags($this->description ?? "");
+        return str_limit(  strip_tags($this->description), 160 );
+
     }
 
 }

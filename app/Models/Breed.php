@@ -91,9 +91,9 @@ class Breed extends Model implements HasMedia, Sitemapable
         return strip_tags($this->name);
     }
 
-    public function getSeoDescriptioneAttribute()
+    public function getSeoDescriptionAttribute()
     {
-        return strip_tags($this->description);
+        return str_limit(  strip_tags($this->description ?? $this->history_description), 160 );
     }
 
 }

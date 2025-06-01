@@ -44,7 +44,7 @@ const PuppyCard = ({puppy, className="col-md-6 col-lg-4 col-xl-3 mb-4", height="
               <div className="puppy-spotlight-details">
                 <div className="p-3">
                   <p className="fs-2 mb-1 text-uppercase fw-medium">{puppy.breeds[0]?.name ?? null}</p>
-                  <h6 className="fs-6 font-work-sans">{puppy.name}</h6>
+                  <h3 className="fs-6 font-work-sans">{puppy.name}</h3>
                   <div className="row">
                     <div className="col-6">
                       <div className="d-flex align-items-center gap-2 mb-2">
@@ -71,7 +71,7 @@ const PuppyCard = ({puppy, className="col-md-6 col-lg-4 col-xl-3 mb-4", height="
                   </div>
                 </div>
                 <div className="p-3 border-top d-flex align-items-center justify-content-between">
-                  <h6 className="fs-5 font-work-sans">{puppy.formatted_price}</h6>
+                  <h3 className="fs-5 font-work-sans">{puppy.formatted_price}</h3>
                   <Link prefetch preserveScroll={false}   href={`/puppies/${puppy.slug}`} className="btn btn-primary d-flex align-items-center gap-2" >
                     <img loading="lazy" src="/images/svgs/icon-paws.svg" alt="urpuppy-img" />
                     View more

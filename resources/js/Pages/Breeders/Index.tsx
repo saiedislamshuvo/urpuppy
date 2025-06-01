@@ -37,8 +37,8 @@ const Index = ({breeders, seo_title, seo_description, url} : {
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-7 col-xl-5">
-            <h1 className="mb-7 pb-1 text-center" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">Find
-              Breeders</h1>
+            <h2 className="mb-7 pb-1 text-center" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">Find
+              Breeders</h2>
             <div className="grid-filter d-none d-lg-block aos-init aos-animate" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
               <div className="d-flex align-items-center justify-content-between">
 
@@ -64,7 +64,7 @@ const Index = ({breeders, seo_title, seo_description, url} : {
                 <section className="choose-your-breeds py-7 py-md-5 py-xl-9">
       <div className="container">
         <div className="d-flex align-items-center justify-content-between mb-4 mb-lg-8">
-          <h2 className="mb-0" data-aos="fade-right" data-aos-delay="100" data-aos-duration="1000">Choose your Breeder</h2>
+          <h3 className="mb-0" data-aos="fade-right" data-aos-delay="100" data-aos-duration="1000">Choose your Breeder</h3>
         </div>
 
 
