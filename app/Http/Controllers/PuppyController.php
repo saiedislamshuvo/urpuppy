@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Data\PuppyCardData;
 use App\Data\PuppyData;
 use App\Data\PuppySiblingData;
@@ -18,6 +20,22 @@ class PuppyController extends Controller
     {
         $filters = $request->all();
 
+        $filter = $filters['filter'] ?? [];
+
+        $seo_title = $filter['breed'] ?? '';
+        if (! empty($filter['gender']) && $filter['gender'] !== 'All') {
+            $seo_title .= ' | Gender : '.$filter['gender'];
+        }
+
+        $seo_parts = [];
+        foreach ($filter as $key => $value) {
+            if (is_array($value)) {
+                $value = implode(' to ', $value);
+            }
+            $seo_parts[] = ucfirst($key).': '.$value;
+        }
+        $seo_description = implode(', ', $seo_parts);
+
         $puppies = $puppyService->getPuppies($request, paginate: true);
         $puppiesData = app(FavoriteService::class)->applyFavorites(PuppyData::collect($puppies));
 
@@ -26,6 +44,8 @@ class PuppyController extends Controller
             'puppies' => $puppiesData,
             'has_search' => count($filters),
             'payload' => $filters,
+            'seo_title' => $seo_title,
+            'seo_description' => $seo_description,
         ]);
     }
 
@@ -51,7 +71,7 @@ class PuppyController extends Controller
             });
 
             $results = Octane::concurrently([
-                'featuredPuppies' => function() {
+                'featuredPuppies' => function () {
                     return Cache::remember('featured_puppies', 1800, function () {
                         return Puppy::with('breeds', 'media', 'seller')
                             ->inRandomOrder()
@@ -59,39 +79,39 @@ class PuppyController extends Controller
                             ->get();
                     });
                 },
-                'featured_breeds' => function() {
+                'featured_breeds' => function () {
                     return FeaturedBreedResource::collection(
                         Breed::withCount('puppies')
-                        ->orderByDesc('puppies_count')
-                        ->take(10)
-                        ->get()
+                            ->orderByDesc('puppies_count')
+                            ->take(10)
+                            ->get()
                     );
                 },
-                'siblings' => function() use ($puppy) {
+                'siblings' => function () use ($puppy) {
                     return PuppySiblingData::collect(
                         $puppy->siblings()->with('media')->get()
                     );
                 },
-                'related_puppies' => function() use ($puppy) {
-    $cacheKey = "puppy_{$puppy->id}_related_puppies";
-    $cacheDuration = 1800;
+                'related_puppies' => function () use ($puppy) {
+                    $cacheKey = "puppy_{$puppy->id}_related_puppies";
+                    $cacheDuration = 1800;
 
-    return Cache::remember($cacheKey, $cacheDuration, function() use ($puppy) {
-        $query = Puppy::with('breeds', 'media', 'seller')
-            ->hasSubscribedUsers()
-            ->where('id', '!=', $puppy->id)
-            ->inRandomOrder()
-            ->limit(4);
+                    return Cache::remember($cacheKey, $cacheDuration, function () use ($puppy) {
+                        $query = Puppy::with('breeds', 'media', 'seller')
+                            ->hasSubscribedUsers()
+                            ->where('id', '!=', $puppy->id)
+                            ->inRandomOrder()
+                            ->limit(4);
 
-        if ($puppy->breeds && $puppy->breeds->count() > 0) {
-            $query->whereHas('breeds', function ($q) use ($puppy) {
-                $q->whereIn('breeds.id', $puppy->breeds->pluck('id'));
-            });
-        }
+                        if ($puppy->breeds && $puppy->breeds->count() > 0) {
+                            $query->whereHas('breeds', function ($q) use ($puppy) {
+                                $q->whereIn('breeds.id', $puppy->breeds->pluck('id'));
+                            });
+                        }
 
-        return PuppyCardData::collect($query->get());
-    });
-}
+                        return PuppyCardData::collect($query->get());
+                    });
+                },
 
             ]);
 

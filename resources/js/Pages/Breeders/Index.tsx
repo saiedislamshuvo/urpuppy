@@ -10,8 +10,12 @@ import { PaginatedCollection } from '@/types/global'
 import { Link, router } from '@inertiajs/react'
 import React, { useState } from 'react'
 
-const Index = ({breeders} : {
-    breeders: PaginatedCollection<App.Data.BreederFullData>
+const Index = ({breeders, seo_title, seo_description, url} : {
+    breeders: PaginatedCollection<App.Data.BreederFullData>,
+    seo_title: string,
+    seo_description: string,
+    url: string
+
 }) => {
 
     const [filter, setFilter] = useState<any>({
@@ -24,7 +28,7 @@ const Index = ({breeders} : {
 
   return (
         <Layout>
-            <MetaTags title="Breeders"  />
+            <MetaTags title={seo_title} description={seo_description} url={url}  />
             <BannerSlider slidesPerView={1} children={[
                 <SmallBannerWithContent title="Register as a breeder" pill="Feature" key={1} background_image="/images/breeds-slider/hero-inner-slider-2.jpg" />,
             ]} />

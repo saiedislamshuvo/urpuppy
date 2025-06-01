@@ -9,15 +9,18 @@ import MetaTags from '@/Components/MetaTags'
 import { Link } from '@inertiajs/react'
 import SavedSearchModal from '@/Components/Modals/SavedSearchModal'
 
-const Index = ({puppies, states, breeds, has_search} : {
+const Index = ({puppies, states, breeds, has_search, seo_title, seo_description, url} : {
     puppies: PaginatedCollection<App.Data.PuppyData>
     states: App.Data.StateData[],
     breeds: App.Data.BreedData[],
     has_search: boolean,
+    seo_title: string,
+    seo_description: string,
+    url: string
 }) => {
   return (
     <Layout>
-        <MetaTags title="Puppies"  />
+        <MetaTags title={seo_title} description={seo_description} url={url}  />
 
         {!has_search ?
         <Banner size="md" header="Puppies for Sale" subheader="Countless Puppies Available For Sale Across the Country!"/> :

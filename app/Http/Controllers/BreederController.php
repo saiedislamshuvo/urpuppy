@@ -32,8 +32,11 @@ class BreederController extends Controller
               })
             : $this->getFilteredBreeders($breed, $state);
 
+
         return inertia()->render('Breeders/Index', [
             'breeders' => BreederFullData::collect($breeders),
+            'seo_title' => 'Searched for ' . $breed ?? 'A breed',
+            'seo_description' => 'Searching for ' . $breed ?? 'A breed',
         ]);
     }
 

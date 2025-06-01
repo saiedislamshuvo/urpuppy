@@ -6,7 +6,6 @@
     <meta name="author" content="UrPuppy.com">
     <meta name="robots" content="index, follow">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Your go-to platform for adorable puppies and pet-related content.">
 
     <link fetchpriority="high" rel="preload" as="image" href="{{ asset('banner-bg.webp') }}">
     <link rel="icon" type="image/png" href="{{ asset('images/logos/favicon.png') }}">
@@ -32,9 +31,6 @@
         }
     </script>
 
-
-
-    <title inertia>{{ config('app.name', 'UrPuppy') }}</title>
 
     @viteReactRefresh
     @vite(['resources/js/app.tsx', "resources/js/Pages/{$page['component']}.tsx"])

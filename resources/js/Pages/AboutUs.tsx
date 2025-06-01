@@ -10,7 +10,7 @@ const AboutUs = ({url}: {url: string}) => {
   return (
   <Layout navType="secondary">
 
-            <MetaTags url={url} title="About Us"/>
+            <MetaTags url={url}  title="About Us"/>
               <div className="page-wrapper position-relative overflow-hidden">
     <section className="information pt-4 pb-9">
       <div className="container">
