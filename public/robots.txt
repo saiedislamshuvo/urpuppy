@@ -1,6 +1,6 @@
 User-agent: *
 Disallow: /puppies/create
-Disallow: /breeder/create
+Disallow: /breeders/create
 Disallow: /register/seller
 Disallow: /register/breeder
 Disallow: /register-breeder
