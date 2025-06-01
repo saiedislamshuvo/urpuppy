@@ -14,21 +14,26 @@ class OptimizeBlogImages extends Command
 
     public function handle()
     {
+        $targetWidth = 1200;
+        $targetHeight = 800;
+        $quality = 85;
+
         // Initialize ImageManager with GD driver
         $manager = new ImageManager(new Driver());
         $disk = Storage::disk('s3');
 
-        // Step 1: Convert all images in blog/ folder to WebP
-        $this->info("Step 1: Converting all images in blog/ folder to WebP...");
+        // Step 1: Process all images in blog/ folder (convert to WebP if needed, resize all)
+        $this->info("Step 1: Processing all images in blog/ folder...");
         $files = $disk->files('blog/');
-        $convertedFiles = [];
+        $processedFiles = [];
 
         foreach ($files as $filePath) {
-            if (!preg_match('/\.(jpg|jpeg|png)$/i', $filePath)) {
-                continue; // skip non-supported files
+            // Skip non-image files
+            if (!preg_match('/\.(jpg|jpeg|png|webp)$/i', $filePath)) {
+                continue;
             }
 
-            $this->info("Converting: $filePath");
+            $this->info("Processing: $filePath");
 
             try {
                 // Get image from storage
@@ -42,43 +47,65 @@ class OptimizeBlogImages extends Command
                 // Create image instance from binary data
                 $image = $manager->read($imageData);
 
-                // Convert to WebP with 70% quality
-                $webpData = $image->toWebp(70);
+                // Get original dimensions
+                $originalWidth = $image->width();
+                $originalHeight = $image->height();
+                $this->info("  Original size: {$originalWidth}x{$originalHeight}");
 
-                if (!$webpData) {
-                    $this->error("Failed to encode WebP: $filePath (empty result)");
+                // Resize to target dimensions with cover mode
+                $image->cover($targetWidth, $targetHeight);
+                $this->info("  Resized to: {$image->width()}x{$image->height()} (cover mode)");
+
+                // Determine output path - convert to WebP if not already
+                $isWebP = preg_match('/\.webp$/i', $filePath);
+                $outputPath = $isWebP ? $filePath : preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $filePath);
+
+                // Encode image data
+                $outputData = $isWebP ? $image->toWebp($quality) : $image->toWebp($quality);
+
+                if (!$outputData) {
+                    $this->error("Failed to encode image: $filePath (empty result)");
                     continue;
                 }
 
-                // Create .webp filename
-                $webpPath = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $filePath);
-
-                // Check if WebP already exists
-                if ($disk->exists($webpPath)) {
-                    $this->warn("WebP already exists: $webpPath (skipping conversion)");
-                    $convertedFiles[$filePath] = $webpPath;
+                // Check if output file already exists (and is different from input)
+                if ($outputPath !== $filePath && $disk->exists($outputPath)) {
+                    $this->warn("Output file already exists: $outputPath (skipping)");
+                    $processedFiles[$filePath] = $outputPath;
                     continue;
                 }
 
-                // Upload WebP to storage with correct MIME
-                $success = $disk->put($webpPath, $webpData, [
+                // Upload to storage with correct MIME
+                $success = $disk->put($outputPath, $outputData, [
                     'visibility' => 'public',
                     'ContentType' => 'image/webp',
                 ]);
 
                 if ($success) {
-                    $this->info("✅ Converted to WebP: $webpPath");
-                    $convertedFiles[$filePath] = $webpPath;
+                    // Get file sizes for comparison
+                    $originalSize = strlen($imageData);
+                    $outputSize = strlen($outputData);
+                    $savings = round((($originalSize - $outputSize) / $originalSize) * 100, 1);
+
+                    $this->info("✅ Processed: $outputPath");
+                    $this->info("  File size: " . $this->formatBytes($originalSize) . " → " . $this->formatBytes($outputSize) . " ({$savings}% change)");
+
+                    $processedFiles[$filePath] = $outputPath;
+
+                    // If we created a new WebP file and the original wasn't WebP, mark original for deletion
+                    if (!$isWebP && $outputPath !== $filePath) {
+                        $processedFiles[$filePath] = $outputPath;
+                    }
                 } else {
-                    $this->error("Failed to save WebP: $webpPath");
+                    $this->error("Failed to save: $outputPath");
                 }
 
             } catch (\Exception $e) {
-                $this->error("❌ Error converting $filePath: " . $e->getMessage());
+                $this->error("❌ Error processing $filePath: " . $e->getMessage());
             }
         }
 
-        // Step 2: Update post banners from old formats to WebP
+        // Step 2: Update post banners to use WebP files
         $this->info("\nStep 2: Updating post banners to use WebP files...");
         $posts = Post::query()->get();
 
@@ -89,7 +116,7 @@ class OptimizeBlogImages extends Command
 
             $this->info("Processing post ID: {$post->id} - Banner: {$post->banner}");
 
-            // Check if current banner is an image file in blog/ folder
+            // Check if current banner is an image file in blog/ folder (not already WebP)
             if (preg_match('/^blog\/.*\.(jpg|jpeg|png)$/i', $post->banner)) {
                 // Create WebP path
                 $webpPath = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $post->banner);
@@ -103,15 +130,16 @@ class OptimizeBlogImages extends Command
                     $this->warn("WebP not found for: {$post->banner} (expected: {$webpPath})");
                 }
             } else {
-                $this->info("Skipping post {$post->id} - not an image in blog/ folder or already WebP");
+                $this->info("Skipping post {$post->id} - already WebP or not in blog/ folder");
             }
         }
 
-        // Step 3: Delete old image files (JPG, JPEG, PNG)
+        // Step 3: Delete old image files (JPG, JPEG, PNG) that were converted
         $this->info("\nStep 3: Cleaning up old image files...");
 
-        foreach ($convertedFiles as $originalPath => $webpPath) {
-            if ($disk->exists($originalPath)) {
+        foreach ($processedFiles as $originalPath => $webpPath) {
+            // Only delete if the original is not WebP and different from the processed path
+            if ($originalPath !== $webpPath && $disk->exists($originalPath) && !preg_match('/\.webp$/i', $originalPath)) {
                 $disk->delete($originalPath);
                 $this->info("🗑️ Deleted original: {$originalPath}");
             }
@@ -127,8 +155,22 @@ class OptimizeBlogImages extends Command
         }
 
         $this->info("\n✅ Process completed!");
-        $this->info("- Converted " . count($convertedFiles) . " images to WebP");
+        $this->info("- Processed " . count($processedFiles) . " images");
         $this->info("- Updated post banners to use WebP files");
         $this->info("- Deleted old image files");
+    }
+
+    /**
+     * Format bytes to human readable format
+     */
+    private function formatBytes($bytes, $precision = 2)
+    {
+        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+
+        for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
+            $bytes /= 1024;
+        }
+
+        return round($bytes, $precision) . ' ' . $units[$i];
     }
 }

@@ -11,5 +11,7 @@ use Illuminate\Support\Facades\Schedule;
 
 Schedule::command(SyncViewsToDatabase::class)->hourly();
 
+
+Schedule::command('images:convert-webp')->daily();
 Schedule::command('sitemap:generate')->daily();
 Schedule::command('app:send-wishlist')->daily();
