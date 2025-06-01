@@ -32,10 +32,10 @@ class GenerateSitemap extends Command
     {
         $sitemap = SitemapGenerator::create(config('app.url'))
             ->getSitemap()
-            ->add(Puppy::all())
+            ->add(Puppy::where('status', 'published')->get())
             ->add(route('breeds.index'))
             ->add(Breed::all())
-            ->add(User::all());
+            ->add(User::breeders()->get());
 
         // Create a temporary file handle
         $tempFile = tmpfile();
