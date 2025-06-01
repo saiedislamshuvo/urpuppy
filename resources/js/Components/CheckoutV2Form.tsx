@@ -5,6 +5,9 @@ import Button from "./ui/Button";
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
 const CheckoutV2Form = ({ clientSecret, plan_id, type = 'new' }: any) => {
+
+    console.log('works')
+    console.log(import.meta.env.VITE_STRIPE_KEY)
     const [elements, setElements] = useState(null);
     const [stripe, setStripe] = useState<any>(null);
     const [message, setMessage] = useState("");
