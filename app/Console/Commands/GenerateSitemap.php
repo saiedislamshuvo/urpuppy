@@ -42,10 +42,14 @@ class GenerateSitemap extends Command
         fwrite($tempFile, $sitemap->render());
         rewind($tempFile);
 
-        Storage::disk('s3')->put('sitemap.xml', $sitemap->render());
+        /* Storage::disk('s3')->put('sitemap.xml', $sitemap->render()); */
+
+        if (Storage::disk('s3')->exists('sitemap.xml')) {
+    Storage::disk('s3')->delete('sitemap.xml');
+}
 
         // Stream to S3
-        /* Storage::disk('s3')->writeStream('sitemap.xml', $tempFile); */
+         Storage::disk('s3')->writeStream('sitemap.xml', $tempFile);
 
         // Close the file handle
         fclose($tempFile);
