@@ -240,7 +240,8 @@ href={`/report/${puppy.slug}`} method="post" data={{
             {siblings.length > 0 &&
             <div className="card border">
               <div className="card-body">
-                <h5 className="fs-5 mb-3 pb-1">Charlie’s Siblings</h5>
+                <h5 className="fs-5 mb-3 pb-1">{puppy.name}{puppy.name.endsWith('s') ? "'" : "'s"} Siblings
+ </h5>
                 <div className="row">
                                             {
                                                 siblings.map((sibling: App.Data.PuppySiblingData) => (
