@@ -14,7 +14,7 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2165217194424630"
         crossorigin="anonymous"></script>
 
-   <script defer src="https://analytics.urpuppy.com/script.js" data-website-id="fd5f64b1-e0ff-4833-9911-127d552c8f3a"></script>
+    <script defer src="https://analytics.761073128.xyz/script.js" data-website-id="ff04b39a-2c33-43df-9854-8edb4ae01c4a">
     </script>
 
     <script type="application/ld+json">
