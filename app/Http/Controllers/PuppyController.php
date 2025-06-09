@@ -74,6 +74,7 @@ class PuppyController extends Controller
                 'featuredPuppies' => function () {
                     return Cache::remember('featured_puppies', 1800, function () {
                         return Puppy::with('breeds', 'media', 'seller')
+                            ->hasSubscribedUsers()
                             ->inRandomOrder()
                             ->limit(5)
                             ->get();
@@ -89,7 +90,7 @@ class PuppyController extends Controller
                 },
                 'siblings' => function () use ($puppy) {
                     return PuppySiblingData::collect(
-                        $puppy->siblings()->with('media')->get()
+                        $puppy->siblings()->with('media')->hasSubscribedUsers()->get()
                     );
                 },
                 'related_puppies' => function () use ($puppy) {
