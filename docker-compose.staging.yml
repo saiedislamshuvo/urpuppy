@@ -16,27 +16,10 @@ services:
             WITH_SSR: true
             WITH_HORIZON: true
             WITH_SCHEDULER: true
-    postgres:
-        image: postgres:16-alpine
-        volumes:
-          - pgalpine:/var/lib/postgresql/data
-          - /var/run/docker.sock:/var/run/docker.sock
-        networks:
-          - dokploy-network
-        environment:
-          - POSTGRES_PASSWORD=Asakaboi35
-          - POSTGRES_USER=urpuppy
-          - POSTGRES_DB=urpuppy
-
-    redis:
-        networks:
-          - dokploy-network
-        image: redis:alpine
 
 networks:
   dokploy-network:
     external: true
 
 volumes:
-  pgalpine:
   urpuppy-app-storage:
