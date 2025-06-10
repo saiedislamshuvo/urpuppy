@@ -91,7 +91,7 @@ class SellerController extends Controller
         }
 
         if (!$user->premium_plan && $user->puppies()->count() == 1 && $user->roles->contains('seller')) {
-            return success('plans.index', 'Subscribe to any plan to activate your listing');
+            /* return success('plans.index', 'Subscribe to any plan to activate your listing'); */
         }
 
         $patterns = pattern_options();
@@ -121,7 +121,7 @@ $siblings = sibling_options($request, $id);
 
                 // Check plan requirements
                 if (!$user->breeder_plan && !$user->premium_plan && $user->puppies()->count() > 1) {
-                    return success('plans.index', 'Subscribe to any plan to activate your listing');
+                    /* return success('plans.index', 'Subscribe to any plan to activate your listing'); */
                 }
 
                 $data = $request->validated();
@@ -155,7 +155,9 @@ $siblings = sibling_options($request, $id);
                 !$user->premium_plan &&
                 $user->profile_completed
             ) {
-                return success('plans.index', 'Subscribe to any plan to activate your listing');
+
+                return success('home', 'Created Successfully');
+//                return success('plans.index', 'Subscribe to any plan to activate your listing');
             }
 
                 return success('puppies.show', 'Puppy created successfully', $created_puppy->slug);

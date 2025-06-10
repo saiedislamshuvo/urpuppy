@@ -58,7 +58,7 @@ class SellerRegistrationRequest extends FormRequest
         ];
 
         if (! $request->user()->profile_completed) {
-            $rules['gmap_payload'] = ['required'];
+            /* $rules['gmap_payload'] = ['required']; */
         }
 
         // Check the user's puppies count
@@ -88,7 +88,7 @@ class SellerRegistrationRequest extends FormRequest
         return [
             'phone.required' => 'Phone number is required.',
             /* 'city.required' => 'City is required.', */
-            'gmap_payload.required' => 'Location field is required',
+            /* 'gmap_payload.required' => 'Location field is required', */
             /* 'state_id.required' => 'State is required.', */
             'email.unique' => 'The email address is already taken.',
             'puppy_price.min' => 'The puppy price must be a positive value.',

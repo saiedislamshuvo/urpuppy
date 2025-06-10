@@ -68,7 +68,6 @@ class DatabaseSeeder extends Seeder
 
         $user->assignRole('author');
 
-        $this->call(PlanSeeder::class);
 
         Breed::factory()->times(20)->create();
 
@@ -155,7 +154,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PuppyPatternsSeeder::class);
         $this->call(PuppyColorsSeeder::class);
         $this->call(LoveSeeder::class);
-        $this->call(WorldSeeder::class);
-
+        /* $this->call(WorldSeeder::class); */
+        $this->call(PlanSeeder::class);
     }
 }

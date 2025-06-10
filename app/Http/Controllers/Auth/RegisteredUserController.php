@@ -89,6 +89,10 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+
+        return redirect(route('home', absolute: false))->with('message.success', 'You have been registered successfully.');
+
+
         if ($request?->is_seller) {
             return redirect(route('plans.index', absolute: false))->with('message.success', 'You have to purchase a plan to start selling');
         }
