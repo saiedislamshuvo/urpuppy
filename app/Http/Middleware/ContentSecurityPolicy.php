@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
@@ -12,6 +13,7 @@ class ContentSecurityPolicy
         $response = $next($request);
 
         // Build CSP directives
+
         $directives = [
             "default-src 'self'",
             "script-src 'self' https://pagead2.googlesyndication.com https://analytics.761073128.xyz https://ep2.adtrafficquality.google https://maps.googleapis.com https://js.stripe.com 'unsafe-inline' 'unsafe-eval'",
@@ -20,11 +22,11 @@ class ContentSecurityPolicy
             "img-src 'self' data: https: https://maps.googleapis.com",
             "font-src 'self' data: https://fonts.gstatic.com",
             "frame-src 'self' https://js.stripe.com https://*.stripe.com https://hooks.stripe.com https://m.stripe.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://ep2.adtrafficquality.google https://www.google.com/recaptcha",
-            "connect-src 'self' https://analytics.761073128.xyz https://ep1.adtrafficquality.google https://maps.googleapis.com https://js.stripe.com https://api.stripe.com https://m.stripe.com https://*.stripe.com",
+            "connect-src 'self' https://analytics.761073128.xyz https://ep1.adtrafficquality.google https://maps.googleapis.com https://js.stripe.com https://api.stripe.com https://m.stripe.com https://*.stripe.com https://d1ycq56gu6gk7x.cloudfront.net", // Added Cloudfront URL here
         ];
 
         // Combine directives into single header
-        $csp = implode('; ', $directives) . ';';
+        $csp = implode('; ', $directives).';';
 
         // Set headers - multiple methods for maximum compatibility
         $response->headers->set('Content-Security-Policy', $csp, true);
