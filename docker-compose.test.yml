@@ -86,6 +86,7 @@ services:
       - stack
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - lencrypt:/letsencrypt
     logging: *default-logging
     labels:
       traefik.enable: true
