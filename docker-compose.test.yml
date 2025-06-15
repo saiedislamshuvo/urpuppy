@@ -283,5 +283,8 @@ volumes:
     driver: local
   stack-minio:
     driver: local
+  lencrypt:
+    driver: local   
+    
 
 
