@@ -53,6 +53,10 @@ services:
       - "--entryPoints.app.http.redirections.entryPoint.scheme=https"
       - "--entryPoints.app-secure.address=:443"
       - "--entryPoints.app-secure.http3=true"
+      - "--entryPoints.app-secure.http.tls.certresolver=myresolver"
+      - "--certificatesresolvers.myresolver.acme.email=mobistyle35@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
 
       
       - "--entryPoints.pgadmin.address=:6053"
@@ -61,6 +65,11 @@ services:
       - "--entryPoints.minio-console.address=:8900"
       - "--entryPoints.glances.address=:61208"
       - "--entryPoints.netdata.address=:19999"
+
+      - "--entryPoints.app-secure.http.tls.certresolver=myresolver"
+      - "--certificatesresolvers.myresolver.acme.email=mobistyle35@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "127.0.0.1:8190:8190" # Traefik
       - "80:80" # HTTP
@@ -108,6 +117,8 @@ services:
       traefik.http.routers.app-secure.entryPoints: app-secure
       traefik.http.routers.app-secure.service: app-service
       traefik.http.routers.app-secure.tls: true
+      traefik.http.routers.app-secure.tls.certresolver: myresolver
+
       traefik.http.routers.app-secure.middlewares: "redirect-scheme,app-retry,app-compress,security-headers"
 
       traefik.http.services.app-service.loadbalancer.server.port: 8000 # Because container exposes multiple ports
