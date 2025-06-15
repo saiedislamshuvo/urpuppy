@@ -55,8 +55,8 @@ services:
       - "--entryPoints.app.http.redirections.entryPoint.scheme=https"
       - "--entryPoints.app-secure.address=:443"
       - "--entryPoints.app-secure.http3=true"
-      - "--entryPoints.reverb.address=:8080"
-      - "--entryPoints.reverb.http3=true"
+      # - "--entryPoints.reverb.address=:8080"
+      # - "--entryPoints.reverb.http3=true"
       - "--entryPoints.pgadmin.address=:6053"
       - "--entryPoints.pghero.address=:6660"
       - "--entryPoints.minio.address=:9000"
@@ -149,20 +149,20 @@ services:
       CONTAINER_MODE: scheduler
     labels:
       traefik.enable: false
-  reverb:
-    <<: *base
-    environment:
-      CONTAINER_MODE: reverb
-    labels:
-      traefik.enable: true
-      traefik.http.routers.reverb.rule: Host(`${APP_HOST}`) || Host(`localhost`)
-      traefik.http.routers.reverb.entryPoints: reverb
-      traefik.http.routers.reverb.tls: true
-      traefik.http.routers.reverb.middlewares: "reverb-retry"
-      traefik.http.middlewares.reverb-retry.retry.attempts: 4
-      traefik.http.middlewares.reverb-retry.retry.initialinterval: 100ms
-      traefik.http.routers.reverb.service: reverb-service
-      traefik.http.services.reverb-service.loadbalancer.server.port: 8080
+  # reverb:
+  #   <<: *base
+  #   environment:
+  #     CONTAINER_MODE: reverb
+  #   labels:
+  #     traefik.enable: true
+  #     traefik.http.routers.reverb.rule: Host(`${APP_HOST}`) || Host(`localhost`)
+  #     traefik.http.routers.reverb.entryPoints: reverb
+  #     traefik.http.routers.reverb.tls: true
+  #     traefik.http.routers.reverb.middlewares: "reverb-retry"
+  #     traefik.http.middlewares.reverb-retry.retry.attempts: 4
+  #     traefik.http.middlewares.reverb-retry.retry.initialinterval: 100ms
+  #     traefik.http.routers.reverb.service: reverb-service
+  #     traefik.http.services.reverb-service.loadbalancer.server.port: 8080
   redis:
     image: 'redis:alpine'
     ulimits:
