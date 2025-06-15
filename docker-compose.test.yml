@@ -76,7 +76,7 @@ services:
       - stack
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - urpuppy-letsencrypt:/letsencrypt
+      - urpuppy-letsencrypt-cert:/letsencrypt
     logging: *default-logging
     labels:
       traefik.enable: true
@@ -273,7 +273,7 @@ volumes:
     driver: local
   stack-minio:
     driver: local
-  urpuppy-letsencrypt:
+  urpuppy-letsencrypt-cert:
     driver: local   
     
 
