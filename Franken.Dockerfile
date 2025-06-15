@@ -129,12 +129,12 @@ USER ${USER}
 
 COPY --link --chown=${WWWUSER}:${WWWUSER} --from=vendor /usr/bin/composer /usr/bin/composer
 
-COPY --link --chown=${WWWUSER}:${WWWUSER} deply/supervisord.conf /etc/
-COPY --link --chown=${WWWUSER}:${WWWUSER} deply/octane/FrankenPHP/supervisord.frankenphp.conf /etc/supervisor/conf.d/
-COPY --link --chown=${WWWUSER}:${WWWUSER} deply/supervisord.*.conf /etc/supervisor/conf.d/
-COPY --link --chown=${WWWUSER}:${WWWUSER} deply/start-container /usr/local/bin/start-container
-COPY --link --chown=${WWWUSER}:${WWWUSER} deply/healthcheck /usr/local/bin/healthcheck
-COPY --link --chown=${WWWUSER}:${WWWUSER} deply/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
+COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/supervisord.conf /etc/
+COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/octane/FrankenPHP/supervisord.frankenphp.conf /etc/supervisor/conf.d/
+COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/supervisord.*.conf /etc/supervisor/conf.d/
+COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/start-container /usr/local/bin/start-container
+COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/healthcheck /usr/local/bin/healthcheck
+COPY --link --chown=${WWWUSER}:${WWWUSER} deployment/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
 
 RUN chmod +x /usr/local/bin/start-container /usr/local/bin/healthcheck
 
@@ -185,19 +185,15 @@ USER ${USER}
 
 ENV WITH_HORIZON=false \
     WITH_SCHEDULER=false \
-    WITH_SSR=false \
     WITH_REVERB=false
 
 COPY --link --chown=${WWWUSER}:${WWWUSER} . .
 COPY --link --chown=${WWWUSER}:${WWWUSER} --from=build ${ROOT}/public public
-COPY --link --chown=${WWWUSER}:${WWWUSER} --from=build ${ROOT}/bootstrap/ssr bootstrap/ssr
 
 RUN mkdir -p \
     storage/framework/{sessions,views,cache,testing} \
     storage/logs \
     bootstrap/cache && chmod -R a+rw storage
-
-RUN touch storage/logs/ssr.log && chmod a+rw storage/logs/ssr.log
 
 RUN composer install \
     --classmap-authoritative \
@@ -207,11 +203,9 @@ RUN composer install \
     && composer clear-cache
 
 EXPOSE 8000
-EXPOSE 6001
 EXPOSE 443
 EXPOSE 443/udp
 EXPOSE 2019
-EXPOSE 13714
 EXPOSE 8080
 
 ENTRYPOINT ["start-container"]
