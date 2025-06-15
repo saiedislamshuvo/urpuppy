@@ -98,6 +98,8 @@ services:
       interval: 3s
       retries: 12
       timeout: 5s
+    volumes:
+      - app-storage:/var/www/html/storage
     labels:
       traefik.enable: true
 
@@ -143,8 +145,12 @@ services:
       CONTAINER_MODE: horizon
     labels:
       traefik.enable: false
+    volumes:
+      - queue-storage:/var/www/html/storage
   scheduler:
     <<: *base
+    volumes:
+      - scheduler-storage:/var/www/html/storage
     environment:
       CONTAINER_MODE: scheduler
     labels:
