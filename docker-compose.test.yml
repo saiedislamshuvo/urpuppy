@@ -287,6 +287,12 @@ networks:
 volumes:
   stack-pgsql:
     driver: local
+  app-storage:
+    driver: local
+  scheduler-storage:
+    driver: local
+  queue-storage:
+    driver: local
   stack-redis:
     driver: local
   stack-pgadmin:
