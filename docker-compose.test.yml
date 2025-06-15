@@ -58,7 +58,7 @@ services:
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--entryPoints.minio.address=:9000"
-      - "--entryPoints.pghero.address=:8080"
+      - "--entryPoints.matomo.address=:8080"
       - "--entryPoints.minio-console.address=:8900"
 
     ports:
