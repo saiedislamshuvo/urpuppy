@@ -57,14 +57,9 @@ services:
       - "--certificatesresolvers.myresolver.acme.email=mobistyle35@gmail.com"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-
-      
-      - "--entryPoints.pgadmin.address=:6053"
-      - "--entryPoints.pghero.address=:6660"
       - "--entryPoints.minio.address=:9000"
       - "--entryPoints.minio-console.address=:8900"
-      - "--entryPoints.glances.address=:61208"
-      - "--entryPoints.netdata.address=:19999"
+
     ports:
       - "127.0.0.1:8190:8190" # Traefik
       - "80:80" # HTTP
