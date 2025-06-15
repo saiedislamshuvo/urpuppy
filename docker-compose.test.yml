@@ -102,7 +102,27 @@ services:
       traefik.http.routers.app.rule: Host(`${APP_HOST}`) 
       traefik.http.routers.app.entryPoints: app
       traefik.http.routers.app.service: app-service
-      traefik.http.routers.app.middlewares: "redirect-scheme,app-retry,app-compress,security-headers"
+      traefik.http.routers.app.middlewares: "redirect-scheme,app-retry,app-compress,security-headers, html-cache"
+
+
+      - "traefik.http.middlewares.html-cache.headers.customResponseHeaders.Cache-Control=public, max-age=7600"
+
+      # Static assets cache middleware (for Vite or similar)
+      - "traefik.http.middlewares.static-assets-cache.headers.customResponseHeaders.Cache-Control=public, max-age=31536000, immutable"
+
+      # Static assets router (e.g., Vite build assets)
+      - "traefik.http.routers.static-assets.rule=Host(`bantam.761073128.xyz`) && PathPrefix(`/build/assets/`)"
+      - "traefik.http.routers.static-assets.service=app"
+      - "traefik.http.routers.static-assets.middlewares=compress,static-assets-cache"
+
+      # Image cache middleware
+      - "traefik.http.middlewares.image-cache.headers.customResponseHeaders.Cache-Control=public, max-age=31536000, immutable"
+
+      # Image router using PathRegexp for individual webp files and folders
+      - "traefik.http.routers.images.rule=Host(`bantam.761073128.xyz`) && PathRegexp(`^/(images|img|storage/fonts)/.*|/desktop.*\\.webp|/mobile\\.webp`)"
+      - "traefik.http.routers.images.service=app"
+      - "traefik.http.routers.images.middlewares=compress,image-cache"
+
 
       traefik.http.routers.app-secure.rule: Host(`${APP_HOST}`) 
       traefik.http.routers.app-secure.entryPoints: app-secure
