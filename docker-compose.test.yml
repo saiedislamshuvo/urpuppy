@@ -79,16 +79,17 @@ services:
       - $DOCKER_DATA/traefik/cert:/letsencrypt
     logging: *default-logging
     labels:
-      traefik.enable: true
-      traefik.http.routers.traefik.rule:  Host(`${APP_HOST}`)
-      traefik.http.routers.traefik.service: api@internal
-      traefik.http.routers.traefik.entryPoints: traefik
+      traefik.enable: "true"
+      traefik.http.routers.traefik.rule: "Host(`${APP_HOST}`)"
+      traefik.http.routers.traefik.service: "api@internal"
+      traefik.http.routers.traefik.entryPoints: "traefik"
       traefik.http.routers.traefik.middlewares: "traefik-auth,traefik-retry"
 
-      traefik.http.middlewares.traefik-retry.retry.attempts: 4
-      traefik.http.middlewares.traefik-retry.retry.initialinterval: 100ms
-      traefik.http.middlewares.traefik-auth.basicauth.removeheader: true
-      traefik.http.middlewares.traefik-auth.basicauth.users: "user:$$2y$$05$$8zbpsdxg9wDiiKdqxiB0zeAlxZtG68P1SDBOvCN4IooLFewLx70Gm" # user:123456
+      traefik.http.middlewares.traefik-retry.retry.attempts: "4"
+      traefik.http.middlewares.traefik-retry.retry.initialinterval: "100ms"
+      traefik.http.middlewares.traefik-auth.basicauth.removeheader: "true"
+      traefik.http.middlewares.traefik-auth.basicauth.users: "${TRAEFIK_AUTH_USERS:-user:$$2y$$05$$8zbpsdxg9wDiiKdqxiB0zeAlxZtG68P1SDBOvCN4IooLFewLx70Gm}"
+
   app:
     <<: *base
     healthcheck:
@@ -100,75 +101,75 @@ services:
       - '$DOCKER_DATA/staging-urpuppy/app/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app/storage/logs:/var/www/html/storage/logs'
     labels:
-      traefik.enable: true
+      traefik.enable: "true"
 
-      traefik.http.routers.app.rule: Host(`${APP_HOST}`) 
-      traefik.http.routers.app.entryPoints: app
-      traefik.http.routers.app.service: app-service
-      traefik.http.routers.app.middlewares: "redirect-scheme,app-retry,app-compress,security-headers, html-cache"
+      traefik.http.routers.app.rule: "Host(`${APP_HOST}`)"
+      traefik.http.routers.app.entryPoints: "app"
+      traefik.http.routers.app.service: "app-service"
+      traefik.http.routers.app.middlewares: "redirect-scheme,app-retry,app-compress,security-headers,html-cache"
 
-
-      - "traefik.http.middlewares.html-cache.headers.customResponseHeaders.Cache-Control=public, max-age=7600"
+      traefik.http.middlewares.html-cache.headers.customResponseHeaders.Cache-Control: "public, max-age=7600"
 
       # Static assets cache middleware (for Vite or similar)
-      - "traefik.http.middlewares.static-assets-cache.headers.customResponseHeaders.Cache-Control=public, max-age=31536000, immutable"
+      traefik.http.middlewares.static-assets-cache.headers.customResponseHeaders.Cache-Control: "public, max-age=31536000, immutable"
 
       # Static assets router (e.g., Vite build assets)
-      - "traefik.http.routers.static-assets.rule=Host(`bantam.761073128.xyz`) && PathPrefix(`/build/assets/`)"
-      - "traefik.http.routers.static-assets.service=app"
-      - "traefik.http.routers.static-assets.middlewares=compress,static-assets-cache"
+      traefik.http.routers.static-assets.rule: "Host(`${APP_HOST}`) && PathPrefix(`/build/assets/`)"
+      traefik.http.routers.static-assets.service: "app-service"
+      traefik.http.routers.static-assets.middlewares: "app-compress,static-assets-cache"
 
       # Image cache middleware
-      - "traefik.http.middlewares.image-cache.headers.customResponseHeaders.Cache-Control=public, max-age=31536000, immutable"
+      traefik.http.middlewares.image-cache.headers.customResponseHeaders.Cache-Control: "public, max-age=31536000, immutable"
 
       # Image router using PathRegexp for individual webp files and folders
-      - "traefik.http.routers.images.rule=Host(`bantam.761073128.xyz`) && PathRegexp(`^/(images|img|storage/fonts)/.*|/desktop.*\\.webp|/mobile\\.webp`)"
-      - "traefik.http.routers.images.service=app"
-      - "traefik.http.routers.images.middlewares=compress,image-cache"
+      traefik.http.routers.images.rule: "Host(`${APP_HOST}`) && PathRegexp(`^/(images|img|storage/fonts)/.*|/desktop.*\\.webp|/mobile\\.webp`)"
+      traefik.http.routers.images.service: "app-service"
+      traefik.http.routers.images.middlewares: "app-compress,image-cache"
 
-
-      traefik.http.routers.app-secure.rule: Host(`${APP_HOST}`) 
-      traefik.http.routers.app-secure.entryPoints: app-secure
-      traefik.http.routers.app-secure.service: app-service
-      traefik.http.routers.app-secure.tls: true
-      traefik.http.routers.app-secure.tls.certresolver: myresolver
+      traefik.http.routers.app-secure.rule: "Host(`${APP_HOST}`)"
+      traefik.http.routers.app-secure.entryPoints: "app-secure"
+      traefik.http.routers.app-secure.service: "app-service"
+      traefik.http.routers.app-secure.tls: "true"
+      traefik.http.routers.app-secure.tls.certresolver: "myresolver"
 
       traefik.http.routers.app-secure.middlewares: "redirect-scheme,app-retry,app-compress,security-headers"
 
-      traefik.http.services.app-service.loadbalancer.server.port: 8000 # Because container exposes multiple ports
+      traefik.http.services.app-service.loadbalancer.server.port: "8000"
       traefik.http.services.app-service.loadbalancer.healthCheck.path: "/up"
       traefik.http.services.app-service.loadbalancer.healthCheck.hostname: "localhost"
-      traefik.http.services.app-service.loadbalancer.healthCheck.port: 8000
-      traefik.http.services.app-service.loadbalancer.healthCheck.interval: 3s
-      traefik.http.services.app-service.loadbalancer.healthCheck.timeout: 5s
+      traefik.http.services.app-service.loadbalancer.healthCheck.port: "8000"
+      traefik.http.services.app-service.loadbalancer.healthCheck.interval: "3s"
+      traefik.http.services.app-service.loadbalancer.healthCheck.timeout: "5s"
 
-      traefik.http.middlewares.limit.buffering.maxRequestBodyBytes: 460000000 # 460mb
-      traefik.http.middlewares.redirect-scheme.redirectscheme.scheme: https
-      traefik.http.middlewares.redirect-scheme.redirectscheme.permanent: true
-      traefik.http.middlewares.app-retry.retry.attempts: 4
-      traefik.http.middlewares.app-retry.retry.initialinterval: 100ms
-      traefik.http.middlewares.app-compress.compress: true
-      traefik.http.middlewares.security-headers.headers.accesscontrolmaxage: 100
-      traefik.http.middlewares.security-headers.headers.addvaryheader: true # Vary: Origin
-      traefik.http.middlewares.security-headers.headers.hostsproxyheaders: X-Forwarded-Host
-      traefik.http.middlewares.security-headers.headers.stsseconds: 63072000 # Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-      traefik.http.middlewares.security-headers.headers.stsincludesubdomains: true
-      traefik.http.middlewares.security-headers.headers.stspreload: true
-      traefik.http.middlewares.security-headers.headers.forcestsheader: true
-      traefik.http.middlewares.security-headers.headers.customFrameOptionsValue: SAMEORIGIN # X-Frame-Options: same-origin
-      traefik.http.middlewares.security-headers.headers.contenttypenosniff: true # X-Content-Type-Options: nosniff
-      traefik.http.middlewares.security-headers.headers.browserxssfilter: true # X-XSS-Protection: 1; mode=block
-      traefik.http.middlewares.security-headers.headers.referrerpolicy: no-referrer-when-downgrade # Referrer-Policy: no-referrer-when-downgrade
-      traefik.http.middlewares.security-headers.headers.permissionspolicy: camera=(), geolocation=(), microphone=(), payment=(), usb=(), interest-cohort=(), gyroscope=()
+      traefik.http.middlewares.limit.buffering.maxRequestBodyBytes: "460000000"
+      traefik.http.middlewares.redirect-scheme.redirectscheme.scheme: "https"
+      traefik.http.middlewares.redirect-scheme.redirectscheme.permanent: "true"
+      traefik.http.middlewares.app-retry.retry.attempts: "4"
+      traefik.http.middlewares.app-retry.retry.initialinterval: "100ms"
+      traefik.http.middlewares.app-compress.compress: "true"
+      traefik.http.middlewares.security-headers.headers.accesscontrolmaxage: "100"
+      traefik.http.middlewares.security-headers.headers.addvaryheader: "true"
+      traefik.http.middlewares.security-headers.headers.hostsproxyheaders: "X-Forwarded-Host"
+      traefik.http.middlewares.security-headers.headers.stsseconds: "63072000"
+      traefik.http.middlewares.security-headers.headers.stsincludesubdomains: "true"
+      traefik.http.middlewares.security-headers.headers.stspreload: "true"
+      traefik.http.middlewares.security-headers.headers.forcestsheader: "true"
+      traefik.http.middlewares.security-headers.headers.customFrameOptionsValue: "SAMEORIGIN"
+      traefik.http.middlewares.security-headers.headers.contenttypenosniff: "true"
+      traefik.http.middlewares.security-headers.headers.browserxssfilter: "true"
+      traefik.http.middlewares.security-headers.headers.referrerpolicy: "no-referrer-when-downgrade"
+      traefik.http.middlewares.security-headers.headers.permissionspolicy: "camera=(), geolocation=(), microphone=(), payment=(), usb=(), interest-cohort=(), gyroscope=()"
+
   horizon:
     <<: *base
     environment:
       CONTAINER_MODE: horizon
     labels:
-      traefik.enable: false
+      traefik.enable: "false"
     volumes:
       - '$DOCKER_DATA/staging-urpuppy/app-queue/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app-queue/storage/logs:/var/www/html/storage/logs'
+
   scheduler:
     <<: *base
     environment:
@@ -177,7 +178,7 @@ services:
       - '$DOCKER_DATA/staging-urpuppy/app-scheduler/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app-scheduler/storage/logs:/var/www/html/storage/logs'
     labels:
-      traefik.enable: false
+      traefik.enable: "false"
     
   redis:
     image: 'redis:alpine'
@@ -199,14 +200,14 @@ services:
       timeout: 5s
     restart: always
     labels:
-      traefik.enable: false
+      traefik.enable: "false"
+
   pgsql:
     image: 'postgres:17-bookworm'
     ulimits:
       nofile:
         soft: 20000
         hard: 40000
-        # command: ["-c", "config_file=/etc/postgresql/postgresql.conf"]
     security_opt:
       - no-new-privileges:true
     environment:
@@ -226,9 +227,10 @@ services:
     restart: always
     logging: *default-logging
     labels:
-      traefik.enable: false
-      docker-volume-backup.stop-during-backup: true
-      docker-volume-backup.archive-pre: /bin/sh -c 'pg_dump -U ${DB_USERNAME} -F t ${DB_DATABASE} > /backup/${DB_DATABASE}-database.tar'
+      traefik.enable: "false"
+      docker-volume-backup.stop-during-backup: "true"
+      docker-volume-backup.archive-pre: "/bin/sh -c 'pg_dump -U ${DB_USERNAME} -F t ${DB_DATABASE} > /backup/${DB_DATABASE}-database.tar'"
+
   backup:
     image: offen/docker-volume-backup:v2
     security_opt:
@@ -236,13 +238,15 @@ services:
     environment:
       BACKUP_FILENAME: backup-%Y-%m-%dT%H-%M-%S.tar.gz
       BACKUP_PRUNING_PREFIX: backup-
-      BACKUP_CRON_EXPRESSION: "0 2 * * *" # run every day at 2am
+      BACKUP_CRON_EXPRESSION: "0 2 * * *"
       BACKUP_RETENTION_DAYS: '7'
     restart: always
     depends_on:
       pgsql:
         condition: service_healthy
     logging: *default-logging
+    networks:
+      - stack
     volumes:
       - $DOCKER_DATA/staging-urpuppy/pgsql:/backup/pgsql:ro
       - $DOCKER_DATA/staging-urpuppy/backup/volumes:/archive
@@ -250,7 +254,8 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     labels:
-      traefik.enable: false
+      traefik.enable: "false"
+
   minio:
     image: 'minio/minio:latest'
     security_opt:
@@ -266,32 +271,29 @@ services:
     restart: always
     logging: *default-logging
     labels:
-      traefik.enable: true
+      traefik.enable: "true"
 
-  
-      traefik.http.routers.minio-console.entryPoints: minio-console
-      traefik.http.routers.minio-console.service: minio-console-service
+      traefik.http.routers.minio-console.entryPoints: "minio-console"
+      traefik.http.routers.minio-console.service: "minio-console-service"
       traefik.http.routers.minio-console.middlewares: "minio-auth,minio-retry"
-      traefik.http.services.minio-console-service.loadbalancer.server.port: 8900
+      traefik.http.services.minio-console-service.loadbalancer.server.port: "8900"
 
-      traefik.http.routers.minio.rule: Host(`${APP_HOST}`) 
-      traefik.http.routers.minio.entryPoints: minio
-      traefik.http.routers.minio.service: minio-service
+      traefik.http.routers.minio.rule: "Host(`${APP_HOST}`)"
+      traefik.http.routers.minio.entryPoints: "minio"
+      traefik.http.routers.minio.service: "minio-service"
       traefik.http.routers.minio.middlewares: "minio-retry,minio-compress"
-      traefik.http.services.minio-service.loadbalancer.server.port: 9000
+      traefik.http.services.minio-service.loadbalancer.server.port: "9000"
 
-      traefik.http.middlewares.minio-compress.compress: true
-      traefik.http.middlewares.minio-retry.retry.attempts: 4
-      traefik.http.middlewares.minio-retry.retry.initialinterval: 100ms
-      traefik.http.middlewares.minio-auth.basicauth.removeheader: true
-      traefik.http.middlewares.minio-auth.basicauth.users: "user:$$2y$$05$$8zbpsdxg9wDiiKdqxiB0zeAlxZtG68P1SDBOvCN4IooLFewLx70Gm" # user:123456
+      traefik.http.middlewares.minio-compress.compress: "true"
+      traefik.http.middlewares.minio-retry.retry.attempts: "4"
+      traefik.http.middlewares.minio-retry.retry.initialinterval: "100ms"
+      traefik.http.middlewares.minio-auth.basicauth.removeheader: "true"
+      traefik.http.middlewares.minio-auth.basicauth.users: "${MINIO_AUTH_USERS:-user:$$2y$$05$$8zbpsdxg9wDiiKdqxiB0zeAlxZtG68P1SDBOvCN4IooLFewLx70Gm}"
     healthcheck:
       test: [ "CMD", "mc", "ready", "local" ]
       retries: 3
       timeout: 5s
+
 networks:
   stack:
     driver: bridge
-
-
-
