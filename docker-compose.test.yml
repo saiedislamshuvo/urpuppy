@@ -58,6 +58,7 @@ services:
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--entryPoints.minio.address=:9000"
+      - "--entryPoints.minio.pghero=:8080"
       - "--entryPoints.minio-console.address=:8900"
 
     ports:
@@ -70,6 +71,7 @@ services:
       - "127.0.0.1:6660:6660" # PgHero
       - "127.0.0.1:61208:61208" # Glances
       - "9000:9000" # MinIO
+      - "8080:8080" # MinIO
       - "127.0.0.1:8900:8900" # MinIO console
       - "127.0.0.1:19999:19999" # NetData
     networks:
