@@ -283,7 +283,7 @@ services:
       timeout: 5s
 networks:
   stack:
-    driver: host
+    driver: bridge
 volumes:
   stack-pgsql:
     driver: local
