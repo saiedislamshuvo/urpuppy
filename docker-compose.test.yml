@@ -216,7 +216,7 @@ services:
       POSTGRES_USER: '${DB_USERNAME}'
       POSTGRES_PASSWORD: '${DB_PASSWORD}'
     volumes:
-      - $DOCKER_DATA/databases/urpuppy-db:/var/lib/postgresql/data
+      - urpuppy-staging-pgsql:/var/lib/postgresql/data
     networks:
       - stack
     healthcheck:
@@ -297,3 +297,7 @@ services:
 networks:
   stack:
     driver: bridge
+
+volumes:
+  urpuppy-staging-pgsql:
+    driver: local
