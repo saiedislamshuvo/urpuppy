@@ -25,9 +25,7 @@ x-base: &base
     - no-new-privileges:true
   networks:
     - stack
-  volumes:
-    - './storage/app/public:/var/www/html/storage/app/public'
-    - './storage/logs:/var/www/html/storage/logs'
+
   logging: *default-logging
   restart: always
 
@@ -55,8 +53,8 @@ services:
       - "--entryPoints.app.http.redirections.entryPoint.scheme=https"
       - "--entryPoints.app-secure.address=:443"
       - "--entryPoints.app-secure.http3=true"
-      # - "--entryPoints.reverb.address=:8080"
-      # - "--entryPoints.reverb.http3=true"
+
+      
       - "--entryPoints.pgadmin.address=:6053"
       - "--entryPoints.pghero.address=:6660"
       - "--entryPoints.minio.address=:9000"
@@ -68,7 +66,7 @@ services:
       - "80:80" # HTTP
       - "443:443" # HTTPS
       - "443:443/udp" # HTTP/3
-      - "8080:8080" # Reverb
+
       - "127.0.0.1:6053:6053" # pgAdmin
       - "127.0.0.1:6660:6660" # PgHero
       - "127.0.0.1:61208:61208" # Glances
@@ -98,8 +96,6 @@ services:
       interval: 3s
       retries: 12
       timeout: 5s
-    volumes:
-      - app-storage:/var/www/html/storage
     labels:
       traefik.enable: true
 
@@ -145,30 +141,12 @@ services:
       CONTAINER_MODE: horizon
     labels:
       traefik.enable: false
-    volumes:
-      - queue-storage:/var/www/html/storage
   scheduler:
     <<: *base
-    volumes:
-      - scheduler-storage:/var/www/html/storage
     environment:
       CONTAINER_MODE: scheduler
     labels:
       traefik.enable: false
-  # reverb:
-  #   <<: *base
-  #   environment:
-  #     CONTAINER_MODE: reverb
-  #   labels:
-  #     traefik.enable: true
-  #     traefik.http.routers.reverb.rule: Host(`${APP_HOST}`) || Host(`localhost`)
-  #     traefik.http.routers.reverb.entryPoints: reverb
-  #     traefik.http.routers.reverb.tls: true
-  #     traefik.http.routers.reverb.middlewares: "reverb-retry"
-  #     traefik.http.middlewares.reverb-retry.retry.attempts: 4
-  #     traefik.http.middlewares.reverb-retry.retry.initialinterval: 100ms
-  #     traefik.http.routers.reverb.service: reverb-service
-  #     traefik.http.services.reverb-service.loadbalancer.server.port: 8080
   redis:
     image: 'redis:alpine'
     ulimits:
@@ -286,12 +264,6 @@ networks:
     driver: bridge
 volumes:
   stack-pgsql:
-    driver: local
-  app-storage:
-    driver: local
-  scheduler-storage:
-    driver: local
-  queue-storage:
     driver: local
   stack-redis:
     driver: local
