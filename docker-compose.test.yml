@@ -315,7 +315,7 @@ services:
     labels:
       traefik.enable: true
       traefik.http.routers.pghero.rule: Host(`kekyam.761073128.xyz`)
-      traefik.http.routers.pghero.entryPoints: pghero
+      traefik.http.routers.pghero.entryPoints: app-secure
       traefik.http.routers.pghero.service: pghero-service
       traefik.http.services.pghero-service.loadbalancer.server.port: 8080
     environment:
