@@ -17,9 +17,6 @@ services:
             WITH_HORIZON: true
             WITH_SCHEDULER: true
 
-networks:
-  dokploy-network:
-    external: true
 
 volumes:
   urpuppy-app-storage:
