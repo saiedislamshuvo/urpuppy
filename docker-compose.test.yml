@@ -5,7 +5,6 @@ x-logging: &default-logging
     max-file: 6
 
 x-base: &base
-  profiles: [app]
   depends_on:
     pgsql:
       condition: service_healthy
@@ -34,7 +33,6 @@ x-base: &base
 
 services:
   traefik:
-    profiles: [app]
     image: traefik:3.2
     restart: always
     ulimits:
@@ -166,7 +164,6 @@ services:
       traefik.http.routers.reverb.service: reverb-service
       traefik.http.services.reverb-service.loadbalancer.server.port: 8080
   redis:
-    profiles: [app]
     image: 'redis:alpine'
     ulimits:
       nofile:
@@ -188,7 +185,6 @@ services:
     labels:
       traefik.enable: false
   pgsql:
-    profiles: [app]
     image: 'postgres:17-bookworm'
     ulimits:
       nofile:
@@ -220,7 +216,6 @@ services:
       docker-volume-backup.stop-during-backup: true
       docker-volume-backup.archive-pre: /bin/sh -c 'pg_dump -U ${DB_USERNAME} -F t ${DB_DATABASE} > /backup/${DB_DATABASE}-database.tar'
   backup:
-    profiles: [administration]
     image: offen/docker-volume-backup:v2
     security_opt:
       - no-new-privileges:true
@@ -243,7 +238,6 @@ services:
     labels:
       traefik.enable: false
   minio:
-    profiles: [app]
     image: 'minio/minio:latest'
     security_opt:
       - no-new-privileges:true
