@@ -2,8 +2,6 @@ services:
     app:
         image: ghcr.io/adichannnnnhere64/urpuppyv2:staging
         container_name: urpuppy-staging
-        networks:
-          - dokploy-network
         labels:
           - "traefik.enable=true"
           - "traefik.http.routers.urpuppy.rule=Host(`staging.urpuppy.com`)"
