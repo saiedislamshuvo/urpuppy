@@ -317,7 +317,7 @@ services:
       traefik.http.routers.pghero.rule: Host(`kekyam.7610773128.xyz`)
       traefik.http.routers.pghero.entryPoints: pghero
       traefik.http.routers.pghero.service: pghero-service
-      traefik.http.services.pghero-service.loadbalancer.server.port: 8080
+      traefik.http.services.pghero-service.loadbalancer.server.port: 443
     environment:
       - MATOMO_DATABASE_HOST=mariadb
       - MATOMO_DATABASE_PORT_NUMBER=3306
