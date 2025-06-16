@@ -23,8 +23,7 @@ x-base: &base
       hard: 40000
   security_opt:
     - no-new-privileges:true
-  networks:
-    - traefik_default
+
 
   logging: *default-logging
   restart: always
@@ -37,6 +36,8 @@ services:
       interval: 3s
       retries: 12
       timeout: 5s
+    networks:
+      - traefik_default
     volumes:
       - '$DOCKER_DATA/staging-urpuppy/app/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app/storage/logs:/var/www/html/storage/logs'
