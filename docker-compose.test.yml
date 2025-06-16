@@ -195,6 +195,8 @@ services:
     image: 'minio/minio:latest'
     security_opt:
       - no-new-privileges:true
+    networks:
+      - stack
     environment:
       MINIO_ROOT_USER: '${MINIO_ROOT_USER}'
       MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD}'
@@ -264,7 +266,10 @@ services:
       - mariadb
  
 
-
+networks:
+  stack:
+    name: traefik_default
+    external: true
 
 volumes:
   urpuppy-staging-pgsql:
