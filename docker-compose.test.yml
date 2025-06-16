@@ -23,8 +23,6 @@ x-base: &base
       hard: 40000
   security_opt:
     - no-new-privileges:true
-
-
   logging: *default-logging
   restart: always
 
@@ -276,6 +274,8 @@ services:
 networks:
   stack:
     driver: bridge
+  traefik_default:
+    driver: host
 
 volumes:
   urpuppy-staging-pgsql:
