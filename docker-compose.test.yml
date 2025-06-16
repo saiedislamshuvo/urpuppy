@@ -34,8 +34,7 @@ services:
       interval: 3s
       retries: 12
       timeout: 5s
-    networks:
-      - traefik_default
+
     volumes:
       - '$DOCKER_DATA/staging-urpuppy/app/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app/storage/logs:/var/www/html/storage/logs'
@@ -130,8 +129,7 @@ services:
       - no-new-privileges:true
     volumes:
       - $DOCKER_DATA/staging-urpuppy/redis:/data
-    networks:
-      - stack
+   
     logging: *default-logging
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
@@ -156,8 +154,7 @@ services:
       POSTGRES_PASSWORD: '${DB_PASSWORD}'
     volumes:
       - urpuppy-staging-pgsql:/var/lib/postgresql/data
-    networks:
-      - stack
+
     healthcheck:
       test: [ "CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
       interval: 15s
@@ -184,8 +181,7 @@ services:
       pgsql:
         condition: service_healthy
     logging: *default-logging
-    networks:
-      - stack
+ 
     volumes:
       - $DOCKER_DATA/staging-urpuppy/pgsql:/backup/pgsql:ro
       - $DOCKER_DATA/staging-urpuppy/backup/volumes:/archive
@@ -204,8 +200,7 @@ services:
       MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD}'
     volumes:
       - $DOCKER_DATA/staging-urpuppy/s3:/data/minio
-    networks:
-      - stack
+  
     command: 'minio server /data/minio --console-address ":8900"'
     restart: always
     logging: *default-logging
@@ -245,8 +240,7 @@ services:
       - MARIADB_EXTRA_FLAGS=--max_allowed_packet=64MB
     volumes:
       - "mariadb_data3:/bitnami/mariadb"
-    networks:
-      - stack
+
   matomo:
     image: docker.io/bitnami/matomo:5
     labels:
@@ -268,14 +262,9 @@ services:
       - $DOCKER_DATA/staging-urpuppy/analytics/matomo:/bitnami/matomo
     depends_on:
       - mariadb
-    networks:
-      - traefik_default
+ 
 
-networks:
-  stack:
-    driver: bridge
-  traefik_default:
-    driver: host
+
 
 volumes:
   urpuppy-staging-pgsql:
