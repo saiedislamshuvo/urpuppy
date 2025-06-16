@@ -307,7 +307,7 @@ services:
       # https://matomo.org/faq/troubleshooting/faq_183/
       - MARIADB_EXTRA_FLAGS=--max_allowed_packet=64MB
     volumes:
-      - "mariadb_data2:/bitnami/mariadb"
+      - "mariadb_data3:/bitnami/mariadb"
     networks:
       - stack
   matomo:
@@ -341,5 +341,5 @@ networks:
 volumes:
   urpuppy-staging-pgsql:
     driver: local
-  mariadb_data2:
+  mariadb_data3:
     driver: local
