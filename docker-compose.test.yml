@@ -36,6 +36,7 @@ services:
       timeout: 5s
     networks:
       - stack
+      - internal
     volumes:
       - '$DOCKER_DATA/staging-urpuppy/app/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app/storage/logs:/var/www/html/storage/logs'
@@ -103,6 +104,8 @@ services:
     <<: *base
     environment:
       CONTAINER_MODE: horizon
+    networks:
+      - internal
     labels:
       traefik.enable: "false"
     volumes:
@@ -113,6 +116,8 @@ services:
     <<: *base
     environment:
       CONTAINER_MODE: scheduler
+    networks:
+      - internal
     volumes:
       - '$DOCKER_DATA/staging-urpuppy/app-scheduler/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app-scheduler/storage/logs:/var/www/html/storage/logs'
@@ -121,6 +126,8 @@ services:
     
   redis:
     image: 'redis:alpine'
+    networks:
+      - internal
     ulimits:
       nofile:
         soft: 20000
@@ -142,6 +149,8 @@ services:
 
   pgsql:
     image: 'postgres:17-bookworm'
+    networks:
+      - internal
     ulimits:
       nofile:
         soft: 20000
@@ -170,6 +179,8 @@ services:
 
   backup:
     image: offen/docker-volume-backup:v2
+    networks:
+      - internal
     security_opt:
       - no-new-privileges:true
     environment:
@@ -230,47 +241,13 @@ services:
       test: [ "CMD", "mc", "ready", "local" ]
       retries: 3
       timeout: 5s
-  
-  mariadb:
-    image: docker.io/bitnami/mariadb:latest
-    environment:
-      # ALLOW_EMPTY_PASSWORD is recommended only for development.
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_USER=bn_matomo
-      - MARIADB_DATABASE=bitnami_matomo
-      # Flag necessary for the database max allowed packet check
-      # https://matomo.org/faq/troubleshooting/faq_183/
-      - MARIADB_EXTRA_FLAGS=--max_allowed_packet=64MB
-    volumes:
-      - "mariadb_data3:/bitnami/mariadb"
-
-  matomo:
-    image: docker.io/bitnami/matomo:5
-    labels:
-      traefik.enable: true
-      traefik.http.routers.matomo.rule: Host(`kekyam.761073128.xyz`)
-      traefik.http.routers.matomo.entryPoints: app-secure
-      traefik.http.routers.matomo.service: matomo-service
-      traefik.http.services.matomo-service.loadbalancer.server.port: 8080
-    ports:
-      - 8069:8080
-    environment:
-      - MATOMO_DATABASE_HOST=mariadb
-      - MATOMO_DATABASE_PORT_NUMBER=3306
-      - MATOMO_DATABASE_USER=bn_matomo
-      - MATOMO_DATABASE_NAME=bitnami_matomo
-      # ALLOW_EMPTY_PASSWORD is recommended only for development.
-      - ALLOW_EMPTY_PASSWORD=yes
-    volumes:
-      - $DOCKER_DATA/staging-urpuppy/analytics/matomo:/bitnami/matomo
-    depends_on:
-      - mariadb
- 
 
 networks:
   stack:
     name: traefik_default
     external: true
+  internal:
+    driver: bridge
 
 volumes:
   urpuppy-staging-pgsql:
