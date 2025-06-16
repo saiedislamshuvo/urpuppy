@@ -318,6 +318,8 @@ services:
       traefik.http.routers.matomo.entryPoints: app-secure
       traefik.http.routers.matomo.service: matomo-service
       traefik.http.services.matomo-service.loadbalancer.server.port: 8080
+    ports:
+      - 8080:8080
     environment:
       - MATOMO_DATABASE_HOST=mariadb
       - MATOMO_DATABASE_PORT_NUMBER=3306
