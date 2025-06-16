@@ -24,7 +24,7 @@ x-base: &base
   security_opt:
     - no-new-privileges:true
   networks:
-    - stack
+    - traefik_default
 
   logging: *default-logging
   restart: always
@@ -270,7 +270,7 @@ services:
     depends_on:
       - mariadb
     networks:
-      - stack
+      - traefik_default
 
 networks:
   stack:
