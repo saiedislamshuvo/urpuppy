@@ -30,68 +30,6 @@ x-base: &base
   restart: always
 
 services:
-  traefik:
-    image: traefik:3.2
-    restart: always
-    ulimits:
-      nofile:
-        soft: 20000
-        hard: 40000
-    security_opt:
-      - no-new-privileges:true
-    command:
-      - "--log.level=WARN"
-      - "--ping=true"
-      - "--api=true"
-      - "--accesslog=true"
-      - "--api.dashboard=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedByDefault=false"
-      - "--entryPoints.traefik.address=:8190"
-      - "--entryPoints.app.address=:80"
-      - "--entryPoints.app.http.redirections.entryPoint.to=app-secure"
-      - "--entryPoints.app.http.redirections.entryPoint.scheme=https"
-      - "--entryPoints.app-secure.address=:443"
-      - "--entryPoints.app-secure.http3=true"
-      - "--entryPoints.app-secure.http.tls.certresolver=myresolver"
-      - "--certificatesresolvers.myresolver.acme.email=mobistyle35@gmail.com"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      - "--entryPoints.minio.address=:9000"
-      - "--entryPoints.matomo.address=:8080"
-      - "--entryPoints.minio-console.address=:8900"
-
-    ports:
-      - "127.0.0.1:8190:8190" # Traefik
-      - "80:80" # HTTP
-      - "443:443" # HTTPS
-      - "443:443/udp" # HTTP/3
-
-      - "127.0.0.1:6053:6053" # pgAdmin
-      - "127.0.0.1:6660:6660" # PgHero
-      - "127.0.0.1:61208:61208" # Glances
-      - "9000:9000" # MinIO
-      - "8080:8080" # MinIO
-      - "127.0.0.1:8900:8900" # MinIO console
-      - "127.0.0.1:19999:19999" # NetData
-    networks:
-      - stack
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $DOCKER_DATA/traefik/cert:/letsencrypt
-    logging: *default-logging
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.traefik.rule: "Host(`${APP_HOST}`)"
-      traefik.http.routers.traefik.service: "api@internal"
-      traefik.http.routers.traefik.entryPoints: "traefik"
-      traefik.http.routers.traefik.middlewares: "traefik-auth,traefik-retry"
-
-      traefik.http.middlewares.traefik-retry.retry.attempts: "4"
-      traefik.http.middlewares.traefik-retry.retry.initialinterval: "100ms"
-      traefik.http.middlewares.traefik-auth.basicauth.removeheader: "true"
-      traefik.http.middlewares.traefik-auth.basicauth.users: "${TRAEFIK_AUTH_USERS:-user:$$2y$$05$$8zbpsdxg9wDiiKdqxiB0zeAlxZtG68P1SDBOvCN4IooLFewLx70Gm}"
-
   app:
     <<: *base
     healthcheck:
