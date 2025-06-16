@@ -34,7 +34,8 @@ services:
       interval: 3s
       retries: 12
       timeout: 5s
-
+    networks:
+      - stack
     volumes:
       - '$DOCKER_DATA/staging-urpuppy/app/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app/storage/logs:/var/www/html/storage/logs'
