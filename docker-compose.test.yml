@@ -254,7 +254,7 @@ services:
 
 networks:
   traefik:
-    name: traefik
+    name: traefik_traefik
     external: true
 
 volumes:
