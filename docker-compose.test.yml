@@ -36,6 +36,11 @@ services:
       timeout: 5s
     networks:
       - stack
+      - internal
+    extra_hosts:
+      - "pgsql:172.20.0.2"
+      - "redis:172.20.0.3"
+      - "minio:172.20.0.4"
     volumes:
       - '$DOCKER_DATA/staging-urpuppy/app/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app/storage/logs:/var/www/html/storage/logs'
@@ -104,7 +109,7 @@ services:
     environment:
       CONTAINER_MODE: horizon
     networks:
-      - stack
+      - internal
     labels:
       traefik.enable: "false"
     volumes:
@@ -116,7 +121,7 @@ services:
     environment:
       CONTAINER_MODE: scheduler
     networks:
-      - stack
+      - internal
     volumes:
       - '$DOCKER_DATA/staging-urpuppy/app-scheduler/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app-scheduler/storage/logs:/var/www/html/storage/logs'
@@ -126,7 +131,7 @@ services:
   redis:
     image: 'redis:alpine'
     networks:
-      - stack
+      - internal
     ulimits:
       nofile:
         soft: 20000
@@ -136,12 +141,12 @@ services:
       - no-new-privileges:true
     volumes:
       - $DOCKER_DATA/staging-urpuppy/redis:/data
-   
     logging: *default-logging
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: [ "CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD}", "ping" ]
       retries: 3
       timeout: 5s
+      interval: 5s
     restart: always
     labels:
       traefik.enable: "false"
@@ -149,7 +154,7 @@ services:
   pgsql:
     image: 'postgres:17-bookworm'
     networks:
-      - stack
+      - internal
     ulimits:
       nofile:
         soft: 20000
@@ -161,9 +166,10 @@ services:
       POSTGRES_DB: '${DB_DATABASE}'
       POSTGRES_USER: '${DB_USERNAME}'
       POSTGRES_PASSWORD: '${DB_PASSWORD}'
+      POSTGRES_HOST_AUTH_METHOD: 'md5'
+      POSTGRES_INITDB_ARGS: '--auth-host=md5'
     volumes:
       - urpuppy-staging-pgsql:/var/lib/postgresql/data
-
     healthcheck:
       test: [ "CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
       interval: 15s
@@ -179,7 +185,7 @@ services:
   backup:
     image: offen/docker-volume-backup:v2
     networks:
-      - stack
+      - internal
     security_opt:
       - no-new-privileges:true
     environment:
@@ -192,7 +198,6 @@ services:
       pgsql:
         condition: service_healthy
     logging: *default-logging
- 
     volumes:
       - $DOCKER_DATA/staging-urpuppy/pgsql:/backup/pgsql:ro
       - $DOCKER_DATA/staging-urpuppy/backup/volumes:/archive
@@ -208,12 +213,12 @@ services:
       - no-new-privileges:true
     networks:
       - stack
+      - internal  # Added internal network
     environment:
       MINIO_ROOT_USER: '${MINIO_ROOT_USER}'
       MINIO_ROOT_PASSWORD: '${MINIO_ROOT_PASSWORD}'
     volumes:
       - $DOCKER_DATA/staging-urpuppy/s3:/data/minio
-  
     command: 'minio server /data/minio --console-address ":8900"'
     restart: always
     logging: *default-logging
@@ -240,11 +245,17 @@ services:
       test: [ "CMD", "mc", "ready", "local" ]
       retries: 3
       timeout: 5s
+      interval: 10s
 
 networks:
   stack:
     name: traefik_traefik
     external: true
+  internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
 
 volumes:
   urpuppy-staging-pgsql:
