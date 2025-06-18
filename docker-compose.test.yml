@@ -254,8 +254,7 @@ services:
 
 networks:
   traefik:
-    name: traefik_traefik
-    external: true
+    driver: bridge
 
 volumes:
   urpuppy-staging-pgsql:
