@@ -37,10 +37,6 @@ services:
     networks:
       - traefik
 
-    extra_hosts:
-      - "pgsql:172.20.0.2"
-      - "redis:172.20.0.3"
-      - "minio:172.20.0.4"
     volumes:
       - '$DOCKER_DATA/staging-urpuppy/app/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app/storage/logs:/var/www/html/storage/logs'
@@ -254,7 +250,8 @@ services:
 
 networks:
   traefik:
-    driver: bridge
+    name: 'traefik_traefik'
+    external: true
 
 volumes:
   urpuppy-staging-pgsql:
