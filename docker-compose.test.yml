@@ -15,8 +15,7 @@ x-base: &base
 
   image: ghcr.io/adichannnnnhere64/urpuppyv2:staging
   user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
-  env_file:
-    - path: .env
+
   ulimits:
     nofile:
       soft: 20000
