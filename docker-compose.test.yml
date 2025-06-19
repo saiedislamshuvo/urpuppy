@@ -44,7 +44,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.docker.network: web
-      traefik.http.routers.app.rule: "Host(`${APP_HOST}`)"
+      traefik.http.routers.app.rule: "Host(`${URPUPPY_APP_HOST}`)"
       traefik.http.routers.app.entryPoints: "app"
       traefik.http.routers.app.service: "app-service"
       traefik.http.routers.app.middlewares: "redirect-scheme,app-retry,app-compress,security-headers,html-cache"
@@ -55,7 +55,7 @@ services:
       traefik.http.middlewares.static-assets-cache.headers.customResponseHeaders.Cache-Control: "public, max-age=31536000, immutable"
 
       # Static assets router (e.g., Vite build assets)
-      traefik.http.routers.static-assets.rule: "Host(`${APP_HOST}`) && PathPrefix(`/build/assets/`)"
+      traefik.http.routers.static-assets.rule: "Host(`${URPUPPY_APP_HOST}`) && PathPrefix(`/build/assets/`)"
       traefik.http.routers.static-assets.service: "app-service"
       traefik.http.routers.static-assets.middlewares: "app-compress,static-assets-cache"
 
@@ -63,11 +63,11 @@ services:
       traefik.http.middlewares.image-cache.headers.customResponseHeaders.Cache-Control: "public, max-age=31536000, immutable"
 
       # Image router using PathRegexp for individual webp files and folders
-      traefik.http.routers.images.rule: "Host(`${APP_HOST}`) && PathRegexp(`^/(images|img|storage/fonts)/.*|/desktop.*\\.webp|/mobile\\.webp`)"
+      traefik.http.routers.images.rule: "Host(`${URPUPPY_APP_HOST}`) && PathRegexp(`^/(images|img|storage/fonts)/.*|/desktop.*\\.webp|/mobile\\.webp`)"
       traefik.http.routers.images.service: "app-service"
       traefik.http.routers.images.middlewares: "app-compress,image-cache"
 
-      traefik.http.routers.app-secure.rule: "Host(`${APP_HOST}`)"
+      traefik.http.routers.app-secure.rule: "Host(`${URPUPPY_APP_HOST}`)"
       traefik.http.routers.app-secure.entryPoints: "app-secure"
       traefik.http.routers.app-secure.service: "app-service"
       traefik.http.routers.app-secure.tls: "true"
@@ -233,7 +233,7 @@ services:
       traefik.http.routers.minio-console.middlewares: "minio-auth,minio-retry"
       traefik.http.services.minio-console-service.loadbalancer.server.port: "8900"
 
-      traefik.http.routers.minio.rule: "Host(`${APP_HOST}`)"
+      traefik.http.routers.minio.rule: "Host(`${URPUPPY_APP_HOST}`)"
       traefik.http.routers.minio.entryPoints: "minio"
       traefik.http.routers.minio.service: "minio-service"
       traefik.http.routers.minio.middlewares: "minio-retry,minio-compress"
