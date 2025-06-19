@@ -15,7 +15,8 @@ x-base: &base
 
   image: ghcr.io/adichannnnnhere64/urpuppyv2:staging
   user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
-
+  env_file:
+    - path: .env
   ulimits:
     nofile:
       soft: 20000
@@ -36,8 +37,7 @@ services:
     networks:
       - web
       - urpuppy_internal
-    env_file:
-      - path: .env
+
     volumes:
       - '$DOCKER_DATA/staging-urpuppy/app/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app/storage/logs:/var/www/html/storage/logs'
