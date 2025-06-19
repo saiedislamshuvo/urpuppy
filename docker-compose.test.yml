@@ -43,7 +43,7 @@ services:
       - '$DOCKER_DATA/staging-urpuppy/app/storage/logs:/var/www/html/storage/logs'
     labels:
       traefik.enable: "true"
-
+      traefik.docker.network: web
       traefik.http.routers.app.rule: "Host(`${APP_HOST}`)"
       traefik.http.routers.app.entryPoints: "app"
       traefik.http.routers.app.service: "app-service"
