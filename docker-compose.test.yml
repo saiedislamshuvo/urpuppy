@@ -10,8 +10,7 @@ x-base: &base
       condition: service_healthy
     redis:
       condition: service_healthy
-    minio:
-      condition: service_healthy
+
 
   image: ghcr.io/adichannnnnhere64/urpuppyv2:staging
   user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
