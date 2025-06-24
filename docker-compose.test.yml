@@ -126,6 +126,8 @@ services:
     image: 'dpage/pgadmin4:latest'
     networks:
       - urpuppy_internal
+      - traefik_web
+
     security_opt:
       - no-new-privileges:true
     depends_on:
