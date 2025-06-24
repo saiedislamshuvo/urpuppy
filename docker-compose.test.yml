@@ -92,10 +92,9 @@ services:
       traefik.enable: "false"
 
   pgsql:
-    image: 'postgres:17-bookworm'
+    image: 'postgres:17-alpine'
     networks:
       - urpuppy_internal
-
     ulimits:
       nofile:
         soft: 20000
@@ -122,6 +121,28 @@ services:
       traefik.enable: "false"
       docker-volume-backup.stop-during-backup: "true"
       docker-volume-backup.archive-pre: "/bin/sh -c 'pg_dump -U ${DB_USERNAME} -F t ${DB_DATABASE} > /backup/${DB_DATABASE}-database.tar'"
+
+  pgadmin:
+    image: 'dpage/pgadmin4:latest'
+    networks:
+      - urpuppy_internal
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      pgsql:
+        condition: service_healthy
+    ulimits:
+      nofile:
+        soft: 20000
+        hard: 40000
+    environment:
+      PGADMIN_DEFAULT_EMAIL: '${PGADMIN_DEFAULT_EMAIL}'
+      PGADMIN_DEFAULT_PASSWORD: '${PGADMIN_DEFAULT_PASSWORD}'
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: 'True'
+    volumes:
+      - 'stack-pgadmin:/var/lib/pgadmin'
+    restart: always
+    logging: *default-logging
 
   backup:
     image: offen/docker-volume-backup:v2
@@ -158,6 +179,8 @@ networks:
 
 volumes:
   urpuppy-staging-pgsql:
+    driver: local
+  stack-pgadmin:
     driver: local
   mariadb_data3:
     driver: local
