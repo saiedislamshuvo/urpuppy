@@ -43,6 +43,7 @@ elif [ "${container_mode}" = "scheduler" ]; then
     initialStuff
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.scheduler.conf
 elif [ "${container_mode}" = "ssr" ]; then
+    echo "Container mode: $container_mode";
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.ssr.conf
 elif [ "${container_mode}" = "worker" ]; then
     if [ -z "${WORKER_COMMAND}" ]; then
