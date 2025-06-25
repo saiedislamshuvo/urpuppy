@@ -9,7 +9,7 @@ if [ "${container_mode}" = "http" ]; then
 elif [ "${container_mode}" = "horizon" ]; then
     php "${ROOT}/artisan" horizon:status
 elif [ "${container_mode}" = "ssr" ]; then
-    php "${ROOT}/artisan" octane:status
+    exit 0
 elif [ "${container_mode}" = "scheduler" ]; then
     if [ "$(supervisorctl status scheduler:scheduler_0 | awk '{print tolower($2)}')" = "running" ]; then
         exit 0
