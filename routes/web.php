@@ -78,6 +78,10 @@ Route::get('/saved-search/{id}', [SavedSearchController::class, 'destroy']);
 Route::get('/saved-search', [SavedSearchController::class, 'show']);
 Route::post('/saved-search', [SavedSearchController::class, 'store']);
 
+Route::get('test', function () {
+    dd('test');
+});
+
 Route::post('/complete-subscription', function (Request $request) {
     $user = $request->user();
     $paymentMethod = $request->payment_method; // Retrieve from the frontend
