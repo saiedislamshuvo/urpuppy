@@ -7,12 +7,12 @@ running_migrations_and_seeders=${RUNNING_MIGRATIONS_AND_SEEDERS:-"false"}
 
 initialStuff() {
     echo "Container mode: $container_mode"
-    
+
     if [ "${running_migrations_and_seeders}" = "true" ]; then
         echo "Running migrations and seeding database ..."
         php artisan migrate --isolated --seed --force || php artisan migrate --seed --force
     fi
-	
+
     php artisan storage:link; \
     php artisan optimize:clear; \
     php artisan optimize;
@@ -42,6 +42,9 @@ elif [ "${container_mode}" = "reverb" ]; then
 elif [ "${container_mode}" = "scheduler" ]; then
     initialStuff
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.scheduler.conf
+elif [ "${container_mode}" = "ssr" ]; then
+    initialStuff
+    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.ssr.conf
 elif [ "${container_mode}" = "worker" ]; then
     if [ -z "${WORKER_COMMAND}" ]; then
         echo "WORKER_COMMAND is undefined."
