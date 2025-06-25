@@ -48,26 +48,3 @@ jobs:
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-
-      - name: Add SSH private key
-        uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_STAGING }}
-
-      - name: Execute Deployment with Full Cleanup
-        run: |
-          ssh -o StrictHostKeyChecking=no root@91.107.220.6 << 'EOF'
-          docker system prune -f --filter "until=14h"  # Only remove old images
-          docker builder prune -f
-          docker pull ghcr.io/adichannnnnhere64/urpuppyv2:staging
-          EOF
-
-          curl -X 'POST' \
-             'https://bugitik.761073128.xyz/api/compose.deploy' \
-             -H 'accept: application/json' \
-             -H 'Content-Type: application/json' \
-             -H 'x-api-key:  ${{ secrets.DOKPLOY_API_KEY }}'\
-             -d '{
-             "composeId": "oReeehdo53YQSbrn8pvYe"
-          }'
-
