@@ -54,6 +54,18 @@ services:
       - '$DOCKER_DATA/staging-urpuppy/app-queue/storage/app/public:/var/www/html/storage/app/public'
       - '$DOCKER_DATA/staging-urpuppy/app-queue/storage/logs:/var/www/html/storage/logs'
 
+  ssr:
+    <<: *base
+    environment:
+      CONTAINER_MODE: ssr
+    networks:
+      - urpuppy_internal
+    labels:
+      traefik.enable: "false"
+    volumes:
+      - '$DOCKER_DATA/staging-urpuppy/app-ssr/storage/app/public:/var/www/html/storage/app/public'
+      - '$DOCKER_DATA/staging-urpuppy/app-ssr/storage/logs:/var/www/html/storage/logs'
+
   scheduler:
     <<: *base
     environment:
