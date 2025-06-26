@@ -14,8 +14,7 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2165217194424630"
         crossorigin="anonymous"></script>
 
-    <script defer src="https://analytics.761073128.xyz/script.js" data-website-id="ff04b39a-2c33-43df-9854-8edb4ae01c4a">
-    </script>
+    <script src="https://analytics.urpuppy.com/api/script.js" data-site-id="1" defer></script>
 
     <script type="application/ld+json">
         {
@@ -51,4 +50,3 @@
 </body>
 
 </html>
-
