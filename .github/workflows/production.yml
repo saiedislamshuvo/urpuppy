@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: FrankenPHP.Dockerfile
+          file: Dockerfile.Staging2
           tags: ghcr.io/${{ github.repository }}:production
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
