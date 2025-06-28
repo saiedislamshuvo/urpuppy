@@ -11,9 +11,9 @@ export default defineConfig(({ mode }) => {
   return {
     css: {
       preprocessorOptions: {
-        scss: {
-          additionalData: `$cloudfront-url: '${env.VITE_CLOUDFRONT_URL || 'https://d1ycq56gu6gk7x.cloudfront.net'}';`
-        }
+        //scss: {
+         // additionalData: `$cloudfront-url: '${env.VITE_CLOUDFRONT_URL || 'https://d1ycq56gu6gk7x.cloudfront.net'}';`
+       //}
       }
     },
     plugins: [
