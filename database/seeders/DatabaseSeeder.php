@@ -47,6 +47,7 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call(RoleSeeder::class);
+        $this->call(PlanSeeder::class);
 
         if (! User::where('email', 'support@urpuppy.com')->exists()) {
             $user = User::factory()->create([

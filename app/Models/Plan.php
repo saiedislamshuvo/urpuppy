@@ -70,23 +70,19 @@ class Plan extends Model implements HasMedia, Sortable
         });
 
         static::saved(function (self $plan): void {
-            Stripe::setApiKey(config('services.stripe.secret'));
-            /* $stripePlan = self::createStripePlan($plan); */
+            if (! app()->isLocal()) {
+                Stripe::setApiKey(config('services.stripe.secret'));
+                /* $stripePlan = self::createStripePlan($plan); */
 
-            if ($plan->stripe_plan_id === 0 || empty($plan->stripe_plan_id) && $plan->price > 0 ) {
+                if ($plan->stripe_plan_id === 0 || empty($plan->stripe_plan_id) && $plan->price > 0) {
 
-                $stripePlan = self::createStripePlan($plan);
-                $plan->updateQuietly([
-                    'stripe_plan_id' => $stripePlan->id,
-                    'stripe_product_id' => $stripePlan->product,
-                ]);
+                    $stripePlan = self::createStripePlan($plan);
+                    $plan->updateQuietly([
+                        'stripe_plan_id' => $stripePlan->id,
+                        'stripe_product_id' => $stripePlan->product,
+                    ]);
 
-            } else {
-
-                /*                 if ($plan->wasChanged('price')) { */
-                /*                     $newStripePlan = self::createStripePlan($plan); */
-                /*                     $plan->updateQuietly(['stripe_plan_id' => $newStripePlan->id]); */
-                /*                 } */
+                }
             }
         });
     }
@@ -107,18 +103,22 @@ class Plan extends Model implements HasMedia, Sortable
         return $total.' Days';
     }
 
-    protected static function createStripePlan(self $plan): StripePlan
+    protected static function createStripePlan(self $plan): ?StripePlan
     {
         $lastCreatedPlan = null;
-        $lastCreatedPlan = StripePlan::create([
-            'amount' => $plan->money,
-            'currency' => $plan->currency_code,
-            'interval' => $plan->interval,
-            'interval_count' => $plan->interval_count,
-            'product' => [
-                'name' => $plan->name,
-            ],
-        ]);
+        if (! app()->isLocal()) {
+
+            $lastCreatedPlan = StripePlan::create([
+                'amount' => $plan->money,
+                'currency' => $plan->currency_code,
+                'interval' => $plan->interval,
+                'interval_count' => $plan->interval_count,
+                'product' => [
+                    'name' => $plan->name,
+                ],
+            ]);
+
+        }
 
         return $lastCreatedPlan;
     }
