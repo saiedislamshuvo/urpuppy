@@ -126,7 +126,7 @@ class UserResource extends Resource
                             ->visible(fn (Get $get) => filled($get('password')))
                             ->maxLength(255)
                             ->label(strval(__('filament-authentication::filament-authentication.field.user.confirm_password'))),
-
+                        
                         Select::make('roles')
                             ->multiple()
                             ->relationship('roles', 'name')

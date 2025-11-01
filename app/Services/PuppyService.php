@@ -25,7 +25,7 @@ class PuppyService
             ])
             ->with([
                 'breeds:id,name,slug',
-                'seller:id,first_name,email,phone,last_name,short_state,city,created_at,slug,is_breeder',
+                'seller:id,first_name,email,phone,last_name,state,short_state,city,created_at,slug,is_breeder',
                 'favorites',
                 'media',
             ])

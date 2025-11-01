@@ -300,7 +300,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, M
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, 'support@urpuppy.com') || str_ends_with($this->email, 'editor@urpuppy.com');
+        return true; //str_ends_with($this->email, 'support@urpuppy.com') || str_ends_with($this->email, 'editor@urpuppy.com');
     }
 
     public function scopeBreeders($query)
@@ -373,9 +373,21 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, M
 
     public function getAddressAttribute()
     {
-        return $this->city.' '.$this->short_state;
+ if (request()->routeIs('home')) {
 
+        $city  = $this->city ?? '';
+        $state = $this->short_state ?? $this->state?->abbreviation ?? '';
+
+        return trim($city . ' ' . $state);
+    }
+    if ($this->gmap_address) {
         return $this->gmap_address;
+    }
+
+    return trim(($this->city ?? '') . ' ' . ($this->state ?? ''));
+  /*      return $this->city.' '.$this->short_state;
+
+/*        return $this->gmap_address;
         /* $state = $this->state?->abbreviation ?? $this->state?->name; */
         /* $address = $this->city . ' ' . $state ; */
         /* if ($this->city == null &&  $state == null) { */

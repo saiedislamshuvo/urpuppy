@@ -87,79 +87,79 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->navigation(function (NavigationBuilder $builder) {
+            // ->navigation(function (NavigationBuilder $builder) {
 
-                $is_admin = auth()->user()->roles->contains('super_admin') || auth()->user()->roles->contains('admin');
+            //     $is_admin = auth()->user()->roles->contains('super_admin') || auth()->user()->roles->contains('admin');
 
-                $admin_items = [];
+            //     $admin_items = [];
 
-                if ($is_admin) {
-                    $admin_items = [
-                        NavigationGroup::make('UrPuppy')->items([
-                            ...PuppyResource::getNavigationItems(),
-                            ...BreedResource::getNavigationItems(),
-                            ...PuppyColorResource::getNavigationItems(),
-                            ...PuppyPatternResource::getNavigationItems(),
+            //     if ($is_admin) {
+            //         $admin_items = [
+            //             NavigationGroup::make('UrPuppy')->items([
+            //                 ...PuppyResource::getNavigationItems(),
+            //                 ...BreedResource::getNavigationItems(),
+            //                 ...PuppyColorResource::getNavigationItems(),
+            //                 ...PuppyPatternResource::getNavigationItems(),
 
-                        ]),
-                        NavigationGroup::make('Messages')->items([
-                            ...BreederRequestResource::getNavigationItems(),
-                            ...ReportResource::getNavigationItems(),
-                            ...ContactResource::getNavigationItems(),
+            //             ]),
+            //             NavigationGroup::make('Messages')->items([
+            //                 ...BreederRequestResource::getNavigationItems(),
+            //                 ...ReportResource::getNavigationItems(),
+            //                 ...ContactResource::getNavigationItems(),
 
-                        ]),
-                        NavigationGroup::make('Stripe')->items([
-                            ...PlanResource::getNavigationItems(),
-                            ...SubscriptionResource::getNavigationItems(),
-                            ...DiscountResource::getNavigationItems(),
+            //             ]),
+            //             NavigationGroup::make('Stripe')->items([
+            //                 ...PlanResource::getNavigationItems(),
+            //                 ...SubscriptionResource::getNavigationItems(),
+            //                 ...DiscountResource::getNavigationItems(),
 
-                        ]),
-                        NavigationGroup::make('Emails')->items([
-                            ...MailResource::getNavigationItems(),
+            //             ]),
+            //             NavigationGroup::make('Emails')->items([
+            //                 ...MailResource::getNavigationItems(),
 
-                        ]),
-                        NavigationGroup::make('Blog')->items([
-                            ...PostResource::getNavigationItems(),
-                            ...CategoryResource::getNavigationItems(),
-                            ...AuthorResource::getNavigationItems(),
+            //             ]),
+            //             NavigationGroup::make('Blog')->items([
+            //                 ...PostResource::getNavigationItems(),
+            //                 ...CategoryResource::getNavigationItems(),
+            //                 ...AuthorResource::getNavigationItems(),
 
-                        ]),
-                        NavigationGroup::make('Authentication')->items([
-                            ...UserResource::getNavigationItems(),
-                            ...RoleResource::getNavigationItems(),
+            //             ]),
+            //             NavigationGroup::make('Authentication')->items([
+            //                 ...UserResource::getNavigationItems(),
+            //                 ...RoleResource::getNavigationItems(),
 
-                        ]),
+            //             ]),
 
-                        NavigationGroup::make('Settings')->items([
-                            NavigationItem::make('Log')
-                                ->url('/log-viewer', shouldOpenInNewTab: true)
-                                ->icon('heroicon-o-book-open'),
-                            NavigationItem::make('Horizon')
-                                ->url('/horizon', shouldOpenInNewTab: true)
-                                ->icon('heroicon-o-book-open'),
+            //             NavigationGroup::make('Settings')->items([
+            //                 NavigationItem::make('Log')
+            //                     ->url('/log-viewer', shouldOpenInNewTab: true)
+            //                     ->icon('heroicon-o-book-open'),
+            //                 NavigationItem::make('Horizon')
+            //                     ->url('/horizon', shouldOpenInNewTab: true)
+            //                     ->icon('heroicon-o-book-open'),
 
-                        ]),
+            //             ]),
 
-                    ];
-                } else {
-                    $admin_items = [
-                        NavigationGroup::make('Blog')->items([
-                            ...PostResource::getNavigationItems(),
-                            ...CategoryResource::getNavigationItems(),
-                            ...AuthorResource::getNavigationItems(),
+            //         ];
+            //     } else {
+            //         $admin_items = [
+            //             NavigationGroup::make('Blog')->items([
+            //                 ...PostResource::getNavigationItems(),
+            //                 ...CategoryResource::getNavigationItems(),
+            //                 ...AuthorResource::getNavigationItems(),
 
-                        ]),
-                    ];
-                }
+            //             ]),
+            //         ];
+            //     }
 
-                return $builder
-                    ->items([
-                        NavigationItem::make('Dashboard')
-                            ->icon('heroicon-o-book-open')
-                            ->url('/admin'),
-                    ])
-                    ->groups($admin_items);
-            })
+            //     return $builder
+            //         ->items([
+            //             NavigationItem::make('Dashboard')
+            //                 ->icon('heroicon-o-book-open')
+            //                 ->url('/admin'),
+            //         ])
+            //         ->groups($admin_items);
+            // })
             ->navigationItems([
                 NavigationItem::make('Log')
                     ->url('/log-viewer', shouldOpenInNewTab: true)

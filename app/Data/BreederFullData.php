@@ -58,4 +58,18 @@ class BreederFullData extends Data
         public ?string $seo_title,
         public ?string $seo_description,
     ) {}
+    public static function prepareForPipeline(array $payload): array
+    {
+        // ZIP: only first 5 digits (remove "-6522")
+        if (!empty($payload['company_zip_code'])) {
+            $payload['company_zip_code'] = explode('-', $payload['company_zip_code'])[0];
+        }
+
+        // Address se ZIP+4 remove
+        if (!empty($payload['company_address'])) {
+            $payload['company_address'] = preg_replace('/-\d{4}/', '', $payload['company_address']);
+        }
+
+        return $payload;
+    }
 }

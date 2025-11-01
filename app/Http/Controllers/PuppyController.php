@@ -69,7 +69,7 @@ class PuppyController extends Controller
             defer(function () use ($puppy) {
                 $puppy->logView();
             });
-
+            $puppy->recordView();
             $results = Octane::concurrently([
                 'featuredPuppies' => function () {
                     return Cache::remember('featured_puppies', 1800, function () {

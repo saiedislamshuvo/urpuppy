@@ -475,7 +475,18 @@ class Puppy extends Model implements HasMedia, Sitemapable
             }
         }
     }
-
+    public function recordView()
+    {
+        $sessionKey = 'viewed_puppy_' . $this->id;
+        
+        if (!session()->has($sessionKey)) {
+            $this->increment('view_count');
+            session()->put($sessionKey, now()->addHours(24));
+            return true;
+        }
+        
+        return false;
+    }
     public function getIsNewAttribute()
     {
         return $this->created_at->diffInDays(now()) <= 5 ? true : false;

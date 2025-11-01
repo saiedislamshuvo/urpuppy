@@ -238,3 +238,7 @@ require __DIR__.'/auth.php';
 /* Auth::routes(); */
 
 /* Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); */
+
+Route::get('/test-simple', function() {
+    return response()->json(['message' => 'Simple route works']);
+});
