@@ -1,0 +1,50 @@
+.fi-panel-breeder .fi-layout {
+    background: #fff !important;
+}
+
+.fi-panel-breeder .fi-topbar nav {
+    background: #000 !important;
+    height: 80px !important;
+}
+
+.fi-panel-breeder .fi-topbar-item-button {
+    background: transparent !important;
+    font-weight: 700 !important;
+}
+
+.fi-panel-breeder .fi-topbar-item-label {
+    font-weight: 700 !important;
+    color: #fff !important
+}
+
+.fi-panel-breeder .fi-topbar-item-button:hover .fi-topbar-item-label {
+    color: #e88325 !important;
+}
+
+.fi-panel-breeder .fi-topbar nav img.fi-logo.flex.dark\:hidden {
+    display: none !important;
+}
+
+.fi-panel-breeder .fi-topbar nav img.fi-logo.dark\:flex {
+    display: flex !important;
+}
+
+.bg-secondary {
+    background: rgba(8, 49, 78, 1) !important;
+}
+
+.grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}

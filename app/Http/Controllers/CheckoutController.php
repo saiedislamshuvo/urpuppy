@@ -14,7 +14,7 @@ class CheckoutController extends Controller
 {
     public function __invoke()
     {
-        dd('adi');
+        //
     }
 
     public function payment_methods(Request $request)

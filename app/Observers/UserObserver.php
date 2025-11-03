@@ -30,6 +30,6 @@ class UserObserver
 
         $user->slug = str()->slug($user->name).'-'.$id;
         $user->save();
-
+        $user->createOrGetStripeCustomer();
     }
 }

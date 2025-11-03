@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Filament\Support\Assets\Css;
+use Filament\Support\Facades\FilamentAsset;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,9 +28,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Table::configureUsing(function (Table $table): void {
-            $table
-                ->filtersLayout(FiltersLayout::AboveContentCollapsible)
-                ->paginationPageOptions([20, 40, 60, 80, 100, 120, 140, 160, 180, 'all']);
+            $table->paginationPageOptions([20, 50, 100, 200, 'all']);
         });
     }
 
@@ -40,33 +40,16 @@ class AppServiceProvider extends ServiceProvider
         if (app()->isProduction() ) {
             URL::forceScheme('https');
         }
+        FilamentAsset::register([
+            Css::make('local-stylesheet', asset('css/style.css')),
+        ]);
 
         Vite::useAggressivePrefetching();
-        /* Model::shouldBeStrict((! $this->app->isProduction())); */
-        /* Model::unguard(); */
-        /* Vite::prefetch(concurrency: 3); */
-
-        /* \DB::prohibitDestructiveCommands( */
-        /*    config('app.env') === 'production' */
-        /* ); */
-
-        /*         Gate::define('viewPulse', function (User $user) { */
-        /*             return in_array($user->email, [ */
-        /*                 'admin@urpuppy.com', */
-        /*             ]); */
-        /*         }); */
-
-        Gate::define('viewLogViewer', function (User $user) {
-            return in_array($user->email, [
-                'support@urpuppy.com',
-
-            ]);
-        });
 
         VerifyEmail::createUrlUsing(function ($notifiable) {
             return URL::temporarySignedRoute(
                 'verification.verify',
-                now()->addMinutes(60), // Expiry time
+                now()->addMinutes(60),
                 [
                     'id' => $notifiable->getKey(),
                     'hash' => sha1($notifiable->getEmailForVerification()),
@@ -117,7 +100,6 @@ class AppServiceProvider extends ServiceProvider
                     ->action('Verify Your Account', $url)
                     ->line('This step helps us ensure your account is secure and ready to go. If you didn’t sign up for an account with UrPuppy.com, please disregard this email.')
                     ->line('Thank you for choosing UrPuppy.com!');
-
             }
 
             return $mail;

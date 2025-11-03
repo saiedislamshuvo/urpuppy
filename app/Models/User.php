@@ -9,7 +9,7 @@ use Cog\Laravel\Love\Reacterable\Models\Traits\Reacterable;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
-/* use Filament\Models\Contracts\FilamentUser; */
+use Filament\Models\Contracts\HasAvatar;
 /* use Filament\Models\Contracts\HasName; */
 /* use Filament\Panel; */
 use Filament\Panel;
@@ -32,7 +32,7 @@ use Spatie\Sitemap\Contracts\Sitemapable;
 use Spatie\Sitemap\Tags\Url;
 
 #[ObservedBy([UserObserver::class])]
-class User extends Authenticatable implements FilamentUser, HasMedia, HasName, MustVerifyEmail, ReacterableInterface, Sitemapable
+class User extends Authenticatable implements FilamentUser, HasMedia, HasName, HasAvatar, MustVerifyEmail, ReacterableInterface, Sitemapable
 {
     use Billable, Favoriter, HasFactory, HasRoles, InteractsWithMedia, Notifiable, Reacterable;
     // FilamentUser
@@ -520,6 +520,25 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, M
     /* { */
     /*     return $this->attributes()->get()->pluck('value', 'title'); */
     /* } */
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        $firstInitial = $this->first_name ? strtoupper(mb_substr($this->first_name, 0, 1)) : '';
+        $lastInitial = $this->last_name ? strtoupper(mb_substr($this->last_name, 0, 1)) : '';
+        if ($firstInitial && $lastInitial) {
+            $name = $firstInitial . $lastInitial;
+        } elseif ($firstInitial) {
+            $name = $firstInitial;
+        } elseif ($lastInitial) {
+            $name = $lastInitial;
+        } else {
+            $name = '';
+        }
+        if($name == '') {
+            return $this->avatar;
+        }
+        return 'https://ui-avatars.com/api/?name='. $name .'&color=FFFFFF&background=f97316';
+    }
 
     public function breeder_requests()
     {

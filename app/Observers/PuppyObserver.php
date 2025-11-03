@@ -7,10 +7,7 @@ use Illuminate\Support\Facades\Cache;
 
 class PuppyObserver
 {
-    public function updated(Puppy $user)
-    {
-        /* Cache::flush(); */
-    }
+    public function updated(Puppy $puppy) {}
 
     public function created(Puppy $puppy) {}
 }

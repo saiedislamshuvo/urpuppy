@@ -3,31 +3,30 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PuppyTraitResource\Pages;
+use App\Filament\Resources\PuppyTraitResource\RelationManagers;
 use App\Models\PuppyTrait;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PuppyTraitResource extends Resource
 {
     protected static ?string $model = PuppyTrait::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    public static function canViewAny(): bool
-    {
-        return false;
-    }
+    protected static ?string $navigationGroup = 'UrPuppy';
+    protected static ?string $navigationLabel = 'Puppy Traits';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
+                    ->required(),
             ]);
     }
 
@@ -51,6 +50,7 @@ class PuppyTraitResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -59,19 +59,10 @@ class PuppyTraitResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPuppyTraits::route('/'),
-            'create' => Pages\CreatePuppyTrait::route('/create'),
-            'edit' => Pages\EditPuppyTrait::route('/{record}/edit'),
+            'index' => Pages\ManagePuppyTraits::route('/'),
         ];
     }
 }

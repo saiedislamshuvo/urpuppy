@@ -57,10 +57,8 @@ class RegisteredUserController extends Controller
             'last_name' => 'required|string|max:40',
             'state_id' => '',
             'city_id' => '',
-            /* 'avatar' => 'required', */
             'email' => 'confirmed|required|string|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Password::defaults()],
-            /* 'captcha' => 'required|captcha' */
         ]);
 
         if (User::where('email', $validated['email'])->exists()) {
@@ -74,29 +72,19 @@ class RegisteredUserController extends Controller
             'state_id' => $request?->state_id,
             'city_id' => $request?->city_id,
             'zip_code' => $request->zip_code,
+            'is_seller' => $role == 'seller',
+            'is_breeder' => $role == 'breeder',
             'password' => Hash::make($request->password),
         ]);
-
-        if ($role == 'buyer') {
-            $user->assignRole('buyer');
-        } elseif ($role == 'seller') {
-            $user->assignRole('seller');
-        } elseif ($role == 'breeder') {
-            $user->assignRole('breeder');
-        }
 
         event(new Registered($user));
 
         Auth::login($user);
 
-
-        return redirect(route('home', absolute: false))->with('message.success', 'You have been registered successfully.');
-
-
-        if ($request?->is_seller) {
+        if ($role == 'breeder' || $role == 'seller') {
             return redirect(route('plans.index', absolute: false))->with('message.success', 'You have to purchase a plan to start selling');
         }
 
-        return redirect(route('verification.notice', absolute: false))->with('message.success', 'You have been registered successfully. Please verify your account');
+        return redirect(route('home', absolute: false))->with('message.success', 'You have been registered successfully.');
     }
 }

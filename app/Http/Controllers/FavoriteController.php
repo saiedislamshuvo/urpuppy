@@ -16,9 +16,9 @@ class FavoriteController extends Controller
             return redirect()->to(route('login'))->with('message.error', 'You must be logged in to add to favorites');
         }
 
-        if (! $user?->email_verified_at) {
-            return redirect()->to(route('verification.notice'))->with('message.error', 'Please verify your email first');
-        }
+        // if (! $user?->email_verified_at) {
+        //     return redirect()->to(route('verification.notice'))->with('message.error', 'Please verify your email first');
+        // }
 
         if ($puppy->user_id === $user->id) {
             return redirect()->back()->with('message.error', 'You cannot favorite your own puppy');

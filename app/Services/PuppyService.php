@@ -38,18 +38,7 @@ class PuppyService
             ])
             ->hasSubscribedUsers();
 
-        // Apply additional filters if provided
-        /* if (!empty($filters)) { */
-        /*     $puppiesQuery->allowedFilters($filters); */
-        /* } */
-
-        // Handle pagination
-        /* if ($paginate) { */
         $puppies = $puppiesQuery->paginate(12);
-        /* } else { */
-        /*     $puppies = $puppiesQuery->get(); */
-        /* } */
-
         return $puppies;
     }
 
@@ -108,8 +97,5 @@ class PuppyService
         }
 
         return $puppies;
-
-        /* dd($puppies->count()); */
-
     }
 }

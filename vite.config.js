@@ -12,13 +12,13 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         //scss: {
-         // additionalData: `$cloudfront-url: '${env.VITE_CLOUDFRONT_URL || 'https://d1ycq56gu6gk7x.cloudfront.net'}';`
-       //}
+        // additionalData: `$cloudfront-url: '${env.VITE_CLOUDFRONT_URL || 'https://d1ycq56gu6gk7x.cloudfront.net'}';`
+        //}
       }
     },
     plugins: [
       laravel({
-        input: ['resources/sass/app.scss', 'resources/js/app.tsx'],
+        input: ['resources/sass/app.scss', 'resources/js/app.tsx', 'resources/js/panels/index.tsx'],
         ssr: 'resources/js/ssr.tsx',
         refresh: true,
       }),

@@ -13,7 +13,7 @@ Route::get('/puppy/countries', CountryController::class);
 Route::get('/puppy/states', StateController::class);
 Route::get('/puppy/cities', CityController::class);
 Route::get('/puppy/breeds', BreedController::class);
-ppu
+
 Route::middleware(['throttle:60,1'])->group(function () {
     Route::get('/geocode', function (Request $request) {
         if (Cache::get('geocode_usage') > config('services.google.maps_daily_limit')) {

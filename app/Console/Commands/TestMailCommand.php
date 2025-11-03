@@ -48,31 +48,29 @@ class TestMailCommand extends Command
     public function handle()
     {
         $user = \App\Models\User::find(1);
-        /* $user->save() */
-
-        /* Mail::queue(new AccountDeletionMail($user)); */
 
         $payload = [
             'first_name' => 'Sasha',
             'last_name' => 'Iyamu',
-            'email' => 'businessguy1982@yahoo.com',
+            'email' => 'info@yurpuppy.com',
             'account_type' => 'Breeder',
             'subject' => 'I need help',
             'message' => 'lorem ipsum dolor sit amet  lorem ipsum dolor sit amet  lorem ipsum dolor sit amet  ',
-
         ];
 
+        $to = 'saiedislam.shuvo1124@gmail.com';
+
         $allPuppies = collect();
-        Mail::queue((new AdminNewContact($payload))->to('businessguy1982@yahoo.com'));
-        Mail::queue((new BreederAccountApproved($user))->to('businessguy1982@yahoo.com'));
-        Mail::queue((new BreederAccountRejected($user, 'Bad images'))->to('businessguy1982@yahoo.com'));
-        Mail::queue((new FreeAccountMail($user))->to('businessguy1982@yahoo.com'));
-        Mail::queue((new NewBreederSpecialAccountMail($user))->to('businessguy1982@yahoo.com'));
-        Mail::queue((new PremiumAccountMail($user))->to('businessguy1982@yahoo.com'));
-        Mail::queue((new RenewBreederMail($user))->to('businessguy1982@yahoo.com'));
-        Mail::queue((new RenewSellerMail($user))->to('businessguy1982@yahoo.com'));
-        Mail::queue((new SubscriptionEnded($user))->to('businessguy1982@yahoo.com'));
-        Mail::queue((new SupportTeamEmailResponseMail($user->first_name, 'businessguy1982@yahoo.com', 'lorem ipsum dolor sit amet'))->to('businessguy1982@yahoo.com'));
+        Mail::queue((new AdminNewContact($payload))->to($to));
+        Mail::queue((new BreederAccountApproved($user))->to($to));
+        Mail::queue((new BreederAccountRejected($user, 'Bad images'))->to($to));
+        Mail::queue((new FreeAccountMail($user))->to($to));
+        Mail::queue((new NewBreederSpecialAccountMail($user))->to($to));
+        Mail::queue((new PremiumAccountMail($user))->to($to));
+        Mail::queue((new RenewBreederMail($user))->to($to));
+        Mail::queue((new RenewSellerMail($user))->to($to));
+        Mail::queue((new SubscriptionEnded($user))->to($to));
+        Mail::queue((new SupportTeamEmailResponseMail($user->first_name, $to, 'lorem ipsum dolor sit amet'))->to($to));
 
         $loop = $this->puppyService->getPuppiesCli([])->where('created_at', '>=', now()->subDays(3))->orderByDesc('created_at')->limit(3)->get();
         $allPuppies = $allPuppies->merge($loop)->unique('id');

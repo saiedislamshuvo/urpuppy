@@ -63,7 +63,7 @@ class SellerController extends Controller
             fn() => $user?->breeder_requests()->latest()->first()?->status,
             fn() => !empty($user?->kennel_name),
             fn() => $user?->email_verified_at,
-            fn() => $user?->roles->contains('seller') || $user?->roles->contains('breeder'),
+            fn() => $user?->is_seller || $user?->is_breeder,
         ]);
 
         if (!$user) {

@@ -40,11 +40,20 @@ class Plan extends Model implements HasMedia, Sortable
         'order_column',
         'image_per_listing',
         'video_per_listing',
+        'is_synced',
+        'sync_error',
+        'last_synced_at',
     ];
 
     protected $casts = [
         'interval' => 'json',
         'features' => 'json',
+        'is_synced' => 'boolean',
+        'active' => 'boolean',
+        'is_breeder' => 'boolean',
+        'is_featured' => 'boolean',
+        'is_highlight' => 'boolean',
+        'last_synced_at' => 'datetime',
     ];
 
     protected $appends = [
@@ -63,26 +72,22 @@ class Plan extends Model implements HasMedia, Sortable
 
     protected static function booted(): void
     {
-        static::saving(function (self $model): void {
-            /* if (empty($model->stripe_plan_id)) { */
-            /*     $model->stripe_plan_id = ''; */
-            /* } */
-        });
-
         static::saved(function (self $plan): void {
-            if (! app()->isLocal()) {
-                Stripe::setApiKey(config('services.stripe.secret'));
-                /* $stripePlan = self::createStripePlan($plan); */
+            // Skip syncing if we're in local environment or if this is a quiet update
+            if (app()->isLocal() || $plan->wasRecentlyCreated === false && !$plan->isDirty()) {
+                return;
+            }
 
-                if ($plan->stripe_plan_id === 0 || empty($plan->stripe_plan_id) && $plan->price > 0) {
-
-                    $stripePlan = self::createStripePlan($plan);
-                    $plan->updateQuietly([
-                        'stripe_plan_id' => $stripePlan->id,
-                        'stripe_product_id' => $stripePlan->product,
-                    ]);
-
-                }
+            // Sync to Stripe automatically after save
+            // We'll dispatch this to a job in production for better performance
+            if (app()->isProduction()) {
+                // Dispatch sync job (you can create this later)
+                dispatch(function () use ($plan) {
+                    app(\App\Services\StripePlanSyncService::class)->syncToStripe($plan);
+                });
+            } else {
+                // Sync immediately in non-production environments
+                app(\App\Services\StripePlanSyncService::class)->syncToStripe($plan);
             }
         });
     }

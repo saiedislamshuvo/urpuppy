@@ -75,7 +75,7 @@ class AdminPanelProvider extends PanelProvider
             ->globalSearchDebounce('750ms')
             ->sidebarWidth('70')
             ->maxContentWidth('full')
-            ->sidebarFullyCollapsibleOnDesktop()
+            // ->sidebarFullyCollapsibleOnDesktop()
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -189,6 +189,7 @@ class AdminPanelProvider extends PanelProvider
                 /* \BezhanSalleh\FilamentGoogleAnalytics\FilamentGoogleAnalyticsPlugin::make(), */
                 /* \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make() */
                 /* FilamentShieldPlugin::make(), */
-            ]);
+            ])
+            ->spa();
     }
 }

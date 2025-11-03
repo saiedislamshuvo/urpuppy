@@ -34,6 +34,8 @@ class UserData extends Data
         public ?string $social_x,
         /** @var string[] */
         public ?Collection $roles,
+        public bool $is_breeder,
+        public bool $is_seller,
         public bool $enable_notification,
         public ?SubscriptionData $premium_plan,
         public ?SubscriptionData $breeder_plan,
