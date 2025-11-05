@@ -17,6 +17,7 @@ class PuppyCardData extends Data
         public string $gender,
         public string $formatted_price,
         public ?bool $is_favorite,
+        public ?bool $is_compared,
         public ?bool $is_new,
         public string $age,
         public int $view_count,
@@ -29,6 +30,12 @@ class PuppyCardData extends Data
     public function setIsFavorite(bool $isFavorite): self
 {
     $this->is_favorite = $isFavorite;
+    return $this;
+}
+
+    public function setIsCompared(bool $isCompared): self
+{
+    $this->is_compared = $isCompared;
     return $this;
 }
 }

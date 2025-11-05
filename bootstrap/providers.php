@@ -3,7 +3,6 @@
 return [
     App\Providers\AppServiceProvider::class,
     App\Providers\Filament\AdminPanelProvider::class,
-    App\Providers\Filament\BreederPanelProvider::class,
     App\Providers\HorizonServiceProvider::class,
     App\Providers\PrometheusServiceProvider::class,
     Rollbar\Laravel\RollbarServiceProvider::class,

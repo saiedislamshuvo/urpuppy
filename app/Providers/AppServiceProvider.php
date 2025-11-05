@@ -23,13 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        CreateAction::configureUsing(function ($action) {
-            return $action->slideOver()->closeModalByClickingAway(false);
-        });
-
-        Table::configureUsing(function (Table $table): void {
-            $table->paginationPageOptions([20, 50, 100, 200, 'all']);
-        });
+        //
     }
 
     /**
@@ -43,6 +37,18 @@ class AppServiceProvider extends ServiceProvider
         FilamentAsset::register([
             Css::make('local-stylesheet', asset('css/style.css')),
         ]);
+
+        Gate::guessPolicyNamesUsing(function (string $modelClass) {
+            return str_replace('Models', 'Policies', $modelClass) . 'Policy';
+        });
+
+        Gate::before(function ($user, $ability) {
+            if($user?->is_admin) {
+                return $user?->is_superadmin ? true : null;
+            }
+            return null;
+        });
+         
 
         Vite::useAggressivePrefetching();
 

@@ -13,6 +13,7 @@ use App\Models\Puppy;
 use App\Models\State;
 use App\Models\User;
 use App\Services\FavoriteService;
+use App\Services\CompareService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Octane\Facades\Octane;
@@ -84,12 +85,18 @@ class HomeController extends Controller
         ]);
 
         $topPick = $results['top_picks']
-            ? app(FavoriteService::class)->applyFavoriteToSingle(PuppyData::from($results['top_picks']))
+            ? app(CompareService::class)->applyCompareToSingle(
+                app(FavoriteService::class)->applyFavoriteToSingle(PuppyData::from($results['top_picks']))
+            )
             : null;
 
-        $spotlights = app(FavoriteService::class)->applyFavorites(PuppyCardData::collect($results['spotlights']));
+        $spotlights = app(CompareService::class)->applyCompares(
+            app(FavoriteService::class)->applyFavorites(PuppyCardData::collect($results['spotlights']))
+        );
 
-        $newArrivals = app(FavoriteService::class)->applyFavorites(PuppyCardData::collect($results['new_arrivals']));
+        $newArrivals = app(CompareService::class)->applyCompares(
+            app(FavoriteService::class)->applyFavorites(PuppyCardData::collect($results['new_arrivals']))
+        );
 
         return Inertia::render('Home/Index', [
             'breed_filter_list' => inertia()->optional(fn() =>

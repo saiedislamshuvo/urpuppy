@@ -16,6 +16,7 @@ class PuppyData extends Data
         public string $slug,
         public string $gender,
         public ?bool $is_favorite,
+        public ?bool $is_compared,
         public int $price,
         /* public string $breed, */
         /** @var \App\Data\BreedData[] */
@@ -49,6 +50,12 @@ class PuppyData extends Data
     public function setIsFavorite(bool $isFavorite): self
 {
     $this->is_favorite = $isFavorite;
+    return $this;
+}
+
+    public function setIsCompared(bool $isCompared): self
+{
+    $this->is_compared = $isCompared;
     return $this;
 }
 }

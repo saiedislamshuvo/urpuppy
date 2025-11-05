@@ -35,18 +35,8 @@ use Spatie\Sitemap\Tags\Url;
 class User extends Authenticatable implements FilamentUser, HasMedia, HasName, HasAvatar, MustVerifyEmail, ReacterableInterface, Sitemapable
 {
     use Billable, Favoriter, HasFactory, HasRoles, InteractsWithMedia, Notifiable, Reacterable;
-    // FilamentUser
-    // HasName
     use Impersonate;
     use SoftDeletes;
-
-    /* use PivotEventTrait; */
-
-    /*  public static function boot() */
-    /* { */
-    /*       parent::boot(); */
-
-    /*  } */
 
     /**
      * The attributes that are mass assignable.
@@ -103,6 +93,9 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
         'company_short_state',
         'gmap_address',
         'gmap_id',
+
+        'is_admin',
+        'is_superadmin',
     ];
 
     /**
@@ -300,7 +293,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true; //str_ends_with($this->email, 'support@urpuppy.com') || str_ends_with($this->email, 'editor@urpuppy.com');
+        return $this->is_admin || $this->is_superadmin;
     }
 
     public function scopeBreeders($query)
@@ -485,12 +478,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
         return $this->getActiveSubscriptions()?->first()?->trial_ends_at?->format('d M Y');
     }
 
-    public function getRolesAttribute()
-    {
-        return $this->roles()->pluck('name');
-
-    }
-
     public function getPhoneFormattedAttribute()
     {
         if (! $this->phone) {
@@ -545,6 +532,45 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
         return $this->hasMany(BreederRequest::class);
     }
 
+    public function compares()
+    {
+        return $this->hasMany(Compare::class);
+    }
+
+    public function hasCompared($model)
+    {
+        return $this->compares()
+            ->where('compareable_id', $model->id)
+            ->where('compareable_type', get_class($model))
+            ->exists();
+    }
+
+    public function toggleCompare($model)
+    {
+        if ($this->hasCompared($model)) {
+            $this->compares()
+                ->where('compareable_id', $model->id)
+                ->where('compareable_type', get_class($model))
+                ->delete();
+            return false;
+        }
+
+        $this->compares()->create([
+            'compareable_id' => $model->id,
+            'compareable_type' => get_class($model),
+        ]);
+        return true;
+    }
+
+    public function getCompareItems($modelClass)
+    {
+        $compareIds = $this->compares()
+            ->where('compareable_type', $modelClass)
+            ->pluck('compareable_id');
+        
+        return $modelClass::whereIn('id', $compareIds);
+    }
+
     public function getIsApprovedAttribute()
     {
         return $this->breeder_requests()->where('status', 'approved')->latest()->first() ? true : false;
@@ -559,5 +585,47 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
     public function getSeoDescriptionAttribute()
     {
         return strip_tags($this->description ?? "");
+    }
+
+    public function getRoleBadgeAttribute(): string
+    {
+        if ($this->is_breeder) {
+            return 'Breeder';
+        }
+        
+        if ($this->is_seller) {
+            return 'Seller';
+        }
+        
+        if ($this->is_superadmin) {
+            return 'Super Admin';
+        }
+        
+        if ($this->is_admin) {
+            return 'Admin';
+        }
+        
+        return 'Buyer';
+    }
+
+    public function getRoleBadgeColorAttribute(): string
+    {
+        if ($this->is_breeder) {
+            return 'success';
+        }
+        
+        if ($this->is_seller) {
+            return 'info';
+        }
+        
+        if ($this->is_superadmin) {
+            return 'danger';
+        }
+        
+        if ($this->is_admin) {
+            return 'warning';
+        }
+        
+        return 'gray';
     }
 }

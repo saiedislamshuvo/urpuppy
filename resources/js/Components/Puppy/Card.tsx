@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react'
 import React, { useEffect } from 'react'
 import FavoriteButton from '../FavoriteButton'
+import CompareButton from '../CompareButton'
 import Gender from '../Gender'
 
 
@@ -37,7 +38,10 @@ const PuppyCard = ({ puppy, className = "col-md-6 col-lg-4 col-xl-3 mb-4", heigh
                   </span> : <div></div>
 
               }
-              <FavoriteButton uniqueId={location + puppy.id} sellerId={puppy.seller.id} puppyId={puppy.id} isFavorite={puppy.is_favorite} />
+              <div className="d-flex flex-column gap-2">
+                <FavoriteButton uniqueId={location + puppy.id} sellerId={puppy.seller.id} puppyId={puppy.id} isFavorite={puppy.is_favorite} />
+                <CompareButton uniqueId={location + puppy.id} sellerId={puppy.seller.id} puppyId={puppy.id} isCompared={puppy.is_compared} />
+              </div>
 
             </div>
           </Link>

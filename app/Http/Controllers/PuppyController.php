@@ -9,6 +9,7 @@ use App\Http\Resources\FeaturedBreedResource;
 use App\Models\Breed;
 use App\Models\Puppy;
 use App\Services\FavoriteService;
+use App\Services\CompareService;
 use App\Services\PuppyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -37,7 +38,9 @@ class PuppyController extends Controller
         $seo_description = implode(', ', $seo_parts);
 
         $puppies = $puppyService->getPuppies($request, paginate: true);
-        $puppiesData = app(FavoriteService::class)->applyFavorites(PuppyData::collect($puppies));
+        $puppiesData = app(CompareService::class)->applyCompares(
+            app(FavoriteService::class)->applyFavorites(PuppyData::collect($puppies))
+        );
 
         return inertia()->render('Puppy/Index', [
             'price_filter_range' => [@$request->query('filter')['price'][0] ?? 1,  @$request->query('filter')['price'][1] ?? 50000],
@@ -116,12 +119,19 @@ class PuppyController extends Controller
 
             ]);
 
+            $puppyData = PuppyData::from($puppy);
+            $puppyData = app(CompareService::class)->applyCompareToSingle(
+                app(FavoriteService::class)->applyFavoriteToSingle($puppyData)
+            );
+
             return inertia()->render('Puppy/Show', [
                 'featured_puppies' => $results['featuredPuppies'],
                 'siblings' => $results['siblings'],
                 'featured_breeds' => $results['featured_breeds'],
-                'related_puppies' => app(FavoriteService::class)->applyFavorites($results['related_puppies']),
-                'puppy' => PuppyData::from($puppy),
+                'related_puppies' => app(CompareService::class)->applyCompares(
+                    app(FavoriteService::class)->applyFavorites($results['related_puppies'])
+                ),
+                'puppy' => $puppyData,
             ]);
 
         } catch (\Exception $e) {

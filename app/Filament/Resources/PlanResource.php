@@ -12,12 +12,15 @@ use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
@@ -48,6 +51,7 @@ class PlanResource extends Resource
                     ->schema([
                         Section::make('Stripe Sync Status')
                             ->description('Automatically synced with Stripe. Click sync to update.')
+                            ->visible(fn($livewire) => $livewire instanceof EditPlan)
                             ->schema([
                                 Grid::make(3)
                                     ->schema([
@@ -138,6 +142,7 @@ class PlanResource extends Resource
                                 
                                 Select::make('type')
                                     ->options([
+                                        'free' => 'Free',
                                         'breeder' => 'Breeder',
                                         'seller' => 'Seller',
                                     ])
@@ -147,7 +152,7 @@ class PlanResource extends Resource
                             ->columns(2)
                             ->collapsible()
                             ->collapsed(false)
-                            ->columnSpan(7),
+                            ->columnSpan(fn($livewire) => $livewire instanceof EditPlan ? 7 : 12),
                     ]),
 
                 Grid::make(2)
@@ -155,23 +160,67 @@ class PlanResource extends Resource
                         Section::make('Billing & Trial')
                             ->description('Billing cycle and trial period settings')
                             ->schema([
-                                Select::make('interval')
+                                ToggleButtons::make('interval')
                                     ->label('Billing Interval')
                                     ->options([
+                                        'day' => 'Daily',
+                                        'week' => 'Weekly',
                                         'month' => 'Monthly',
                                         'year' => 'Yearly',
                                         'quarter' => 'Quarterly',
                                     ])
                                     ->default('month')
                                     ->required()
+                                    ->inline()
                                     ->columnSpanFull(),
                                 
-                                TextInput::make('trial_days')
+                                ToggleButtons::make('trial_days')
                                     ->label('Trial Days')
-                                    ->numeric()
+                                    ->options([
+                                        '0' => 'No Trial',
+                                        '1' => '1 Day',
+                                        '2' => '2 Days',
+                                        '3' => '3 Days',
+                                        '5' => '5 Days',
+                                        '7' => '7 Days',
+                                        '10' => '10 Days',
+                                        '15' => '15 Days',
+                                        'custom' => 'Custom',
+                                    ])
+                                    ->default('0')
                                     ->required()
-                                    ->default(0)
-                                    ->helperText('Number of free trial days')
+                                    ->inline()
+                                    ->live()
+                                    ->afterStateHydrated(function ($component, $state) {
+                                        // If the value is not in the predefined options, set to custom
+                                        $predefinedOptions = ['0', '1', '2', '3', '5', '7', '10', '15'];
+                                        if (!in_array((string)$state, $predefinedOptions) && filled($state)) {
+                                            $component->state('custom');
+                                        }
+                                    })
+                                    ->afterStateUpdated(function (Get $get, $set, $state) {
+                                        if ($state !== 'custom') {
+                                            $set('trial_days_custom', null);
+                                        }
+                                    })
+                                    ->dehydrateStateUsing(function ($state, Get $get) {
+                                        // If custom is selected, return the custom value, otherwise return the selected value
+                                        if ($state === 'custom') {
+                                            return $get('trial_days_custom') ?? 0;
+                                        }
+                                        return (int)$state;
+                                    })
+                                    ->columnSpanFull(),
+                                
+                                TextInput::make('trial_days_custom')
+                                    ->label('Custom Trial Days')
+                                    ->numeric()
+                                    ->required(fn (Get $get) => $get('trial_days') === 'custom')
+                                    ->default(null)
+                                    ->helperText('Enter the number of free trial days')
+                                    ->visible(fn (Get $get) => $get('trial_days') === 'custom')
+                                    ->live()
+                                    ->dehydrated(false)
                                     ->columnSpanFull(),
                             ])
                             ->collapsible()
@@ -181,27 +230,90 @@ class PlanResource extends Resource
                         Section::make('Plan Limits')
                             ->description('Usage limits for this plan')
                             ->schema([
-                                TextInput::make('listing_limit')
+                                ToggleButtons::make('listing_limit')
                                     ->label('Listing Limit')
-                                    ->numeric()
-                                    ->helperText('Leave empty for unlimited')
+                                    ->options([
+                                        '' => 'Unlimited',
+                                        '10' => '10 Listings',
+                                        '25' => '25 Listings',
+                                        '50' => '50 Listings',
+                                        '100' => '100 Listings',
+                                        '200' => '200 Listings',
+                                        'custom' => 'Custom',
+                                    ])
+                                    ->default('unlimited')
+                                    ->inline()
+                                    ->live()
+                                    ->afterStateHydrated(function ($component, $state) {
+                                        // If the value is not in the predefined options, set to custom
+                                        $predefinedOptions = ['unlimited', '10', '25', '50', '100', '200'];
+                                        if (!in_array((string)$state, $predefinedOptions) && filled($state)) {
+                                            $component->state('custom');
+                                        }
+                                    })
+                                    ->afterStateUpdated(function (Get $get, $set, $state) {
+                                        if ($state !== 'custom') {
+                                            $set('listing_limit_custom', null);
+                                        }
+                                    })
+                                    ->dehydrateStateUsing(function ($state, Get $get) {
+                                        // If custom is selected, return the custom value, otherwise return the selected value
+                                        if ($state === 'custom') {
+                                            return $get('listing_limit_custom') ?? null;
+                                        }
+                                        return $state === 'unlimited' ? null : (int)$state;
+                                    })
                                     ->columnSpanFull(),
                                 
-                                Grid::make(2)
-                                    ->schema([
-                                        TextInput::make('image_per_listing')
-                                            ->label('Images per Listing')
-                                            ->numeric()
-                                            ->required()
-                                            ->default(5),
-                                        
-                                        TextInput::make('video_per_listing')
-                                            ->label('Videos per Listing')
-                                            ->numeric()
-                                            ->required()
-                                            ->default(1),
-                                    ]),
+                                TextInput::make('listing_limit_custom')
+                                    ->label('Custom Listing Limit')
+                                    ->numeric()
+                                    ->required(fn (Get $get) => $get('listing_limit') === 'custom')
+                                    ->default(null)
+                                    ->helperText('Enter the maximum number of listings')
+                                    ->visible(fn (Get $get) => $get('listing_limit') === 'custom')
+                                    ->live()
+                                    ->dehydrated(false)
+                                    ->columnSpanFull(),
+                                
+                                ToggleButtons::make('image_per_listing')
+                                    ->label('Images per Listing')
+                                    ->options([
+                                        '1' => '1 Image',
+                                        '3' => '3 Images',
+                                        '5' => '5 Images',
+                                        '10' => '10 Images',
+                                        '15' => '15 Images',
+                                        '20' => '20 Images',
+                                        'unlimited' => 'Unlimited',
+                                    ])
+                                    ->default('5')
+                                    ->required()
+                                    ->inline()
+                                    ->dehydrateStateUsing(function ($state) {
+                                        return $state === 'unlimited' ? null : (int)$state;
+                                    })
+                                    ->columnSpan(1),
+                                
+                                ToggleButtons::make('video_per_listing')
+                                    ->label('Videos per Listing')
+                                    ->options([
+                                        '0' => 'No Videos',
+                                        '1' => '1 Video',
+                                        '2' => '2 Videos',
+                                        '3' => '3 Videos',
+                                        '5' => '5 Videos',
+                                        'unlimited' => 'Unlimited',
+                                    ])
+                                    ->default('1')
+                                    ->required()
+                                    ->inline()
+                                    ->dehydrateStateUsing(function ($state) {
+                                        return $state === 'unlimited' ? null : (int)$state;
+                                    })
+                                    ->columnSpan(1),
                             ])
+                            ->columns(2)
                             ->collapsible()
                             ->collapsed(false)
                             ->columnSpan(1),
@@ -223,19 +335,6 @@ class PlanResource extends Resource
                                     ])
                                     ->disk(config('media-library.disk_name'))
                                     ->collection('logo')
-                                    ->columnSpanFull(),
-                                
-                                Repeater::make('features')
-                                    ->label('Plan Features')
-                                    ->schema([
-                                        TextInput::make('name')
-                                            ->required()
-                                            ->placeholder('e.g., Unlimited listings')
-                                            ->maxLength(255),
-                                    ])
-                                    ->defaultItems(3)
-                                    ->addActionLabel('Add Feature')
-                                    ->reorderableWithButtons()
                                     ->columnSpanFull(),
                                 
                                 Grid::make(2)
@@ -268,25 +367,25 @@ class PlanResource extends Resource
                         Section::make('Settings')
                             ->description('Plan status and visibility options')
                             ->schema([
-                                Checkbox::make('active')
+                                Toggle::make('active')
                                     ->label('Active')
                                     ->helperText('Inactive plans will be hidden from users. Plans must be synced with Stripe to be active.')
                                     ->default(true)
                                     ->columnSpanFull(),
                                 
-                                Checkbox::make('is_featured')
+                                Toggle::make('is_featured')
                                     ->label('Featured Plan')
                                     ->helperText('Mark this plan as featured')
                                     ->default(false)
                                     ->columnSpanFull(),
                                 
-                                Checkbox::make('is_highlight')
+                                Toggle::make('is_highlight')
                                     ->label('Highlight on Pricing Page')
                                     ->helperText('Draw attention to this plan')
                                     ->default(false)
                                     ->columnSpanFull(),
                                 
-                                Checkbox::make('is_breeder')
+                                Toggle::make('is_breeder')
                                     ->label('Breeder Plan')
                                     ->helperText('Enable breeder-specific features')
                                     ->default(false)
@@ -296,6 +395,26 @@ class PlanResource extends Resource
                             ->collapsed(false)
                             ->columnSpan(1),
                     ]),
+
+                Section::make('Plan Features')
+                    ->description('List of features included in this plan')
+                    ->schema([
+                        Repeater::make('features')
+                            ->label('Plan Features')
+                            ->schema([
+                                TextInput::make('name')
+                                    ->required()
+                                    ->placeholder('e.g., Unlimited listings')
+                                    ->maxLength(255),
+                            ])
+                            ->defaultItems(3)
+                            ->addActionLabel('Add Feature')
+                            ->reorderableWithButtons()
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible()
+                    ->collapsed(false)
+                    ->columnSpanFull(),
 
             ]);
     }
@@ -325,6 +444,7 @@ class PlanResource extends Resource
                 TextColumn::make('type')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
+                        'free' => 'info',
                         'seller' => 'success',
                         'breeder' => 'warning',
                         default => 'gray',

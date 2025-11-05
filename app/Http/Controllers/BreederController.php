@@ -10,6 +10,7 @@ use App\Models\Breed;
 use App\Models\State;
 use App\Models\User;
 use App\Services\FavoriteService;
+use App\Services\CompareService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -230,7 +231,9 @@ class BreederController extends Controller
             'rating_count' => $breeder->comments->count(),
             'rating_average' => $breeder->comments->pluck('rating')->avg(),
             'breeder' => BreederFullData::from($breeder),
-            'puppies' => app(FavoriteService::class)->applyFavorites(PuppyCardData::collect($puppies)),
+            'puppies' => app(CompareService::class)->applyCompares(
+                app(FavoriteService::class)->applyFavorites(PuppyCardData::collect($puppies))
+            ),
         ]);
     }
 }

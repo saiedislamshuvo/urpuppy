@@ -160,35 +160,30 @@ class AdminPanelProvider extends PanelProvider
             //         ])
             //         ->groups($admin_items);
             // })
-            ->navigationItems([
-                NavigationItem::make('Log')
-                    ->url('/log-viewer', shouldOpenInNewTab: true)
-                    ->icon('heroicon-o-book-open')
-                    ->group('Settings'),
-
-            ])
             ->routes(fn () => FilamentMails::routes())
             ->authMiddleware([
                 Authenticate::class,
             ])->plugins([
-                /* FilamentUsersPlugin::make(), */
                 BlogPlugin::make(),
-                /* FilamentGeneralSettingsPlugin::make() */
-                /*     ->setSort(16) */
-                /*     ->setIcon('heroicon-o-cog') */
-                /*     ->setNavigationGroup('Settings'), */
-
-                /* SpatieLaravelTranslatablePlugin::make()->defaultLocales([config('app.locale')]), */
-                /* SkyPlugin::make()->navigationGroupLabel('CMS')->hideResources([ */
-                /*     LibraryResource::class, */
-                /* ]), */
                 FilamentClearCachePlugin::make(),
                 \Phpsa\FilamentAuthentication\FilamentAuthentication::make(),
                 FilamentMailsPlugin::make(),
-
-                /* \BezhanSalleh\FilamentGoogleAnalytics\FilamentGoogleAnalyticsPlugin::make(), */
-                /* \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make() */
-                /* FilamentShieldPlugin::make(), */
+                FilamentShieldPlugin::make()
+                    ->gridColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 3
+                    ])
+                    ->sectionColumnSpan(1)
+                    ->checkboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 4,
+                    ])
+                    ->resourceCheckboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                    ]),
             ])
             ->spa();
     }

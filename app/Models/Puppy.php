@@ -392,6 +392,11 @@ class Puppy extends Model implements HasMedia, Sitemapable
         return $this->morphMany(Comment::class, 'commentable');
     }
 
+    public function compares()
+    {
+        return $this->morphMany(Compare::class, 'compareable');
+    }
+
     public function getIsFavoritedByCurrentUserAttribute()
     {
         /* dd($this->isFavoritedBy(auth()->user())); */

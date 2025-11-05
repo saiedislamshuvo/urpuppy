@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages\ViewUser;
+use App\Models\User;
 use Filament\Forms\Components\Section as Card;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -10,6 +11,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -94,13 +96,6 @@ class UserResource extends Resource
             ->schema([
                 Card::make()
                     ->schema([
-                        SpatieMediaLibraryFileUpload::make('avatar')
-                            ->validationMessages([
-                                'max' => 'Image size should be less than 10MB',
-                            ])
-                            ->disk(config('media-library.disk_name'))->collection('avatars')->rules([
-                            'max:10040',
-                        ])->circleCropper(),
                         TextInput::make('first_name'),
                         TextInput::make('last_name'),
 
@@ -127,11 +122,13 @@ class UserResource extends Resource
                             ->maxLength(255)
                             ->label(strval(__('filament-authentication::filament-authentication.field.user.confirm_password'))),
                         
-                        Select::make('roles')
-                            ->multiple()
-                            ->relationship('roles', 'name')
-                            ->preload(FilamentAuthentication::getPlugin()->getPreloadRoles())
-                            ->label(strval(__('filament-authentication::filament-authentication.field.user.roles'))),
+                        TextInput::make('role_badge')
+                            ->label('Role')
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->formatStateUsing(fn (?User $record) => $record?->role_badge ?? 'Buyer')
+                            ->hiddenOn('create'),
+                        
                     ])
                     ->columns(2), // Ensure all fields inside this Card share 2 columns
 
@@ -144,14 +141,51 @@ class UserResource extends Resource
                         TextInput::make('has_usda_registration'),
                         TextInput::make('company_address'),
                         TextInput::make('company_established_on'),
-
-                        SpatieMediaLibraryFileUpload::make('company_logo')->rules(['max:10040'])->disk(config('media-library.disk_name'))->collection('company_logo'),
-
-                        SpatieMediaLibraryFileUpload::make('video')->disk(config('media-library.disk_name'))->collection('videos')->multiple(),
-                        SpatieMediaLibraryFileUpload::make('gallery')->collection('gallery')->multiple()->disk(config('media-library.disk_name'))->columns(2),
-
                     ])
                     ->columns(2),
+
+                Card::make('Media & Images')
+                    ->description('Upload profile images, company logo, videos, and gallery photos')
+                    ->icon('heroicon-o-photo')
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('avatar')
+                            ->label('Profile Avatar')
+                            ->validationMessages([
+                                'max' => 'Image size should be less than 10MB',
+                            ])
+                            ->disk(config('media-library.disk_name'))
+                            ->collection('avatars')
+                            ->rules(['max:10040'])
+                            ->circleCropper()
+                            ->helperText('Upload a profile picture for the user')
+                            ->columnSpanFull(),
+
+                        SpatieMediaLibraryFileUpload::make('company_logo')
+                            ->label('Company Logo')
+                            ->rules(['max:10040'])
+                            ->disk(config('media-library.disk_name'))
+                            ->collection('company_logo')
+                            ->helperText('Upload the company logo')
+                            ->columnSpanFull(),
+
+                        SpatieMediaLibraryFileUpload::make('video')
+                            ->label('Videos')
+                            ->disk(config('media-library.disk_name'))
+                            ->collection('videos')
+                            ->multiple()
+                            ->helperText('Upload one or more videos')
+                            ->columnSpanFull(),
+
+                        SpatieMediaLibraryFileUpload::make('gallery')
+                            ->label('Gallery Images')
+                            ->collection('gallery')
+                            ->multiple()
+                            ->disk(config('media-library.disk_name'))
+                            ->columns(2)
+                            ->helperText('Upload multiple images for the gallery')
+                            ->columnSpanFull(),
+                    ])
+                    ->collapsible(),
 
             ]);
 
@@ -178,14 +212,16 @@ class UserResource extends Resource
                 ->default(false)
                 ->boolean()
                 ->toggleable()
-                ->toggledHiddenByDefault()
                 ->label(strval(__('filament-authentication::filament-authentication.field.user.verified_at'))),
-            'roles.name' => TextColumn::make('roles.name')->badge()
-                ->label(strval(__('filament-authentication::filament-authentication.field.user.roles'))),
+
+            'role_badge' => TextColumn::make('role_badge')
+                ->badge()
+                ->color(fn (Model $record) => $record->role_badge_color)
+                ->label('Role')
+                ->sortable(false),
             'created_at' => TextColumn::make('created_at')
                 ->dateTime('Y-m-d H:i:s')
                 ->toggleable()
-                ->toggledHiddenByDefault()
                 ->label(strval(__('filament-authentication::filament-authentication.field.user.created_at'))),
         ];
 
@@ -235,15 +271,27 @@ class UserResource extends Resource
     protected static function getTableActions(): array
     {
         $actions = [
-            'view' => ViewAction::make(),
-            'edit' => EditAction::make(),
-            'impersonate' => FilamentAuthentication::getPlugin()->impersonateEnabled() ? ImpersonateLink::make() : null,
-            'delete' => DeleteAction::make(),
-            'force_delete' => FilamentAuthentication::getPlugin()->usesSoftDeletes() ? ForceDeleteAction::make() : null,
-            'restore' => FilamentAuthentication::getPlugin()->usesSoftDeletes() ? RestoreAction::make() : null,
+            ViewAction::make(),
+            EditAction::make(),
         ];
 
-        return array_filter($actions);
+        // Add impersonate action if enabled
+        if (FilamentAuthentication::getPlugin()->impersonateEnabled()) {
+            $actions[] = ImpersonateLink::make();
+        }
+
+        // Add delete action
+        $actions[] = DeleteAction::make();
+
+        // Add soft delete actions if enabled
+        if (FilamentAuthentication::getPlugin()->usesSoftDeletes()) {
+            $actions[] = ForceDeleteAction::make();
+            $actions[] = RestoreAction::make();
+        }
+
+        return [
+            ActionGroup::make($actions),
+        ];
     }
 
     protected static function getTableBulkActions(): array

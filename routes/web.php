@@ -10,6 +10,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\CompareController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PostController;
@@ -99,6 +100,9 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
     Route::patch('/favorites/{puppy}', FavoriteController::class)->name('favorite.toggle');
+
+    Route::get('/compares', [CompareController::class, 'index'])->name('compares.index');
+    Route::patch('/compares/{puppy}', CompareController::class)->name('compare.toggle');
 
     Route::get('/breeder-listings/create', [BreederListingController::class, 'create'])->name('breeder_listings.create');
     Route::post('/breeder-listings', [BreederListingController::class, 'store'])->name('breeder_listings.store');
