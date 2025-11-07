@@ -116,11 +116,11 @@ Route::middleware('auth')->group(function () {
     
     // Puppy Listing Routes (separate from seller registration)
     Route::middleware(['verified', 'profile.completed', 'has.plan'])->group(function () {
-        Route::get('/account/puppies/create', [\App\Http\Controllers\PuppyListingController::class, 'create'])->name('account.puppies.create');
-        Route::post('/account/puppies', [\App\Http\Controllers\PuppyListingController::class, 'store'])->name('account.puppies.store');
-        Route::get('/account/puppies/{id}/edit', [\App\Http\Controllers\PuppyListingController::class, 'edit'])->name('account.puppies.edit');
-        Route::put('/account/puppies/{id}', [\App\Http\Controllers\PuppyListingController::class, 'update'])->name('account.puppies.update');
-        Route::delete('/account/puppies/{id}', [\App\Http\Controllers\PuppyListingController::class, 'destroy'])->name('account.puppies.destroy');
+        Route::get('/puppies-listing/create', [\App\Http\Controllers\PuppyListingController::class, 'create'])->name('account.puppies.create');
+        Route::post('/puppies-listing', [\App\Http\Controllers\PuppyListingController::class, 'store'])->name('account.puppies.store');
+        Route::get('/puppies-listing/{id}/edit', [\App\Http\Controllers\PuppyListingController::class, 'edit'])->name('account.puppies.edit');
+        Route::put('/puppies-listing/{id}', [\App\Http\Controllers\PuppyListingController::class, 'update'])->name('account.puppies.update');
+        Route::delete('/puppies-listing/{id}', [\App\Http\Controllers\PuppyListingController::class, 'destroy'])->name('account.puppies.destroy');
     });
 
     Route::middleware('verified')->group(function () {

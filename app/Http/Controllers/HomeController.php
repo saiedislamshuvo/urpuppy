@@ -63,10 +63,28 @@ class HomeController extends Controller
             },
             'featured_breeds' => function() use ($cacheKeys) {
                 return Cache::remember($cacheKeys['featured_breeds'], now()->addDay(), function() {
-                    return Breed::with('media')
+                    $breeds = Breed::with('media')
                         ->inRandomOrder()
                         ->take(8)
                         ->get();
+                    
+                    return $breeds->map(function ($breed) {
+                        // Get a random breeder for this breed
+                        $randomBreeder = User::breeders()
+                            ->whereHas('breeds', function ($q) use ($breed) {
+                                $q->where('breeds.id', $breed->id);
+                            })
+                            ->inRandomOrder()
+                            ->first();
+                        
+                        // Create BreedData with random_breeder_slug
+                        return BreedData::from([
+                            'name' => $breed->name,
+                            'slug' => $breed->slug,
+                            'image' => $breed->image,
+                            'random_breeder_slug' => $randomBreeder?->slug,
+                        ]);
+                    });
                 });
             },
             'posts' => function() {

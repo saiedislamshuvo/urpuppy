@@ -57,6 +57,7 @@ class HandleInertiaRequests extends Middleware
             'url' => fn () => $request->fullUrl(),
             'isMobile' => $agent->isMobile(),
             'mapProvider' => config('services.map.provider', 'openstreetmap'),
+            'mapboxAccessToken' => config('services.mapbox.access_token'),
         ];
     }
 }

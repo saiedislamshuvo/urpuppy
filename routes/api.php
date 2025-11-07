@@ -30,7 +30,44 @@ Route::middleware(['throttle:60,1'])->group(function () {
         $provider = config('services.map.provider', 'google');
         $address = $request->input('address');
 
-        if ($provider === 'openstreetmap') {
+        if ($provider === 'mapbox') {
+            // Use Mapbox Geocoding API
+            $accessToken = config('services.mapbox.access_token');
+            if (!$accessToken) {
+                abort(500, 'Mapbox access token not configured');
+            }
+
+            $response = Http::get('https://api.mapbox.com/geocoding/v5/mapbox.places/' . urlencode($address) . '.json', [
+                'access_token' => $accessToken,
+                'country' => 'us',
+                'limit' => 1,
+            ]);
+
+            $data = $response->json();
+            
+            if (empty($data['features'])) {
+                return ['results' => []];
+            }
+
+            // Transform Mapbox response to Google Maps format
+            $feature = $data['features'][0];
+            $center = $feature['center'];
+            
+            return [
+                'results' => [
+                    [
+                        'formatted_address' => $feature['place_name'] ?? '',
+                        'geometry' => [
+                            'location' => [
+                                'lat' => (float) $center[1],
+                                'lng' => (float) $center[0],
+                            ],
+                        ],
+                        'address_components' => transformMapboxAddress($feature),
+                    ],
+                ],
+            ];
+        } elseif ($provider === 'openstreetmap') {
             // Use Nominatim API for OpenStreetMap
             $response = Http::get('https://nominatim.openstreetmap.org/search', [
                 'q' => $address,
@@ -86,7 +123,42 @@ Route::middleware(['throttle:60,1'])->group(function () {
         $lat = $request->input('lat');
         $lng = $request->input('lng');
 
-        if ($provider === 'openstreetmap') {
+        if ($provider === 'mapbox') {
+            // Use Mapbox Geocoding API
+            $accessToken = config('services.mapbox.access_token');
+            if (!$accessToken) {
+                abort(500, 'Mapbox access token not configured');
+            }
+
+            $response = Http::get('https://api.mapbox.com/geocoding/v5/mapbox.places/' . $lng . ',' . $lat . '.json', [
+                'access_token' => $accessToken,
+                'limit' => 1,
+            ]);
+
+            $data = $response->json();
+            
+            if (empty($data['features'])) {
+                return ['results' => []];
+            }
+
+            // Transform Mapbox response to Google Maps format
+            $feature = $data['features'][0];
+            
+            return [
+                'results' => [
+                    [
+                        'formatted_address' => $feature['place_name'] ?? '',
+                        'geometry' => [
+                            'location' => [
+                                'lat' => (float) $lat,
+                                'lng' => (float) $lng,
+                            ],
+                        ],
+                        'address_components' => transformMapboxAddress($feature),
+                    ],
+                ],
+            ];
+        } elseif ($provider === 'openstreetmap') {
             // Use Nominatim API for OpenStreetMap
             $response = Http::get('https://nominatim.openstreetmap.org/reverse', [
                 'lat' => $lat,
@@ -174,6 +246,47 @@ if (!function_exists('transformNominatimAddress')) {
                 'short_name' => $address['postcode'],
                 'types' => ['postal_code'],
             ];
+        }
+        
+        return $components;
+    }
+}
+
+// Helper function to transform Mapbox address to Google Maps format
+if (!function_exists('transformMapboxAddress')) {
+    function transformMapboxAddress($feature) {
+        $components = [];
+        $context = $feature['context'] ?? [];
+        
+        // Extract address components from Mapbox context
+        foreach ($context as $item) {
+            $id = $item['id'] ?? '';
+            
+            if (strpos($id, 'address') !== false) {
+                $components[] = [
+                    'long_name' => $item['text'] ?? '',
+                    'short_name' => $item['text'] ?? '',
+                    'types' => ['street_number', 'route'],
+                ];
+            } elseif (strpos($id, 'place') !== false) {
+                $components[] = [
+                    'long_name' => $item['text'] ?? '',
+                    'short_name' => $item['text'] ?? '',
+                    'types' => ['locality'],
+                ];
+            } elseif (strpos($id, 'region') !== false) {
+                $components[] = [
+                    'long_name' => $item['text'] ?? '',
+                    'short_name' => $item['short_code'] ?? $item['text'] ?? '',
+                    'types' => ['administrative_area_level_1'],
+                ];
+            } elseif (strpos($id, 'postcode') !== false) {
+                $components[] = [
+                    'long_name' => $item['text'] ?? '',
+                    'short_name' => $item['text'] ?? '',
+                    'types' => ['postal_code'],
+                ];
+            }
         }
         
         return $components;

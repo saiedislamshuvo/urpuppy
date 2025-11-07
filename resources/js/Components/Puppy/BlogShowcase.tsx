@@ -5,7 +5,7 @@ import Card from '../Post/Card'
 
 const BlogShowcase = ({post_data}: { post_data: App.Data.PostData[] }) => {
   return (
-            <section className="new-arrivals  py-5 py-md-9 ">
+            <section className="new-arrivals py-5">
       <div className="container ">
         <div className="d-flex align-items-center justify-content-between mb-4 mb-lg-8">
           <h2 className="mb-0" data-aos="fade-right" data-aos-delay="100" data-aos-duration="1000">Latest Posts</h2>

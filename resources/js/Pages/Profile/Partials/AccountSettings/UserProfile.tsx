@@ -11,7 +11,7 @@ import DeleteAccountModal from '@/Components/Modals/DeleteAccountModal'
 import StateDropdown from '@/Components/StateDropdown'
 import DateInput from '@/Components/DateInput'
 import PhoneNumberInput from '@/Components/PhoneNumberInput'
-import MapInput from '@/Components/MapInput'
+import MapInput from '@/Components/Map/MapInput'
 
 const UserProfile = () => {
 

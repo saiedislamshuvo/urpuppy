@@ -140,7 +140,7 @@ export default function DashboardLayout({
                                 {(user?.is_seller || user?.is_breeder) && (
                                     <div className="mt-3">
                                         <Link
-                                            href="/account/puppies/create"
+                                            href="/puppies-listing/create"
                                             method="get"
                                             as="button"
                                             className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
@@ -150,7 +150,7 @@ export default function DashboardLayout({
                                     </div>
                                 )}
                             </div>
-                            <div className="col-lg-9">
+                            <div className="col-lg-9" style={{ minHeight: '100vh' }}>
                                 {children}
                             </div>
                         </div>

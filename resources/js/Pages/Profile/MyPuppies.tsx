@@ -42,7 +42,34 @@ const MyPuppies = ({ puppies }: {
               </Link>
             </div>
 
-          )) : <h6 className="mb-4">No puppies found..</h6>
+          )) : (
+            <div className="col-12">
+              <div className="row justify-content-center">
+                <div className="col-lg-8 text-center py-12">
+                  <div className="mb-4">
+                    <img
+                      src="/images/svgs/icon-paws-dark.svg"
+                      alt="My Puppies"
+                      width="120"
+                      height="120"
+                      className="text-muted"
+                    />
+                  </div>
+                  <h3 className="h4 mb-3">No puppies listed yet</h3>
+                  <p className="text-muted mb-4">
+                    Start listing your puppies to reach potential buyers!
+                  </p>
+                  <Link
+                    href="/seller/create"
+                    className="btn btn-primary"
+                    aria-label="Create new puppy listing"
+                  >
+                    List Your First Puppy
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )
         }
       </div>
     </>

@@ -88,7 +88,7 @@ const Navbarv2 = ({ type }: { type?: string | undefined }) => {
             <ul className="navbar-nav align-items-center">
               <li className="nav-item nav-item-line ms-4"></li>
               <li className="nav-item">
-                <Link aria-label="Puppies for Sale" prefetch className={`nav-link ${page.startsWith('/puppies') ? 'active' : ''}`} href="/puppies">
+                <Link aria-label="Puppies for Sale" prefetch className={`nav-link ${page == 'puppies' ? 'active' : ''}`} href="/puppies">
                   Puppies for Sale
                 </Link>
               </li>
@@ -106,7 +106,7 @@ const Navbarv2 = ({ type }: { type?: string | undefined }) => {
               {
                 (user?.is_breeder || user?.is_seller || !user) &&
                 <li className="nav-item">
-                  <Link aria-label="List Ur Puppy" prefetch className={`nav-link ${page == '/seller/create' ? 'active' : ''}`} aria-current="page" href="/seller/create">
+                  <Link aria-label="List Ur Puppy" prefetch className={`nav-link ${page == '/puppies-listing/create' ? 'active' : ''}`} aria-current="page" href="/puppies-listing/create">
                     + List Ur Puppy
                   </Link>
                 </li>
@@ -187,7 +187,7 @@ const Navbarv2 = ({ type }: { type?: string | undefined }) => {
             {
               (user?.is_seller || !user) &&
               <li className="nav-item">
-                <Link aria-label="List Ur Puppy" prefetch className="nav-link text-white" href="/seller/create">
+                <Link aria-label="List Ur Puppy" prefetch className="nav-link text-white" href="/puppies-listing/create">
                   + List Ur Puppy
                 </Link>
               </li>

@@ -134,46 +134,70 @@ export default function Edit({
               {(!plan && !breeder_plan) &&
                 <div className="card border">
                   <div className="card-body pb-0">
-                    <div className="row">
+                    {((user?.is_seller && user?.profile_completed) || (user?.is_breeder && user?.profile_completed) || (!user?.profile_completed && (user?.is_seller || user?.is_breeder))) ? (
+                      <div className="row">
+                        {(user?.is_seller && user?.profile_completed) && <h6 className="mb-4">
+                          <Link aria-label='Choose Plan' href="/plans" method="get" as="button" className="btn btn-primary">Choose Plan</Link>
+                        </h6>}
 
-                      {(user?.is_seller && user?.profile_completed) && <h6 className="mb-4">
-                        <Link aria-label='Choose Plan' href="/plans" method="get" as="button" className="btn btn-primary">Choose Plan</Link>
-                      </h6>}
+                        {(user?.is_breeder && user?.profile_completed) && <h6 className="mb-4">
+                          <Link aria-label='Choose Plan' href="/plans/breeder" method="get" as="button" className="btn btn-primary">Choose Plan</Link>
+                        </h6>}
 
-                      {(user?.is_breeder && user?.profile_completed) && <h6 className="mb-4">
-                        <Link aria-label='Choose Plan' href="/plans/breeder" method="get" as="button" className="btn btn-primary">Choose Plan</Link>
-                      </h6>}
+                        {(!user?.profile_completed) && <h6 className="mb-4">
+                          {
+                            user?.is_breeder && <>
 
-                      {(!user?.profile_completed) && <h6 className="mb-4">
-                        {
-                          user?.is_breeder && <>
+                              <h6>
+                                <Link aria-label='Complete Profile' href="/breeders/create" method="get" as="button" className="btn btn-primary">Complete Profile</Link>
 
-                            <h6>
-                              <Link aria-label='Complete Profile' href="/breeders/create" method="get" as="button" className="btn btn-primary">Complete Profile</Link>
+                              </h6>
 
-                            </h6>
+                            </>
 
-                          </>
+                          }
 
-                        }
+                          {
+                            user?.is_seller && <>
+                              <h6>
 
-                        {
-                          user?.is_seller && <>
-                            <h6>
+                                <Link aria-label='Complete Profile' href="/seller/create" method="get" as="button" className="btn btn-primary">Complete Profile</Link>
+                              </h6>
 
-                              <Link aria-label='Complete Profile' href="/seller/create" method="get" as="button" className="btn btn-primary">Complete Profile</Link>
-                            </h6>
+                            </>
 
-                          </>
-
-                        }
-
-
-
-                      </h6>}
+                          }
 
 
-                    </div>
+
+                        </h6>}
+                      </div>
+                    ) : (
+                      <div className="row justify-content-center">
+                        <div className="col-lg-8 text-center py-12">
+                          <div className="mb-4">
+                            <img
+                              src="/images/svgs/icon-card.svg"
+                              alt="Subscription"
+                              width="120"
+                              height="120"
+                              className="text-muted"
+                            />
+                          </div>
+                          <h3 className="h4 mb-3">No subscription yet</h3>
+                          <p className="text-muted mb-4">
+                            Choose a plan to unlock premium features and reach more buyers!
+                          </p>
+                          <Link
+                            href="/plans"
+                            className="btn btn-primary"
+                            aria-label="Choose a plan"
+                          >
+                            Choose a Plan
+                          </Link>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -185,14 +209,33 @@ export default function Edit({
           aria-labelledby="pills-saved-search-tab" tabIndex={0}>
           <div className="card border">
             <div className="card-body pb-0">
-              <div className="row">
-                {saved_searches.length > 0 ? saved_searches.map((saved_search: App.Data.SavedSearchData, index: number) => (
-                  <div className="col-md-6 col-xx-4">
-                    <SavedSearchCard key={index} saved_search={saved_search} />
+              {saved_searches.length > 0 ? (
+                <div className="row">
+                  {saved_searches.map((saved_search: App.Data.SavedSearchData, index: number) => (
+                    <div className="col-md-6 col-xx-4">
+                      <SavedSearchCard key={index} saved_search={saved_search} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="row justify-content-center">
+                  <div className="col-lg-8 text-center py-12">
+                    <div className="mb-4">
+                      <img
+                        src="/images/svgs/icon-bookmarks.svg"
+                        alt="Saved Search"
+                        width="120"
+                        height="120"
+                        className="text-muted"
+                      />
+                    </div>
+                    <h3 className="h4 mb-3">No saved searches yet</h3>
+                    <p className="text-muted mb-0">
+                      Save your favorite search criteria to quickly find puppies that match your preferences!
+                    </p>
                   </div>
-                )) : <h6 className="mb-4"> No Saved Search</h6>
-                }
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

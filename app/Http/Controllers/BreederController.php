@@ -82,12 +82,42 @@ class BreederController extends Controller
             ]);
         }
 
+        $user = $request->user();
+        
+        // Get user's default location (company location if available, otherwise personal location)
+        $defaultLocation = null;
+        // Check if user has company location data or personal location
+        $hasCompanyLocation = !empty($user->company_address) || !empty($user->company_city);
+        $hasPersonalLocation = $user->lat && $user->lng;
+        
+        if ($user && ($hasCompanyLocation || $hasPersonalLocation)) {
+            // Prefer company location, fallback to personal location
+            // Note: company_lat/lng may not exist in DB, so we'll use personal lat/lng as fallback
+            $lat = ($hasCompanyLocation && property_exists($user, 'company_lat') && $user->company_lat) 
+                ? $user->company_lat 
+                : ($user->lat ?? null);
+            $lng = ($hasCompanyLocation && property_exists($user, 'company_lng') && $user->company_lng) 
+                ? $user->company_lng 
+                : ($user->lng ?? null);
+            $defaultLocation = [
+                'lat' => $lat,
+                'lng' => $lng,
+                'address' => $user->company_address ?? $user->gmap_address ?? $user->address ?? '',
+                'city' => $user->company_city ?? $user->city ?? '',
+                'street' => $user->company_street ?? $user->street ?? '',
+                'state' => $user->company_state ?? $user->state ?? '',
+                'shortState' => $user->company_short_state ?? $user->short_state ?? '',
+                'zipCode' => $user->company_zip_code ?? $user->zip_code ?? '',
+            ];
+        }
+
         $breeds = Cache::remember('breed_options', now()->addDay(), function() {
             return BreedOptionData::collect(Breed::query()->get());
         });
 
         return inertia('Breeders/Registration', [
             'breeds' => $breeds,
+            'defaultLocation' => $defaultLocation,
         ]);
     }
 
@@ -101,7 +131,7 @@ class BreederController extends Controller
             $data = $request->validated();
             $user = $request->user();
 
-            $user->update([
+            $updateData = [
                 'kennel_name' => $data['kennel_name'],
                 'company_name' => $data['fullname'],
                 'company_email_address' => $data['company_email_address'],
@@ -111,13 +141,59 @@ class BreederController extends Controller
                 'has_usda_registration' => $data['has_usda_registration'] == 'yes',
                 'breeder_profile_completed' => true,
                 'profile_completed' => true,
-                'company_address' => @$data['gmap_payload']['address'],
-                'company_city' => @$data['gmap_payload']['city'],
-                'company_street' => @$data['gmap_payload']['street'],
-                'company_state' => @$data['gmap_payload']['state'],
-                'company_short_state' => @$data['gmap_payload']['shortState'],
-                'company_zip_code' => @$data['gmap_payload']['zipCode'],
-            ]);
+            ];
+
+            // Check if location fields are provided (new format)
+            $hasLocationData = isset($data['location_lat']) || isset($data['location_lng']) || 
+                              isset($data['location_address']) || isset($data['location_city']) || 
+                              isset($data['location_state']) || isset($data['location_zip_code']);
+
+            if ($hasLocationData) {
+                // Use new location fields format
+                $updateData['company_lat'] = $data['location_lat'] ?? null;
+                $updateData['company_lng'] = $data['location_lng'] ?? null;
+                $updateData['company_address'] = $data['location_address'] ?? null;
+                $updateData['company_city'] = $data['location_city'] ?? null;
+                $updateData['company_street'] = $data['location_street'] ?? null;
+                $updateData['company_state'] = $data['location_state'] ?? null;
+                $updateData['company_short_state'] = $data['location_short_state'] ?? null;
+                $updateData['company_zip_code'] = $data['location_zip_code'] ?? null;
+
+                // Look up state_id based on state name or abbreviation
+                $stateId = null;
+                if (!empty($data['location_state'])) {
+                    // First try to find by exact state name
+                    $state = State::where('name', $data['location_state'])->first();
+                    
+                    // If not found and short_state is provided, try abbreviation
+                    if (!$state && !empty($data['location_short_state'])) {
+                        $state = State::where('abbreviation', strtoupper($data['location_short_state']))->first();
+                    }
+                    
+                    // If still not found, try case-insensitive search by name
+                    if (!$state) {
+                        $state = State::whereRaw('LOWER(name) = ?', [strtolower($data['location_state'])])->first();
+                    }
+                    
+                    if ($state) {
+                        $stateId = $state->id;
+                    }
+                }
+                
+                $updateData['company_state_id'] = $stateId;
+            } elseif (isset($data['gmap_payload']) && is_array($data['gmap_payload'])) {
+                // Fallback to old gmap_payload format for backward compatibility
+                $updateData['company_address'] = $data['gmap_payload']['address'] ?? null;
+                $updateData['company_city'] = $data['gmap_payload']['city'] ?? null;
+                $updateData['company_street'] = $data['gmap_payload']['street'] ?? null;
+                $updateData['company_state'] = $data['gmap_payload']['state'] ?? null;
+                $updateData['company_short_state'] = $data['gmap_payload']['shortState'] ?? null;
+                $updateData['company_zip_code'] = $data['gmap_payload']['zipCode'] ?? null;
+                $updateData['company_lat'] = $data['gmap_payload']['lat'] ?? null;
+                $updateData['company_lng'] = $data['gmap_payload']['lng'] ?? null;
+            }
+
+            $user->update($updateData);
 
             if ($breeds = $data['breeds']) {
                 $user->breeds()->detach();

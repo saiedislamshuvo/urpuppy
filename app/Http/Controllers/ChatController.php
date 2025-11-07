@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewMessageReceived;
 use App\Models\Chat;
 use App\Models\ChatAttachment;
 use App\Models\ChatMessage;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -325,6 +327,11 @@ class ChatController extends Controller
 
         // Reload message with relationships
         $message->load(['sender', 'receiver', 'attachments']);
+
+        // Send email notification to receiver if they have notifications enabled
+        if ($receiver->enable_notification ?? true) {
+            Mail::queue(new NewMessageReceived($receiver, $message));
+        }
 
         return response()->json([
             'message' => [

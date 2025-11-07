@@ -59,6 +59,14 @@ class PuppyEditData extends Data
         public ?string $certificate_document_url,
         /** @var string[] */
         public ?Collection $certificate_document,
+        public ?float $lat,
+        public ?float $lng,
+        public ?string $address,
+        public ?string $city,
+        public ?string $street,
+        public ?string $state,
+        public ?string $short_state,
+        public ?string $zip_code,
 
     ) {}
 }

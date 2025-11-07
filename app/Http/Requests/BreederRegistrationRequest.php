@@ -51,6 +51,16 @@ class BreederRegistrationRequest extends FormRequest
                 'mimes:mpeg,mp4,ogg,webm',
                 'max:51200', // 50MB max per video
             ],
+            
+            // Location fields (optional)
+            'location_lat' => ['nullable', 'numeric', 'between:-90,90'],
+            'location_lng' => ['nullable', 'numeric', 'between:-180,180'],
+            'location_address' => ['nullable', 'string', 'max:255'],
+            'location_city' => ['nullable', 'string', 'max:100'],
+            'location_street' => ['nullable', 'string', 'max:255'],
+            'location_state' => ['nullable', 'string', 'max:100'],
+            'location_short_state' => ['nullable', 'string', 'max:2'],
+            'location_zip_code' => ['nullable', 'string', 'max:20'],
         ];
 
         /*         if (!empty(request()->get('company_logo'))) */

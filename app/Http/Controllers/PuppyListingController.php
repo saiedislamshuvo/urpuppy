@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Data\PuppyEditData;
 use App\Http\Requests\PuppyListingRequest;
 use App\Jobs\ProcessPuppyMedia;
+use App\Mail\NewPuppyListingPosted;
 use App\Models\Puppy;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -25,13 +28,28 @@ class PuppyListingController extends Controller
         $patterns = pattern_options();
         $breeds = breed_options();
         $colors = color_options();
-        $siblings = sibling_options($request, null);
+        $user = $request->user();
+
+        // Get user's default location
+        $defaultLocation = null;
+        if ($user && ($user->lat && $user->lng)) {
+            $defaultLocation = [
+                'lat' => $user->lat,
+                'lng' => $user->lng,
+                'address' => $user->gmap_address ?? $user->address ?? '',
+                'city' => $user->city ?? '',
+                'street' => $user->street ?? '',
+                'state' => $user->state ?? '',
+                'shortState' => $user->short_state ?? '',
+                'zipCode' => $user->zip_code ?? '',
+            ];
+        }
 
         return Inertia::render('PuppyListing/Create', [
             'patterns' => $patterns,
             'breeds' => $breeds,
             'colors' => $colors,
-            'siblings' => $siblings,
+            'defaultLocation' => $defaultLocation,
         ]);
     }
 
@@ -46,17 +64,31 @@ class PuppyListingController extends Controller
         $patterns = pattern_options();
         $breeds = breed_options();
         $colors = color_options();
-        $siblings = sibling_options($request, $id);
+
+        // Get user's default location for fallback
+        $defaultLocation = null;
+        if ($user && ($user->lat && $user->lng)) {
+            $defaultLocation = [
+                'lat' => $user->lat,
+                'lng' => $user->lng,
+                'address' => $user->gmap_address ?? $user->address ?? '',
+                'city' => $user->city ?? '',
+                'street' => $user->street ?? '',
+                'state' => $user->state ?? '',
+                'shortState' => $user->short_state ?? '',
+                'zipCode' => $user->zip_code ?? '',
+            ];
+        }
 
         return Inertia::render('PuppyListing/Edit', [
             'puppy_edit' => PuppyEditData::from(
-                Puppy::with(['media', 'siblings', 'breeds', 'seller', 'puppy_patterns', 'puppy_colors'])
+                Puppy::with(['media', 'breeds', 'seller', 'puppy_patterns', 'puppy_colors'])
                     ->findOrFail($id)
             ),
             'patterns' => $patterns,
             'breeds' => $breeds,
             'colors' => $colors,
-            'siblings' => $siblings,
+            'defaultLocation' => $defaultLocation,
         ]);
     }
 
@@ -88,6 +120,11 @@ class PuppyListingController extends Controller
 
                 // Clear cache
                 Cache::forget("seller_{$user->slug}_puppies_*");
+
+                // Send email notification to user if they have notifications enabled
+                if ($user->enable_notification ?? true) {
+                    Mail::queue(new NewPuppyListingPosted($user, $created_puppy));
+                }
 
                 return success('puppies.show', 'Puppy created successfully', $created_puppy->slug);
             });
@@ -145,7 +182,9 @@ class PuppyListingController extends Controller
 
     protected function formatPuppyData(array $data): array
     {
-        return [
+        $certificateType = $data['certificate_type'] ?? null;
+        
+        $puppyData = [
             'name' => ucwords($data['puppy_name']),
             'gender' => $data['puppy_gender'],
             'description' => $data['puppy_about'],
@@ -156,9 +195,50 @@ class PuppyListingController extends Controller
             'has_vet_exam' => $data['has_vet_exam'] == 'yes',
             'has_travel_ready' => $data['has_travel_ready'] == 'yes',
             'has_delivery_included' => $data['has_delivery_included'] == 'yes',
-            'has_certificate' => $data['has_certificate'] == 'yes',
-            'certificate_type' => $data['certificate_type'] ?? null,
+            'has_certificate' => !empty($certificateType),
+            'certificate_type' => $certificateType,
         ];
+
+        // Add location data if provided (check for any location field)
+        $hasLocationData = isset($data['location_lat']) || isset($data['location_lng']) || 
+                          isset($data['location_address']) || isset($data['location_city']) || 
+                          isset($data['location_state']) || isset($data['location_zip_code']);
+        
+        if ($hasLocationData) {
+            $puppyData['lat'] = $data['location_lat'] ?? null;
+            $puppyData['lng'] = $data['location_lng'] ?? null;
+            $puppyData['address'] = $data['location_address'] ?? null;
+            $puppyData['city'] = $data['location_city'] ?? null;
+            $puppyData['street'] = $data['location_street'] ?? null;
+            $puppyData['state'] = $data['location_state'] ?? null;
+            $puppyData['short_state'] = $data['location_short_state'] ?? null;
+            $puppyData['zip_code'] = $data['location_zip_code'] ?? null;
+            
+            // Look up state_id based on state name or abbreviation
+            $stateId = null;
+            if (!empty($data['location_state'])) {
+                // First try to find by exact state name
+                $state = State::where('name', $data['location_state'])->first();
+                
+                // If not found and short_state is provided, try abbreviation
+                if (!$state && !empty($data['location_short_state'])) {
+                    $state = State::where('abbreviation', strtoupper($data['location_short_state']))->first();
+                }
+                
+                // If still not found, try case-insensitive search by name
+                if (!$state) {
+                    $state = State::whereRaw('LOWER(name) = ?', [strtolower($data['location_state'])])->first();
+                }
+                
+                if ($state) {
+                    $stateId = $state->id;
+                }
+            }
+            
+            $puppyData['state_id'] = $stateId;
+        }
+
+        return $puppyData;
     }
 
     protected function processPuppyRelationships(Puppy $puppy, array $data, bool $isUpdate = false): void
@@ -181,19 +261,6 @@ class PuppyListingController extends Controller
 
                 $puppy->$relation()->attach($items);
             }
-        }
-
-        // Handle siblings separately
-        if (isset($data['puppy_siblings']) && !empty($data['puppy_siblings'])) {
-            if ($isUpdate) {
-                $puppy->siblings()->detach();
-            }
-
-            $siblings = isset(collect($data['puppy_siblings'])->first()['value'])
-                ? collect($data['puppy_siblings'])->unique('value')->pluck('value')->toArray()
-                : $data['puppy_siblings'];
-
-            $puppy->attachSiblings($siblings);
         }
     }
 

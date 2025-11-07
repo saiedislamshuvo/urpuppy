@@ -57,6 +57,8 @@ class PuppyData extends Data
         public ?string $certificate_type = null,
         public ?string $certificate_document_url = null,
 
+        public ?string $state,
+
     ) {}
 
     public function setIsFavorite(bool $isFavorite): self

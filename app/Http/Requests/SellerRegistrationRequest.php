@@ -40,7 +40,17 @@ class SellerRegistrationRequest extends FormRequest
             $rules['phone'] = ['required', 'string', 'max:100', 'regex:/^\+?[1-9]\d{1,14}$/'];
         }
         
-        // gmap_payload is optional
+        // Location fields (optional)
+        $rules['location_lat'] = ['nullable', 'numeric', 'between:-90,90'];
+        $rules['location_lng'] = ['nullable', 'numeric', 'between:-180,180'];
+        $rules['location_address'] = ['nullable', 'string', 'max:255'];
+        $rules['location_city'] = ['nullable', 'string', 'max:100'];
+        $rules['location_street'] = ['nullable', 'string', 'max:255'];
+        $rules['location_state'] = ['nullable', 'string', 'max:100'];
+        $rules['location_short_state'] = ['nullable', 'string', 'max:2'];
+        $rules['location_zip_code'] = ['nullable', 'string', 'max:20'];
+        
+        // gmap_payload is optional (kept for backward compatibility)
         $rules['gmap_payload'] = ['nullable'];
 
         return $rules;

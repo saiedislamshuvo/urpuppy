@@ -31,6 +31,10 @@ class AdminResource extends Resource
     {
         return parent::getEloquentQuery()->where('is_admin', true)->orWhere('is_superadmin', true);
     }
+    public static function getNavigationSort(): ?int
+    {
+        return 14;
+    }
 
     public static function form(Form $form): Form
     {

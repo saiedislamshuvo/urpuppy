@@ -25,17 +25,18 @@ class PuppyCardData extends Data
         public DataCollection $breeds,
 
         public BreederData $seller,
+        public ?string $state,
     ) {}
 
     public function setIsFavorite(bool $isFavorite): self
-{
-    $this->is_favorite = $isFavorite;
-    return $this;
-}
+    {
+        $this->is_favorite = $isFavorite;
+        return $this;
+    }
 
     public function setIsCompared(bool $isCompared): self
-{
-    $this->is_compared = $isCompared;
-    return $this;
-}
+    {
+        $this->is_compared = $isCompared;
+        return $this;
+    }
 }

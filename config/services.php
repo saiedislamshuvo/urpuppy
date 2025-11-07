@@ -47,7 +47,11 @@ return [
     ],
 
     'map' => [
-        'provider' => env('MAP_PROVIDER', 'openstreetmap'), // 'google' or 'openstreetmap'
+        'provider' => env('MAP_PROVIDER', 'mapbox'), // 'google', 'mapbox', or 'openstreetmap'
+    ],
+
+    'mapbox' => [
+        'access_token' => env('MAPBOX_ACCESS_TOKEN'),
     ],
 
 ];

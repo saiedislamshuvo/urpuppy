@@ -22,7 +22,7 @@ class StateResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-map-pin';
 
-    protected static ?string $navigationLabel = 'States';
+    protected static ?string $navigationLabel = 'Location';
 
     protected static ?string $modelLabel = 'State';
 

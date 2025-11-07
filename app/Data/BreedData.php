@@ -12,6 +12,7 @@ class BreedData extends Data
         public string $name,
         public string $slug,
         public string $image,
+        public ?string $random_breeder_slug = null,
 
     ) {}
 }

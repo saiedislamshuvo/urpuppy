@@ -13,7 +13,7 @@ import CheckoutV2Form from '../CheckoutV2Form'
 import InputError from '../InputError'
 import { parseInt } from 'lodash'
 import PhoneNumberInput from '../PhoneNumberInput'
-import MapInput from '../MapInput'
+import MapInput, { LocationData } from '../Map/MapInput'
 
 
 
@@ -31,6 +31,8 @@ const SellerRegistrationForm = ({
   const breeds = usePage().props.breeds as App.Data.BreedOptionData[];
   const puppy_count = puppyCountProp ?? (usePage().props.puppy_count as number);
   const user = usePage().props.auth.user;
+  const mapProvider = usePage().props.mapProvider as string;
+  const defaultLocation = usePage().props.defaultLocation as LocationData | null;
 
   // Determine if this is seller registration mode (no puppies yet)
   const isSellerRegistration = !puppy_count && !puppy_edit;
@@ -48,6 +50,15 @@ const SellerRegistrationForm = ({
     social_x: string | null;
     zip_code: string;
     gmap_payload: any | null;
+    // Location fields
+    location_lat?: number | null;
+    location_lng?: number | null;
+    location_address?: string | null;
+    location_city?: string | null;
+    location_street?: string | null;
+    location_state?: string | null;
+    location_short_state?: string | null;
+    location_zip_code?: string | null;
     // Puppy fields (optional)
     images?: any[];
     puppy_breeds?: any[];
@@ -74,6 +85,25 @@ const SellerRegistrationForm = ({
     certificate_document?: any[];
   };
 
+  // Get initial location from user or defaultLocation
+  const getInitialLocation = (): LocationData | null => {
+    if (user && (user as any).lat && (user as any).lng) {
+      return {
+        lat: (user as any).lat,
+        lng: (user as any).lng,
+        address: (user as any).gmap_address ?? (user as any).address ?? '',
+        city: (user as any).city ?? '',
+        street: (user as any).street ?? '',
+        state: (user as any).state ?? '',
+        shortState: (user as any).short_state ?? '',
+        zipCode: (user as any).zip_code ?? '',
+      };
+    }
+    return defaultLocation;
+  };
+
+  const initialLocation = getInitialLocation();
+
   // Initialize form data - only include seller fields for seller registration
   const initialFormData: FormData = {
     first_name: user.first_name,
@@ -87,6 +117,15 @@ const SellerRegistrationForm = ({
     social_x: (user as any)?.social_x ?? null,
     zip_code: user.zip_code ?? '',
     gmap_payload: null,
+    // Location fields
+    location_lat: initialLocation?.lat ?? null,
+    location_lng: initialLocation?.lng ?? null,
+    location_address: initialLocation?.address ?? null,
+    location_city: initialLocation?.city ?? null,
+    location_street: initialLocation?.street ?? null,
+    location_state: initialLocation?.state ?? null,
+    location_short_state: initialLocation?.shortState ?? null,
+    location_zip_code: initialLocation?.zipCode ?? null,
     // Only add puppy fields if not in seller registration mode
     ...(!isSellerRegistration ? {
       images: puppy_edit?.preview_images ?? [],
@@ -117,6 +156,20 @@ const SellerRegistrationForm = ({
 
   const { patch, data, setData, post, errors, processing } = useForm<FormData>(initialFormData)
 
+  const handleLocationSelect = (location: LocationData) => {
+    setData({
+      ...data,
+      location_lat: location.lat,
+      location_lng: location.lng,
+      location_address: location.address,
+      location_city: location.city,
+      location_street: location.street,
+      location_state: location.state,
+      location_short_state: location.shortState,
+      location_zip_code: location.zipCode,
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -133,15 +186,6 @@ const SellerRegistrationForm = ({
       post(`/seller/store`);
     }
   };
-
-
-  const [selectedGMap, setSelectedGMap] = useState<any | null>(null);
-
-  useEffect(() => {
-    if (selectedGMap) {
-      setData('gmap_payload', selectedGMap);
-    }
-  }, [selectedGMap]);
 
 
 
@@ -221,13 +265,94 @@ const SellerRegistrationForm = ({
                 </div>
               </div>
               <div className="location-details border-bottom mb-4">
-                <SemiHeading title="Location Details (Optional)" />
-                <p className="text-muted small mb-3">You can optionally select your location on the map below. You can search for an address, click on the map, or use your current location.</p>
-                <MapInput
-                  initialAddress={user.address ?? ""}
-                  onLocationSelect={setSelectedGMap} />
-
-                {errors.gmap_payload && <InputError message={errors.gmap_payload} />}
+                <SemiHeading title="Location" />
+                <div className="row">
+                  <div className="col-12">
+                    <div className="mb-4">
+                      <InputLabel value="Your Location" />
+                      <p className="text-muted small mb-3">
+                        {defaultLocation ? 'Default location from your account is pre-filled. You can change it if needed.' : 'Select your location. You can use the map to search or manually enter the address below.'}
+                      </p>
+                      <MapInput
+                        provider={mapProvider as any}
+                        onLocationSelect={handleLocationSelect}
+                        initialAddress={initialLocation?.address}
+                        initialLocation={initialLocation ? { lat: initialLocation.lat, lng: initialLocation.lng } : null}
+                      />
+                      {errors.location_lat && <InputError message={errors.location_lat} />}
+                      {errors.location_lng && <InputError message={errors.location_lng} />}
+                    </div>
+                  </div>
+                </div>
+                <div className="row mt-4">
+                  <div className="col-12">
+                    <div className="mb-4">
+                      <InputLabel value="Full Address" />
+                      <TextInput
+                        value={data.location_address ?? ''}
+                        onChange={(e) => setData('location_address', e.target.value)}
+                        placeholder="Enter full address"
+                      />
+                      {errors.location_address && <InputError message={errors.location_address} />}
+                    </div>
+                  </div>
+                  <div className="col-lg-6">
+                    <div className="mb-4">
+                      <InputLabel value="House & Street No" />
+                      <TextInput
+                        value={data.location_street ?? ''}
+                        onChange={(e) => setData('location_street', e.target.value)}
+                        placeholder="Street address"
+                      />
+                      {errors.location_street && <InputError message={errors.location_street} />}
+                    </div>
+                  </div>
+                  <div className="col-lg-6">
+                    <div className="mb-4">
+                      <InputLabel value="City" />
+                      <TextInput
+                        value={data.location_city ?? ''}
+                        onChange={(e) => setData('location_city', e.target.value)}
+                        placeholder="City"
+                      />
+                      {errors.location_city && <InputError message={errors.location_city} />}
+                    </div>
+                  </div>
+                  <div className="col-lg-4">
+                    <div className="mb-4">
+                      <InputLabel value="State" />
+                      <TextInput
+                        value={data.location_state ?? ''}
+                        onChange={(e) => setData('location_state', e.target.value)}
+                        placeholder="State name"
+                      />
+                      {errors.location_state && <InputError message={errors.location_state} />}
+                    </div>
+                  </div>
+                  <div className="col-lg-4">
+                    <div className="mb-4">
+                      <InputLabel value="State Code" />
+                      <TextInput
+                        value={data.location_short_state ?? ''}
+                        onChange={(e) => setData('location_short_state', e.target.value.toUpperCase())}
+                        placeholder="e.g., CA, NY, TX"
+                        maxLength={2}
+                      />
+                      {errors.location_short_state && <InputError message={errors.location_short_state} />}
+                    </div>
+                  </div>
+                  <div className="col-lg-4">
+                    <div className="mb-4">
+                      <InputLabel value="Zip Code" />
+                      <TextInput
+                        value={data.location_zip_code ?? ''}
+                        onChange={(e) => setData('location_zip_code', e.target.value)}
+                        placeholder="Zip code"
+                      />
+                      {errors.location_zip_code && <InputError message={errors.location_zip_code} />}
+                    </div>
+                  </div>
+                </div>
               </div>
             </>}
           {!isSellerRegistration && (

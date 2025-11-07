@@ -9,7 +9,8 @@
     <meta http-equiv="Content-Security-Policy" content="default-src *;
     img-src * 'self' data: https: http:;
     script-src 'self' 'unsafe-inline' 'unsafe-eval' *;
-    style-src  'self' 'unsafe-inline' *">
+    style-src  'self' 'unsafe-inline' *;
+    connect-src 'self' https://nominatim.openstreetmap.org;">
 
     <link fetchpriority="high" rel="preload" as="image" href="{{ asset('banner-bg.webp') }}">
     <link rel="icon" type="image/png" href="{{ asset('images/logos/favicon.png') }}">

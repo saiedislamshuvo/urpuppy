@@ -17,11 +17,13 @@ class ChatMessage extends Model
         'message',
         'is_read',
         'read_at',
+        'inactivity_email_sent_at',
     ];
 
     protected $casts = [
         'is_read' => 'boolean',
         'read_at' => 'datetime',
+        'inactivity_email_sent_at' => 'datetime',
     ];
 
     public function chat()
