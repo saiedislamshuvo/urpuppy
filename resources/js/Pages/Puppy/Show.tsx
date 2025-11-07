@@ -65,7 +65,7 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
                         <div className="top-picks-details">
                           <div className="d-flex align-items-start justify-content-between mb-4">
                             <h2 className="fs-10 mb-0">{puppy.name}</h2>
-                            <div className="d-flex flex-column gap-2">
+                            <div className="d-flex gap-2">
 
                               <FavoriteButton sellerId={puppy.seller.id} puppyId={puppy.id} isFavorite={puppy.is_favorite} />
                               <CompareButton sellerId={puppy.seller.id} puppyId={puppy.id} isCompared={puppy.is_compared} />

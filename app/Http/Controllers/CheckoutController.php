@@ -145,6 +145,18 @@ class CheckoutController extends Controller
 
                 try {
                     $subscription = $this->createSubscription($user, $plan, $paymentMethod);
+                    
+                    // Set the subscription type if subscription was created successfully
+                    if ($subscription) {
+                        $paymentMethodObj = PaymentMethod::retrieve($paymentMethod);
+                        $cardFingerprint = $paymentMethodObj->card->fingerprint ?? null;
+                        
+                        $subscription->update([
+                            'type' => $plan->type,
+                            'card_fingerprint' => $cardFingerprint,
+                        ]);
+                    }
+                    
                     // Update user roles based on the plan type
                     $this->updateUserRoles($user, $plan, $subscription);
                     return redirect()->route('checkout.success', ['plan_id' => $planId]);

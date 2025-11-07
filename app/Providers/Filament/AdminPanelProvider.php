@@ -44,6 +44,7 @@ use TomatoPHP\FilamentUsers\FilamentUsersPlugin;
 use Vormkracht10\FilamentMails\Facades\FilamentMails;
 use Vormkracht10\FilamentMails\FilamentMailsPlugin;
 use Vormkracht10\FilamentMails\Resources\MailResource;
+use Filafly\Icons\Phosphor\PhosphorIcons;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -164,6 +165,7 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])->plugins([
+                PhosphorIcons::make(),
                 BlogPlugin::make(),
                 FilamentClearCachePlugin::make(),
                 \Phpsa\FilamentAuthentication\FilamentAuthentication::make(),

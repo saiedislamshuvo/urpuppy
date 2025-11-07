@@ -40,7 +40,7 @@ class ProfileUpdateRequest extends FormRequest
 
         $user = $request->user();
 
-        if ($user?->roles()->where('name', 'breeder')->exists()) {
+        if ($user?->is_breeder) {
             $rules['kennel_name'] = ['required', 'string', 'max:100', 'blasp_check'];
             $rules['company_email_address'] = ['required', 'max:100'];
             $rules['company_name'] = ['required', 'max:100', 'blasp_check'];

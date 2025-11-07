@@ -35,7 +35,7 @@ class PuppyResource extends Resource
 {
     protected static ?string $model = Puppy::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-heart';
+    protected static ?string $navigationIcon = 'phosphor-dog';
 
     protected static ?string $navigationLabel = 'Puppies List';
 
@@ -49,11 +49,11 @@ class PuppyResource extends Resource
     {
         return 'UrPuppy';
     }
-
-    public static function getNavigationSort(): ?int
+     public static function getNavigationSort(): ?int
     {
-        return -2;
+        return 1 ;
     }
+
 
     public static function getNavigationBadge(): ?string
     {

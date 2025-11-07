@@ -38,7 +38,7 @@ class SendUserWishlistCommand extends Command
 
     public function handle()
     {
-        $buyers = User::role('buyer')->whereHas('saved_searches')->with('saved_searches')->get();
+        $buyers = User::where('is_breeder', false)->where('is_seller', false)->whereHas('saved_searches')->with('saved_searches')->get();
 
         foreach ($buyers as $buyer) {
             $allPuppies = collect();

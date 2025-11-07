@@ -138,6 +138,18 @@ class ProfileController extends Controller
             $user->password = Hash::make($input['new_password']);
         }
 
+        // Check if profile should be marked as completed
+        // Required fields: phone, city (or gmap_address), and location data
+        if (!$user->profile_completed) {
+            $hasPhone = !empty($user->phone) || !empty($input['phone']);
+            $hasLocation = !empty($user->gmap_address) || !empty($user->city) || 
+                          (!empty($input['gmap_payload']) && !empty($input['gmap_payload']['address']));
+            
+            if ($hasPhone && $hasLocation) {
+                $user->profile_completed = true;
+            }
+        }
+
         $user->save();
 
         return Redirect::route('profile.edit')->with([

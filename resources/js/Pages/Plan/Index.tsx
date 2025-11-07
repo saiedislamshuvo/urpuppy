@@ -6,59 +6,59 @@ import SecondaryJumbotron from '@/Components/SecondaryJumbotron'
 import Layout from '@/Layouts/Layout'
 import React from 'react'
 
-const Index = ({plans, discount} : {
-    plans: App.Data.PlanData[],
-    discount?: App.Data.DiscountData
+const Index = ({ plans, discount }: {
+  plans: App.Data.PlanData[],
+  discount?: App.Data.DiscountData
 }) => {
 
-
+  const plansList = plans || [];
 
   return (
-  <Layout>
-            <MetaTags title="Plans" />
-            <Hero title="Join the Pack" bgImage="/images/subscription-plans/subscription-plans-bg.jpg" description="Exclusive Subscription Plans for Pet Lovers. "/>
+    <Layout>
+      <MetaTags title="Plans" />
+      <Hero title="Join the Pack" bgImage="/images/subscription-plans/subscription-plans-bg.jpg" description="Exclusive Subscription Plans for Pet Lovers. " />
 
-                <section className="subscription-plans pb-0 pb-md-0 py-7 py-md-5 py-xl-9 pb-xl-9">
-      <div className="container">
-        <div className="row mt-8">
+      <section className="subscription-plans pb-0 pb-md-0 py-7 py-md-5 py-xl-9 pb-xl-9">
+        <div className="container">
+          <div className="row mt-8">
 
-                        {plans.length > 0 && plans.map((plan: App.Data.PlanData) =>
+            {plansList.length > 0 && plansList.map((plan: App.Data.PlanData) =>
 
-          <div className="col-md-6 col-xl-3 mb-7 mb-xl-0 d-flex align-items-stretch"  key={plan.id}>
+              <div className="col-md-6 col-xl-3 mb-7 mb-xl-0 d-flex align-items-stretch" key={plan.id}>
 
-                            <PlanCard discount={discount} plan={plan} />
+                <PlanCard discount={discount} plan={plan} />
+              </div>
+
+            )}
           </div>
-
-                        )}
         </div>
-      </div>
-    </section>
+      </section>
 
 
-    <section className="bg-extralight my-4 my-lg-5 py-7 py-md-5 py-xl-9">
-      <div className="container">
+      <section className="bg-extralight my-4 my-lg-5 py-7 py-md-5 py-xl-9">
+        <div className="container">
 
-                    <SecondaryJumbotron />
+          <SecondaryJumbotron />
 
-      </div>
-    </section>
+        </div>
+      </section>
 
 
-    <section className="py-7 py-md-5 py-xl-9">
-      <div className="container">
-                    <Jumbotron title="Get Started Today!"
-                        description="Choose the plan that fits your budget and start selling your puppies with confidence. Whether you’re a
+      <section className="py-7 py-md-5 py-xl-9">
+        <div className="container">
+          <Jumbotron title="Get Started Today!"
+            description="Choose the plan that fits your budget and start selling your puppies with confidence. Whether you’re a
                   first-time seller or an experienced breeder, UrPuppy.com has the perfect plan for you!
 "
-                        image="../images/subscription-plans/get-started-today.png"
-                    />
+            image="../images/subscription-plans/get-started-today.png"
+          />
 
-      </div>
-    </section>
+        </div>
+      </section>
 
 
 
-        </Layout>
+    </Layout>
 
   )
 }

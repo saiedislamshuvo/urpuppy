@@ -15,9 +15,16 @@ class SubscriptionResource extends Resource
 {
     protected static ?string $model = Subscription::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'phosphor-currency-circle-dollar';
+    protected static ?string $navigationLabel = 'Subscriptions List';
+    
 
     protected static ?string $recordTitleAttribute = 'user.first_name';
+
+    public static function getNavigationSort(): ?int
+    {
+        return 9;
+    }
 
     public static function getGloballySearchableAttributes(): array
     {

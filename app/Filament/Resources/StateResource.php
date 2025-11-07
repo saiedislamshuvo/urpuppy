@@ -30,6 +30,17 @@ class StateResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'System'; // This will group the resource under "Content"
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 12;
+    }
+
     public static function form(Form $form): Form
     {
         return $form

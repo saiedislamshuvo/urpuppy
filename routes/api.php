@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\BreedController;
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\StateController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -14,28 +15,167 @@ Route::get('/puppy/states', StateController::class);
 Route::get('/puppy/cities', CityController::class);
 Route::get('/puppy/breeds', BreedController::class);
 
+// Chat API routes - use web middleware for session-based auth
+Route::middleware(['web', 'auth:web'])->group(function () {
+    Route::post('/chat', [ChatController::class, 'store'])->name('api.chat.store');
+    Route::get('/chat/{id}', [ChatController::class, 'show'])->name('api.chat.show');
+    Route::post('/chat/{id}/message', [ChatController::class, 'sendMessage'])->name('api.chat.sendMessage');
+    Route::post('/chat/upload-attachment', [ChatController::class, 'uploadAttachment'])->name('api.chat.uploadAttachment');
+    Route::post('/chat/{id}/read', [ChatController::class, 'markAsRead'])->name('api.chat.markAsRead');
+    Route::get('/chat/unread/count', [ChatController::class, 'getUnreadCount'])->name('api.chat.unreadCount');
+});
+
 Route::middleware(['throttle:60,1'])->group(function () {
     Route::get('/geocode', function (Request $request) {
-        if (Cache::get('geocode_usage') > config('services.google.maps_daily_limit')) {
-            abort(429, 'Daily limit exceeded');
+        $provider = config('services.map.provider', 'google');
+        $address = $request->input('address');
+
+        if ($provider === 'openstreetmap') {
+            // Use Nominatim API for OpenStreetMap
+            $response = Http::get('https://nominatim.openstreetmap.org/search', [
+                'q' => $address,
+                'format' => 'json',
+                'addressdetails' => 1,
+                'limit' => 1,
+                'countrycodes' => 'us', // Restrict to USA
+            ])->withHeaders([
+                'User-Agent' => config('app.name', 'Laravel'),
+            ]);
+
+            $data = $response->json();
+            
+            if (empty($data)) {
+                return ['results' => []];
+            }
+
+            // Transform Nominatim response to Google Maps format
+            $result = $data[0];
+            return [
+                'results' => [
+                    [
+                        'formatted_address' => $result['display_name'] ?? '',
+                        'geometry' => [
+                            'location' => [
+                                'lat' => (float) $result['lat'],
+                                'lng' => (float) $result['lon'],
+                            ],
+                        ],
+                        'address_components' => transformNominatimAddress($result['address'] ?? []),
+                    ],
+                ],
+            ];
+        } else {
+            // Google Maps
+            if (Cache::get('geocode_usage') > config('services.google.maps_daily_limit')) {
+                abort(429, 'Daily limit exceeded');
+            }
+
+            Cache::increment('geocode_usage');
+
+            $response = Http::get('https://maps.googleapis.com/maps/api/geocode/json', [
+                'address' => $address,
+                'key' => config('services.google.maps_key'),
+            ]);
+
+            return $response->json();
         }
-
-        Cache::increment('geocode_usage');
-
-        $response = Http::get('https://maps.googleapis.com/maps/api/geocode/json', [
-            'address' => $request->input('address'),
-            'key' => config('services.google.maps_key'),
-        ]);
-
-        return $response->json();
     });
 
     Route::get('/reverse-geocode', function (Request $request) {
-        $response = Http::get('https://maps.googleapis.com/maps/api/geocode/json', [
-            'latlng' => $request->input('lat').','.$request->input('lng'),
-            'key' => config('services.google.maps_key'),
-        ]);
+        $provider = config('services.map.provider', 'google');
+        $lat = $request->input('lat');
+        $lng = $request->input('lng');
 
-        return $response->json();
+        if ($provider === 'openstreetmap') {
+            // Use Nominatim API for OpenStreetMap
+            $response = Http::get('https://nominatim.openstreetmap.org/reverse', [
+                'lat' => $lat,
+                'lon' => $lng,
+                'format' => 'json',
+                'addressdetails' => 1,
+            ])->withHeaders([
+                'User-Agent' => config('app.name', 'Laravel'),
+            ]);
+
+            $data = $response->json();
+            
+            if (empty($data)) {
+                return ['results' => []];
+            }
+
+            // Transform Nominatim response to Google Maps format
+            return [
+                'results' => [
+                    [
+                        'formatted_address' => $data['display_name'] ?? '',
+                        'geometry' => [
+                            'location' => [
+                                'lat' => (float) $lat,
+                                'lng' => (float) $lng,
+                            ],
+                        ],
+                        'address_components' => transformNominatimAddress($data['address'] ?? []),
+                    ],
+                ],
+            ];
+        } else {
+            // Google Maps
+            $response = Http::get('https://maps.googleapis.com/maps/api/geocode/json', [
+                'latlng' => $lat.','.$lng,
+                'key' => config('services.google.maps_key'),
+            ]);
+
+            return $response->json();
+        }
     });
 });
+
+// Helper function to transform Nominatim address to Google Maps format
+if (!function_exists('transformNominatimAddress')) {
+    function transformNominatimAddress($address) {
+        $components = [];
+        
+        if (isset($address['house_number'])) {
+            $components[] = [
+                'long_name' => $address['house_number'],
+                'short_name' => $address['house_number'],
+                'types' => ['street_number'],
+            ];
+        }
+        
+        if (isset($address['road'])) {
+            $components[] = [
+                'long_name' => $address['road'],
+                'short_name' => $address['road'],
+                'types' => ['route'],
+            ];
+        }
+        
+        if (isset($address['city']) || isset($address['town']) || isset($address['village'])) {
+            $city = $address['city'] ?? $address['town'] ?? $address['village'];
+            $components[] = [
+                'long_name' => $city,
+                'short_name' => $city,
+                'types' => ['locality'],
+            ];
+        }
+        
+        if (isset($address['state'])) {
+            $components[] = [
+                'long_name' => $address['state'],
+                'short_name' => $address['state_code'] ?? $address['state'],
+                'types' => ['administrative_area_level_1'],
+            ];
+        }
+        
+        if (isset($address['postcode'])) {
+            $components[] = [
+                'long_name' => $address['postcode'],
+                'short_name' => $address['postcode'],
+                'types' => ['postal_code'],
+            ];
+        }
+        
+        return $components;
+    }
+}

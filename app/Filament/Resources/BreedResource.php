@@ -28,9 +28,14 @@ class BreedResource extends Resource
 {
     protected static ?string $model = Breed::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'phosphor-paw-print';
+    protected static ?string $navigationLabel = 'Puppies Breeds';
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationSort(): ?int
+    {
+        return 2;
+    }
 
     public static function getGloballySearchableAttributes(): array
     {

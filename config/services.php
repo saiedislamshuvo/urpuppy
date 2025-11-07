@@ -46,4 +46,8 @@ return [
         'maps_daily_limit' => env('GOOGLE_MAPS_DAILY_LIMIT', 1000),
     ],
 
+    'map' => [
+        'provider' => env('MAP_PROVIDER', 'openstreetmap'), // 'google' or 'openstreetmap'
+    ],
+
 ];

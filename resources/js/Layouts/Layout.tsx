@@ -2,6 +2,7 @@ import { AOSInit } from '@/Components/AosInit';
 import Footer from '@/Components/Navigation/Footer';
 import Navbarv2 from '@/Components/Navigation/Navbarv2';
 import Banner from '@/Pages/Home/Sections/Banner';
+import FloatingChatButton from '@/Components/FloatingChatButton';
 import { usePage } from '@inertiajs/react';
 import React, { useEffect } from 'react'
 import { PropsWithChildren, ReactNode, useState } from 'react';
@@ -34,14 +35,15 @@ export default function Layout({
     }, [flash]);
 
     return (
-    <div >
+        <div >
             <AOSInit />
-            <Navbarv2 type={navType}/>
+            <Navbarv2 type={navType} />
             <main scroll-region="true" >
-            {children}
+                {children}
             </main>
-            <Footer/>
-</div>
-)
+            <Footer />
+            <FloatingChatButton />
+        </div>
+    )
 }
 

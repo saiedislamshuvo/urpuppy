@@ -59,16 +59,16 @@ class AppServiceProvider extends ServiceProvider
                 [
                     'id' => $notifiable->getKey(),
                     'hash' => sha1($notifiable->getEmailForVerification()),
-                    'role' => $notifiable->roles->first(),
+                    'role' => $notifiable->is_breeder ? 'breeder' : ($notifiable->is_seller ? 'seller' : 'buyer'),
                 ]
             );
         });
 
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
 
-            $roles = $notifiable->roles;
+            $role = $notifiable->is_breeder ? 'breeder' : ($notifiable->is_seller ? 'seller' : 'buyer');
 
-            if ($roles->contains('buyer')) {
+            if ($role == 'buyer') {
 
                 $mail = (new MailMessage)
                     ->subject('New Buyer Account')
@@ -78,7 +78,7 @@ class AppServiceProvider extends ServiceProvider
                     ->line('This step helps us ensure your account is secure and ready to go. If you didn’t sign up for an account with UrPuppy.com, please disregard this email.')
                     ->line('Thank you for choosing UrPuppy.com!');
 
-            } elseif ($roles->contains('seller')) {
+            } elseif ($role == 'seller') {
                 $mail = (new MailMessage)
                     ->subject('New Seller Account')
                     ->greeting('Hi! '.$notifiable->full_name)
@@ -87,7 +87,7 @@ class AppServiceProvider extends ServiceProvider
                     ->line('This step helps us ensure your account is secure and ready to go. If you didn’t sign up for an account with UrPuppy.com, please disregard this email.')
                     ->line('Thank you for choosing UrPuppy.com!');
 
-            } elseif ($roles->contains('breeder')) {
+            } elseif ($role == 'breeder') {
 
                 $mail = (new MailMessage)
                     ->subject('New Breeder Account')

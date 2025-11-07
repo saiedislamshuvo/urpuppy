@@ -77,12 +77,26 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Ensure buyer role sets both to false
+        if ($role == 'buyer') {
+            $user->update([
+                'is_seller' => false,
+                'is_breeder' => false,
+            ]);
+        }
+
         event(new Registered($user));
 
         Auth::login($user);
 
-        if ($role == 'breeder' || $role == 'seller') {
-            return redirect(route('plans.index', absolute: false))->with('message.success', 'You have to purchase a plan to start selling');
+        if ($role == 'breeder') {
+            // Redirect to breeder profile setup first
+            return redirect(route('breeders.create', absolute: false))->with('message.success', 'Please complete your profile setup to continue');
+        }
+
+        if ($role == 'seller') {
+            // Redirect to seller profile setup first
+            return redirect(route('seller.create', absolute: false))->with('message.success', 'Please complete your profile setup to continue');
         }
 
         return redirect(route('home', absolute: false))->with('message.success', 'You have been registered successfully.');

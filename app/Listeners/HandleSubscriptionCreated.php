@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Models\Plan;
+use App\Models\Subscription;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Events\WebhookReceived;
@@ -67,14 +68,27 @@ class HandleSubscriptionCreated
         \Log::channel('stripe')->info(@$meta_data['plan_type']);
         /* \Log::info(@$meta_data['plan_type']); */
 
-        if (@$meta_data['plan_type'] == 'premium') {
+        $planType = @$meta_data['plan_type'];
+        
+        // Update the subscription type in the database if it exists
+        if ($planType) {
+            $dbSubscription = Subscription::where('stripe_id', $subscription['id'])
+                ->where('user_id', $user->id)
+                ->first();
+            
+            if ($dbSubscription && !$dbSubscription->type) {
+                $dbSubscription->update(['type' => $planType]);
+            }
+        }
+
+        if ($planType == 'premium') {
 
             $user->update([
                 'is_seller' => true,
             ]);
 
             Mail::queue(new \App\Mail\PremiumAccountMail($user));
-        } elseif (@$meta_data['plan_type'] == 'breeder') {
+        } elseif ($planType == 'breeder') {
 
             $user->update([
                 'is_breeder' => true,
@@ -82,7 +96,7 @@ class HandleSubscriptionCreated
 
             \Log::info('okay baby boy');
             Mail::queue(new \App\Mail\NewBreederSpecialAccountMail($user));
-        } elseif (@$meta_data['plan_type'] == 'free') {
+        } elseif ($planType == 'free') {
 
             $user->update([
                 'is_seller' => true,

@@ -3,20 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Data\PuppyData;
-use App\Data\PuppyEditData;
-use App\Http\Requests\PuppyUpdateRequest;
 use App\Http\Requests\SellerRegistrationRequest;
-use App\Jobs\GenerateVideoThumbnail;
-use App\Jobs\ProcessPuppyMedia;
-use App\Models\Puppy;
 use App\Models\User;
 use App\Services\FavoriteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Laravel\Octane\Facades\Octane;
 
 class SellerController extends Controller
 {
@@ -42,164 +34,64 @@ class SellerController extends Controller
         ]);
     }
 
-    public function destroy(int $id)
-    {
-        $puppy = Puppy::findOrFail($id);
-        $puppy->delete();
+    // Puppy deletion is now handled by PuppyListingController
 
-        // Clear relevant cache
-        Cache::forget("seller_{$puppy->seller->slug}_puppies_*");
-
-        return success('register.seller', 'Puppy deleted successfully');
-    }
-
-    public function create(Request $request, $id = null)
+    /**
+     * Show the seller profile registration form.
+     * This is only for seller profile information, not puppy creation.
+     */
+    public function create(Request $request)
     {
         $user = $request->user();
 
-        // Check all conditions in parallel
-        [$hasBreederPlan, $breederRequest, $hasKennelName, $isVerified, $isSeller] = Octane::concurrently([
-            fn() => $user?->breeder_plan,
-            fn() => $user?->breeder_requests()->latest()->first()?->status,
-            fn() => !empty($user?->kennel_name),
-            fn() => $user?->email_verified_at,
-            fn() => $user?->is_seller || $user?->is_breeder,
-        ]);
-
         if (!$user) {
-            return error('register.seller', 'You are not logged in')->setStatusCode(301);
+            return error('login', 'You are not logged in')->setStatusCode(301);
         }
 
-        if (!$isVerified) {
-            return error('verification.notice', 'Verify first.');
-        }
-
-        if (!$isSeller) {
+        if (!$user->is_seller && !$user->is_breeder) {
             return error('home', 'You are not a seller/breeder');
         }
 
-        if (!$hasBreederPlan && $user->roles->contains('breeder')) {
-            if ($breederRequest != 'approved') {
-                return error('profile.edit', 'Your request has not been approved yet');
-            }
-
-            if ($hasKennelName) {
-                return error('plans.breeder', 'Please subscribe to a plan');
-            }
-
-            return error('breeders.create', 'Register as a breeder to create puppies');
-        }
-
-        if (!$user->premium_plan && $user->puppies()->count() == 1 && $user->roles->contains('seller')) {
-            /* return success('plans.index', 'Subscribe to any plan to activate your listing'); */
-        }
-
-        $patterns = pattern_options();
-$breeds = breed_options();
-$colors = color_options();
-$siblings = sibling_options($request, $id);
-
-
         return inertia('Seller/Registration', [
             'puppy_count' => $user->puppies()->count(),
-            'puppy_edit' => $id ? PuppyEditData::from(
-                Puppy::with(['media', 'siblings', 'breeds', 'seller', 'puppy_patterns', 'puppy_colors'])
-                    ->findOrFail($id)
-            ) : null,
-            'patterns' => $patterns,
-            'breeds' => $breeds,
-            'colors' => $colors,
-            'siblings' => $siblings,
+            'puppy_edit' => null,
         ]);
     }
 
-    public function store(SellerRegistrationRequest $request)
+    /**
+     * Update seller profile information.
+     * This only handles seller profile updates, not puppy creation.
+     */
+    public function updateProfile(SellerRegistrationRequest $request)
     {
         try {
-            return DB::transaction(function () use ($request) {
-                $user = $request->user();
+            $user = $request->user();
+            $data = $request->validated();
 
-                // Check plan requirements
-                if (!$user->breeder_plan && !$user->premium_plan && $user->puppies()->count() > 1) {
-                    /* return success('plans.index', 'Subscribe to any plan to activate your listing'); */
-                }
+            // Update profile
+            $this->updateUserProfile($user, $data);
 
-                $data = $request->validated();
+            // Refresh user to get latest data
+            $user->refresh();
 
-                // Update profile if needed
-                if (!$user->profile_completed) {
-                    $this->updateUserProfile($user, $data);
-                }
-
-                // Check listing limit
-                if ($user->puppies()->count() >= ($user->premium_plan?->plan?->listing_limit ?? 0) &&
-                    $user->premium_plan?->plan?->listing_limit != 0) {
-                    return error('home', 'You have reached your listing limit');
-                }
-
-                // Create puppy
-                $created_puppy = $user->puppies()->create($this->formatPuppyData($data));
-
-                // Process relationships
-                $this->processPuppyRelationships($created_puppy, $data);
-
-                // Process media in background
-                $this->dispatchMediaJobs($created_puppy, $data);
-
-                // Clear history and cache
-                inertia()->clearHistory();
-                Cache::forget("seller_{$user->slug}_puppies_*");
-
-                       if (
-                !$user->breeder_plan &&
-                !$user->premium_plan &&
-                $user->profile_completed
-            ) {
-
-                return success('home', 'Created Successfully');
-//                return success('plans.index', 'Subscribe to any plan to activate your listing');
+            // If email is verified, check for plan
+            if (!$user->premium_plan && !$user->breeder_plan) {
+                return redirect(route('plans.index', absolute: false))
+                    ->with('message.success', 'Profile setup completed! Please purchase a plan to start listing puppies.');
             }
 
-                return success('puppies.show', 'Puppy created successfully', $created_puppy->slug);
-            });
+            return success('profile.edit', 'Profile updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error in store method: ' . $e->getMessage());
-            return error('home', 'An error occurred while creating the puppy. Please try again.');
-        }
-    }
-
-    public function update(PuppyUpdateRequest $request, int $id)
-    {
-        try {
-            return DB::transaction(function () use ($request, $id) {
-                $data = $request->validated();
-                $user = $request->user();
-
-                // Update puppy
-                $puppy = $user->puppies()->findOrFail($id);
-                $puppy->update($this->formatPuppyData($data));
-
-                // Process relationships
-                $this->processPuppyRelationships($puppy, $data, true);
-
-                // Process media in background
-                $this->dispatchMediaJobs($puppy, $data, true);
-
-                // Clear history and cache
-                inertia()->clearHistory();
-                Cache::forget("seller_{$user->slug}_puppies_*");
-
-                return success('puppies.show', 'Puppy updated successfully', $puppy->slug);
-            });
-        } catch (\Exception $e) {
-            Log::error('Error in update method: ' . $e->getMessage());
-            return error('home', 'An error occurred while updating the puppy. Please try again.');
+            Log::error('Error in updateProfile method: ' . $e->getMessage());
+            return error('profile.edit', 'An error occurred while updating your profile. Please try again.');
         }
     }
 
     protected function updateUserProfile(User $user, array $data): void
     {
         $user->update([
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
             'phone' => $data['phone'],
             'website' => $data['website'],
             'social_fb' => $data['social_fb'],
@@ -211,83 +103,9 @@ $siblings = sibling_options($request, $id);
             'street' => $data['gmap_payload']['street'] ?? null,
             'state' => $data['gmap_payload']['state'] ?? null,
             'short_state' => $data['gmap_payload']['shortState'] ?? null,
-            'zip_code' => $data['gmap_payload']['zipCode'] ?? null,
+            'zip_code' => $data['gmap_payload']['zipCode'] ?? $data['zip_code'] ?? null,
             'profile_completed' => true,
         ]);
     }
 
-    protected function formatPuppyData(array $data): array
-    {
-        return [
-            'name' => ucwords($data['puppy_name']),
-            'gender' => $data['puppy_gender'],
-            'description' => $data['puppy_about'],
-            'birth_date' => $data['puppy_birth_date'],
-            'price' => $data['puppy_price'],
-            'has_vaccine' => $data['has_vaccine'] == 'yes',
-            'has_health_certificate' => $data['has_health_certificate'] == 'yes',
-            'has_vet_exam' => $data['has_vet_exam'] == 'yes',
-            'has_travel_ready' => $data['has_travel_ready'] == 'yes',
-            'has_delivery_included' => $data['has_delivery_included'] == 'yes',
-        ];
-    }
-
-    protected function processPuppyRelationships(Puppy $puppy, array $data, bool $isUpdate = false): void
-    {
-        $relationships = [
-            'puppy_patterns' => $data['puppy_patterns'] ?? [],
-            'breeds' => $data['puppy_breeds'] ?? [],
-            'puppy_colors' => $data['puppy_colors'] ?? [],
-        ];
-
-        foreach ($relationships as $relation => $items) {
-            if ($isUpdate) {
-                $puppy->$relation()->detach();
-            }
-
-            if (!empty($items)) {
-                $items = isset(collect($items)->first()['value'])
-                    ? collect($items)->unique('value')->pluck('value')->toArray()
-                    : $items;
-
-                $puppy->$relation()->attach($items);
-            }
-        }
-
-        // Handle siblings separately
-        if (isset($data['puppy_siblings']) && !empty($data['puppy_siblings'])) {
-            if ($isUpdate) {
-                $puppy->siblings()->detach();
-            }
-
-            $siblings = isset(collect($data['puppy_siblings'])->first()['value'])
-                ? collect($data['puppy_siblings'])->unique('value')->pluck('value')->toArray()
-                : $data['puppy_siblings'];
-
-            $puppy->attachSiblings($siblings);
-        }
-    }
-
-    protected function dispatchMediaJobs(Puppy $puppy, array $data, bool $isUpdate = false): void
-    {
-        if ($isUpdate) {
-            $puppy->clearMediaCollection('video');
-            $puppy->clearMediaCollection('puppy_files');
-        }
-
-        // Process videos
-        if (isset($data['videos'])) {
-            ProcessPuppyMedia::dispatch($puppy, $data['videos'], 'video');
-        }
-
-        // Process images
-        if (isset($data['images'])) {
-            $filePaths = collect($data['images'])->map(function ($image) {
-                $path = $image->store('temp/uploads', config('media-library.disk_name'));
-                return Storage::disk(config('media-library.disk_name'))->url($path);
-            })->toArray();
-
-            ProcessPuppyMedia::dispatch($puppy, $filePaths, 'puppy_files');
-        }
-    }
 }

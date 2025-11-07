@@ -27,7 +27,7 @@ const Registration = ({ url, puppy_count, puppy_edit }: { url: string, puppy_cou
                 :
                 <Heading title="List your puppy" description="Create a new listing for your puppy." />
               }
-              <SellerRegistrationForm puppy_edit={puppy_edit} />
+              <SellerRegistrationForm puppy_edit={puppy_edit} puppy_count={puppy_count} />
             </div>
           </div>
         </section>

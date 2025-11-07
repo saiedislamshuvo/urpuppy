@@ -1,23 +1,22 @@
 import Breadcrumb, { BreadcrumbLink } from '@/Components/Breadcrumb'
 import BreederRegistrationForm from '@/Components/Forms/BreederRegistrationForm'
-import SellerRegistrationForm from '@/Components/Forms/SellerRegistrationForm'
 import Heading from '@/Components/Heading'
 import MetaTags from '@/Components/MetaTags'
 import Layout from '@/Layouts/Layout'
 import { Head } from '@inertiajs/react'
 import React from 'react'
 
-const Registration = ({breeds}: { breeds: App.Data.BreedOptionData[]} ) => {
-  return (
-  <Layout navType="secondary">
+const Registration = ({ breeds }: { breeds: App.Data.BreedOptionData[] }) => {
+    return (
+        <Layout navType="secondary">
             <MetaTags title="Registration" />
             <Head>
-                <meta name="robots" content="noindex"/>
+                <meta name="robots" content="noindex" />
             </Head>
-              <div className="page-wrapper position-relative overflow-hidden">
+            <div className="page-wrapper position-relative overflow-hidden">
 
-    <section className="information pt-4 pb-8 pb-lg-9">
-                  <div className="container">
+                <section className="information pt-4 pb-8 pb-lg-9">
+                    <div className="container">
                         <Breadcrumb links={
                             [
                                 {
@@ -28,20 +27,20 @@ const Registration = ({breeds}: { breeds: App.Data.BreedOptionData[]} ) => {
                         } />
                         <div className="space-y-4">
 
-                            <Heading title="Breeder Registration" description="Create your Breeder profile to connect"/>
+                            <Heading title="Breeder Registration" description="Create your Breeder profile to connect" />
 
-                        <BreederRegistrationForm breeds={breeds} />
-</div>
+                            <BreederRegistrationForm breeds={breeds} />
+                        </div>
 
-                          </div>
-    </section>
+                    </div>
+                </section>
 
-</div>
+            </div>
 
 
 
-</Layout>
-  )
+        </Layout>
+    )
 }
 
 export default Registration

@@ -36,6 +36,10 @@ class PuppyUpdateRequest extends FormRequest
             'has_vet_exam' => [''],
             'has_travel_ready' => [''],
             'has_delivery_included' => [''],
+            'has_certificate' => [''],
+            'certificate_type' => ['nullable', 'string', 'in:AKC,CKC,Other'],
+            'certificate_document' => ['nullable', 'array'],
+            'certificate_document.*' => ['file', 'mimes:pdf,jpeg,png,jpg', 'max:10240'],
             'images' => ['array', 'required'],
             'videos' => ['array'],
         ];

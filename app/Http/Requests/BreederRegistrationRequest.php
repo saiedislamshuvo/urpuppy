@@ -24,7 +24,7 @@ class BreederRegistrationRequest extends FormRequest
         $rules = [
             'fullname' => ['required', 'string', 'max:100', 'blasp_check'],
             'kennel_name' => ['required', 'string', 'max:100', 'blasp_check'],
-            'gmap_payload' => ['required'],
+            'gmap_payload' => ['nullable'],
             'company_phone' => ['required', 'string', 'max:20'], // Phone number validation
             /* 'company_address' => ['required', 'string', 'max:255'], */
             'company_email_address' => ['required', 'email', 'string', 'max:100'],

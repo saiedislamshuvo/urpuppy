@@ -15,7 +15,12 @@ class ReportResource extends Resource
 {
     protected static ?string $model = Report::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-flag';
+
+    public static function getNavigationSort(): ?int
+    {
+        return 8;
+    }
 
     public static function getNavigationGroup(): ?string
     {

@@ -64,6 +64,9 @@ Route::get('/breeder-listings/{slug}', [BreederListingController::class, 'show']
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Chat page route (still in web for Inertia)
+    Route::get('/chat', [\App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
 
     Route::post('/{postId}/react/{reactionType}', [PostController::class, 'toggleReaction']);
 
@@ -108,17 +111,28 @@ Route::middleware('auth')->group(function () {
     Route::post('/breeder-listings', [BreederListingController::class, 'store'])->name('breeder_listings.store');
     Route::put('/breeder-listings', [BreederListingController::class, 'update'])->name('breeder_listings.update');
 
-    Route::get('/breeders/create', [BreederController::class, 'create'])->name('breeders.create');
-    Route::post('/breeders', [BreederController::class, 'store'])->name('breeders.store');
     
-    Route::get('/seller/create/{id?}', [SellerController::class, 'create'])->name('seller.create');
-    Route::delete('/seller/delete/{id?}', [SellerController::class, 'destroy'])->name('seller.delete');
-    Route::post('/seller/store', [SellerController::class, 'store'])->name('seller.store');
-    Route::post('/seller/update/{id}', [SellerController::class, 'update'])->name('seller.update');
+    // Seller Profile Registration (only profile info, no puppy creation)
+    
+    // Puppy Listing Routes (separate from seller registration)
+    Route::middleware(['verified', 'profile.completed', 'has.plan'])->group(function () {
+        Route::get('/account/puppies/create', [\App\Http\Controllers\PuppyListingController::class, 'create'])->name('account.puppies.create');
+        Route::post('/account/puppies', [\App\Http\Controllers\PuppyListingController::class, 'store'])->name('account.puppies.store');
+        Route::get('/account/puppies/{id}/edit', [\App\Http\Controllers\PuppyListingController::class, 'edit'])->name('account.puppies.edit');
+        Route::put('/account/puppies/{id}', [\App\Http\Controllers\PuppyListingController::class, 'update'])->name('account.puppies.update');
+        Route::delete('/account/puppies/{id}', [\App\Http\Controllers\PuppyListingController::class, 'destroy'])->name('account.puppies.destroy');
+    });
 
     Route::middleware('verified')->group(function () {
+        Route::get('/breeders-create', [BreederController::class, 'create'])->name('breeders.create');
+        Route::post('/breeders', [BreederController::class, 'store'])->name('breeders.store');
+        
+        Route::get('/seller/create', [SellerController::class, 'create'])->name('seller.create');
+        Route::post('/seller/profile', [SellerController::class, 'updateProfile'])->name('seller.profile.update');
+        
         Route::post('/comment/{seller}', [CommentController::class, 'store'])->name('comment.store');
     });
+
 
 });
 

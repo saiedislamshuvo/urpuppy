@@ -15,7 +15,14 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (! auth()->check() || ! auth()->user()->hasRole($role)) {
+        $role_name = $role == 'breeder' ? 'Breeder' : ($role == 'seller' ? 'Seller' : 'Buyer');
+        if($role_name == 'Breeder' && !auth()->user()->is_breeder) {
+            abort(403, 'Unauthorized action.');
+        }
+        if($role_name == 'Seller' && !auth()->user()->is_seller) {
+            abort(403, 'Unauthorized action.');
+        }
+        if($role_name == 'Buyer' && !auth()->user()->is_buyer) {
             abort(403, 'Unauthorized action.');
         }
 

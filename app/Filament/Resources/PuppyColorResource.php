@@ -17,7 +17,12 @@ class PuppyColorResource extends Resource
 {
     protected static ?string $model = PuppyColor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'phosphor-palette';
+
+    public static function getNavigationSort(): ?int
+    {
+        return 4;
+    }
 
     public static function getNavigationGroup(): ?string
     {

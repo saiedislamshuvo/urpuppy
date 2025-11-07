@@ -72,15 +72,11 @@ class BreederController extends Controller
 
     public function create(Request $request)
     {
-        if (! $request->user()) {
-            return redirect()->to(route('register.breeder'))->setStatusCode(301);
+        if (!$request->user()) {
+            return redirect()->to('login')->setStatusCode(301);
         }
 
-        if (! $request->user()->email_verified_at) {
-            return error('verification.notice', 'Verify first.');
-        }
-
-        if (! $request->user()->roles->contains('breeder')) {
+        if (! $request->user()->is_breeder) {
             return redirect()->to(route('home'))->with([
                 'message.error' => 'You are not a breeder',
             ]);
@@ -98,7 +94,7 @@ class BreederController extends Controller
     public function store(BreederRegistrationRequest $request)
     {
         return DB::transaction(function () use ($request) {
-            if (! $request->user()->roles->contains('breeder')) {
+            if (! $request->user()->is_breeder) {
                 return error('home', 'You are not a breeder');
             }
 
@@ -114,6 +110,7 @@ class BreederController extends Controller
                 'company_about' => $data['about_company'],
                 'has_usda_registration' => $data['has_usda_registration'] == 'yes',
                 'breeder_profile_completed' => true,
+                'profile_completed' => true,
                 'company_address' => @$data['gmap_payload']['address'],
                 'company_city' => @$data['gmap_payload']['city'],
                 'company_street' => @$data['gmap_payload']['street'],

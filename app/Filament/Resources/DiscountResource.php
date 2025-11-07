@@ -19,16 +19,17 @@ class DiscountResource extends Resource
 {
     protected static ?string $model = Discount::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'phosphor-seal-percent';
+    protected static ?string $navigationLabel = 'Coupon Card';
+
 
     public static function getNavigationGroup(): ?string
     {
         return 'Stripe'; // This will group the resource under "Content"
     }
-
     public static function getNavigationSort(): ?int
     {
-        return 2;
+        return 11;
     }
 
     public static function form(Form $form): Form

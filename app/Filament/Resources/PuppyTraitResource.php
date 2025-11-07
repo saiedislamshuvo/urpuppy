@@ -17,9 +17,15 @@ class PuppyTraitResource extends Resource
 {
     protected static ?string $model = PuppyTrait::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'phosphor-puzzle-piece';
     protected static ?string $navigationGroup = 'UrPuppy';
     protected static ?string $navigationLabel = 'Puppy Traits';
+
+
+    public static function getNavigationSort(): ?int
+    {
+        return 5;
+    }
 
     public static function form(Form $form): Form
     {

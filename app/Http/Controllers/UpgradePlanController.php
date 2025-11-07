@@ -10,7 +10,7 @@ class UpgradePlanController extends Controller
     public function index()
     {
 
-        if (! auth()->user()?->roles->contains('seller')) {
+        if (! auth()->user()?->is_seller) {
             return error('profile.edit', 'You are not a seller.');
         }
 

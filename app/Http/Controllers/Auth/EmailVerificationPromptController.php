@@ -16,19 +16,25 @@ class EmailVerificationPromptController extends Controller
     public function __invoke(Request $request): RedirectResponse|Response
     {
         $user = $request->user();
-        $route = 'home';
-
-        if ($user->roles()->where('name', 'breeder')->exists()) {
-            $route = 'breeders.create';
-        } elseif ($user->roles()->where('name', 'seller')->exists()) {
-            $route = 'seller.create';
+        
+        // If email is already verified, redirect based on completion status
+        if ($user->hasVerifiedEmail()) {
+            $user->refresh();
+            
+            if ($user->is_breeder) {
+                $route = !$user->profile_completed ? 'breeders.create' : 'plans.breeder';
+            } elseif ($user->is_seller) {
+                $route = !$user->profile_completed ? 'seller.create' : 'plans.index';
+            } else {
+                $route = 'home';
+            }
+            
+            return redirect()->intended(route($route, absolute: false));
         }
 
-        return $user->hasVerifiedEmail()
-                    ? redirect()->intended(route($route, absolute: false))
-            : Inertia::render('Auth/VerifyEmail', ['status' => session('status'),
-                'puppy' => guest_puppy(),
-
-            ]);
+        return Inertia::render('Auth/VerifyEmail', [
+            'status' => session('status'),
+            'puppy' => guest_puppy(),
+        ]);
     }
 }

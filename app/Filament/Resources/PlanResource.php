@@ -36,11 +36,16 @@ class PlanResource extends Resource
 {
     protected static ?string $model = Plan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'phosphor-calendar-heart';
+    protected static ?string $navigationLabel = 'Subscription Plans';
 
     public static function getNavigationGroup(): ?string
     {
         return 'Stripe';
+    }
+    public static function getNavigationSort(): ?int
+    {
+        return 10;
     }
 
     public static function form(Form $form): Form

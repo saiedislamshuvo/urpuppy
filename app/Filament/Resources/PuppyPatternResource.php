@@ -14,7 +14,14 @@ class PuppyPatternResource extends Resource
 {
     protected static ?string $model = PuppyPattern::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'phosphor-cube-transparent';
+    protected static ?string $navigationLabel = 'Puppy Coat';
+
+
+    public static function getNavigationSort(): ?int
+    {
+        return 3;
+    }
 
     public static function getNavigationGroup(): ?string
     {

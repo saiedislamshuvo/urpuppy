@@ -281,6 +281,23 @@ class Puppy extends Model implements HasMedia, Sitemapable
         return collect(asset('paw.svg')); // or handle as needed
     }
 
+    public function getCertificateDocumentAttribute()
+    {
+        $mediaItems = $this->getMedia('certificates');
+
+        if ($mediaItems->isNotEmpty()) {
+            return $mediaItems->map(function ($item) {
+                try {
+                    return $item->getUrl();
+                } catch (\Spatie\MediaLibrary\Exceptions\ConversionDoesNotExist $e) {
+                    return null;
+                }
+            });
+        }
+
+        return collect();
+    }
+
     public function getThumbnailsAttribute()
     {
         // Fetch media items from the 'puppy_files' collection
@@ -300,6 +317,7 @@ class Puppy extends Model implements HasMedia, Sitemapable
 
         return null; // Return null if no media items found
     }
+
 
     public function getListedOnAttribute()
     {

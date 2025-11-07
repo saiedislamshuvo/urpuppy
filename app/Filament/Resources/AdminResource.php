@@ -23,9 +23,9 @@ class AdminResource extends Resource
     protected static ?string $model = User::class;
     protected static ?string $modelLabel = 'Admin';
     protected static ?string $pluralModelLabel = 'Admins';
-    protected static ?string $navigationIcon = 'heroicon-o-user';
     protected static ?string $navigationLabel = 'Admins';
     protected static ?string $navigationGroup = 'Authentication';
+    protected static ?string $navigationIcon = 'phosphor-users-three';
 
     public static function getEloquentQuery(): Builder
     {

@@ -14,13 +14,13 @@ class ContactResource extends Resource
 {
     protected static ?string $model = Contact::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-inbox-arrow-down';
 
     protected static ?string $navigationLabel = 'Inquiries';
 
     public static function getNavigationSort(): ?int
     {
-        return 2;
+        return 7;
     }
 
     public static function getNavigationGroup(): ?string

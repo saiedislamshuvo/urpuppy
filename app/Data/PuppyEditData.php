@@ -54,6 +54,11 @@ class PuppyEditData extends Data
         public bool $has_delivery_included,
         /* public bool $are_you_a_breeder, */
         public bool $has_travel_ready,
+        public bool $has_certificate,
+        public ?string $certificate_type,
+        public ?string $certificate_document_url,
+        /** @var string[] */
+        public ?Collection $certificate_document,
 
     ) {}
 }

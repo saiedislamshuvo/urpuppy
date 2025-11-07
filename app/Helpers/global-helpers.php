@@ -79,7 +79,11 @@ if (! function_exists('color_options')) {
 
 function sibling_options(Request $request, ?int $id)
 {
-    return SiblingData::collect($request->user()->puppies()->where('id', '!=', $id)->get());
+    $query = $request->user()->puppies();
+    if ($id !== null) {
+        $query->where('id', '!=', $id);
+    }
+    return SiblingData::collect($query->get());
 }
 
 /* } */
@@ -126,7 +130,7 @@ if (! function_exists('error')) {
 }
 
 if (! function_exists('get_discount')) {
-    function get_discount(User $user, string $account_type): ?DiscountData
+    function get_discount(?User $user, string $account_type): ?DiscountData
     {
         $now = now();
 
@@ -137,6 +141,10 @@ if (! function_exists('get_discount')) {
         $discount = $discounts?->first();
         if ($discount?->targeted_emails == null) {
             return DiscountData::optional($discount) ?? null;
+        }
+
+        if (!$user) {
+            return null;
         }
 
         $matching_discounts = $discounts->filter(function ($discount) use ($user) {

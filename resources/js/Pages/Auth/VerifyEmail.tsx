@@ -8,7 +8,9 @@ import { FormEventHandler } from 'react';
 export default function VerifyEmail({ status, puppy }: { status?: string, puppy: App.Data.PuppyCardData }) {
     const { post, processing } = useForm({});
 
-    const roles = usePage().props?.auth?.user?.roles;
+    const is_breeder = usePage().props?.auth?.user?.is_breeder;
+    const is_seller = usePage().props?.auth?.user?.is_seller;
+    const roles = [is_breeder ? 'breeder' : (is_seller ? 'seller' : 'buyer')];
 
 
     usePoll(3000, { only: ['status'] })
@@ -26,23 +28,23 @@ export default function VerifyEmail({ status, puppy }: { status?: string, puppy:
 
             {
                 roles?.includes("breeder") ? <>
-            <div className="mb-4 text-sm text-gray-600">
+                    <div className="mb-4 text-sm text-gray-600">
                         Thank you for signing up for our breeder directory. To get started, please verify your email by clicking the link in the email we just sent you.
-            </div>
+                    </div>
 
                 </> : roles?.includes("seller") ? <>
-            <div className="mb-4 text-sm text-gray-600">
-                            Thank you for signing up for a seller account. To get started, please verify your email by clicking the link in the email we just sent you.
-            </div>
+                    <div className="mb-4 text-sm text-gray-600">
+                        Thank you for signing up for a seller account. To get started, please verify your email by clicking the link in the email we just sent you.
+                    </div>
 
                 </> :
-                <>
-            <div className="mb-4 text-sm text-gray-600">
-                                Thank you for signing up for a buyer account. To get started, please verify your email by clicking the link in the email we just sent you.
-            </div>
+                    <>
+                        <div className="mb-4 text-sm text-gray-600">
+                            Thank you for signing up for a buyer account. To get started, please verify your email by clicking the link in the email we just sent you.
+                        </div>
 
 
-                </>
+                    </>
             }
 
 
@@ -54,9 +56,9 @@ export default function VerifyEmail({ status, puppy }: { status?: string, puppy:
             )}
 
             <form onSubmit={submit}>
-                    <div className="mt-4 mb-2" >
-                        Didn't receive it?
-                    </div>
+                <div className="mt-4 mb-2" >
+                    Didn't receive it?
+                </div>
                 <div className=" d-flex justify-content-between">
 
                     <Button type="button" href="" >

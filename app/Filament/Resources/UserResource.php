@@ -40,7 +40,8 @@ use Phpsa\FilamentAuthentication\Traits\LogsAuthentication;
 
 class UserResource extends Resource
 {
-    protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static ?string $navigationIcon = 'phosphor-users-three';
+    protected static ?string $navigationLabel = 'Users';
 
     protected static ?string $recordTitleAttribute = 'first_name';
 
@@ -82,11 +83,6 @@ class UserResource extends Resource
     public static function getNavigationIcon(): string
     {
         return config('filament-authentication.navigation.user.icon');
-    }
-
-    public static function getNavigationSort(): ?int
-    {
-        return config('filament-authentication.navigation.user.sort');
     }
 
     public static function form(Form $form): Form

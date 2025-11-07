@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CheckoutReady;
 use App\Http\Middleware\RedirectSubscriber;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -26,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->validateCsrfTokens(except: [
             'stripe/*',
+            'api/*',
         ]);
 
         $middleware->alias([
@@ -35,11 +37,19 @@ return Application::configure(basePath: dirname(__DIR__))
             'no.subscriber' => RedirectSubscriber::class,
             'redirect.external' => RedirectExternalUrl::class,
             'checkout.ready' => CheckoutReady::class,
+            'profile.completed' => \App\Http\Middleware\EnsureProfileCompleted::class,
+            'has.plan' => \App\Http\Middleware\EnsureHasPlan::class,
         ]);
 
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        // Handle authentication exceptions for API routes - return JSON instead of redirecting
+        $exceptions->render(function (AuthenticationException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json(['error' => 'Unauthenticated'], 401);
+            }
+        });
 
         $exceptions->respond(function (Response $response, Throwable $exception, Request $request) {
             if (! app()->environment(['testing', 'local']) && in_array($response->getStatusCode(), [500, 503, 404, 403])) {

@@ -22,19 +22,22 @@ class CompareController extends Controller
             return redirect()->back()->with('message.error', 'You cannot compare your own puppy');
         }
 
-        // Check if already compared
-        if ($user->hasCompared($puppy)) {
-            return redirect()->to(route('compares.index'))->with('message.info', 'This puppy is already in your compare list');
-        }
-
+        // Check if already compared - if so, remove it
+        $wasCompared = $user->hasCompared($puppy);
         $user->toggleCompare($puppy);
+
+        if ($wasCompared) {
+            return redirect()->to(route('compares.index'))->with('message.success', 'Removed from compare');
+        }
 
         return redirect()->to(route('compares.index'))->with('message.success', 'Added to compare');
     }
 
     public function index(Request $request)
     {
-        $compares = $request->user()->getCompareItems(Puppy::class)->with('breeds', 'seller')->paginate(12);
+        $compares = $request->user()->getCompareItems(Puppy::class)
+            ->with(['breeds', 'seller', 'puppy_colors', 'puppy_traits', 'puppy_patterns'])
+            ->paginate(12);
         
         $puppiesData = PuppyData::collect($compares);
         $puppiesData = app(CompareService::class)->applyCompares(

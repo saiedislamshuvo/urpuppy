@@ -52,6 +52,12 @@ const NavigationSettings = [
         logo: '../images/svgs/icon-paws-dark.svg',
         showForRoles: ['seller', 'breeder']
     },
+    {
+        name: 'Chat',
+        route: '/chat',
+        logo: '../images/svgs/icon-mail-dark.svg',
+        showForRoles: ['all']
+    },
 ];
 
 export default function DashboardLayout({
@@ -134,7 +140,7 @@ export default function DashboardLayout({
                                 {(user?.is_seller || user?.is_breeder) && (
                                     <div className="mt-3">
                                         <Link
-                                            href="/seller/create"
+                                            href="/account/puppies/create"
                                             method="get"
                                             as="button"
                                             className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"

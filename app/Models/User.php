@@ -152,7 +152,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
                 return $freePlan;
             }
 
-            return $this->getActiveSubscriptions()?->where('type', 'premium')?->first();
+            return $this->getActiveSubscriptions()?->where('type', 'seller')?->first();
 
         } catch (Exception $e) {
 
@@ -535,6 +535,21 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
     public function compares()
     {
         return $this->hasMany(Compare::class);
+    }
+
+    public function chats()
+    {
+        return $this->hasMany(Chat::class, 'created_by');
+    }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(ChatMessage::class, 'sender_id');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(ChatMessage::class, 'receiver_id');
     }
 
     public function hasCompared($model)

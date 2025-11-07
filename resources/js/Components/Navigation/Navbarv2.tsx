@@ -64,7 +64,7 @@ const Navbarv2 = ({ type }: { type?: string | undefined }) => {
           </div>
           <div className="d-xl-none d-flex align-items-center gap-3">
 
-            {(user?.roles?.includes('buyer')) && <>
+            {(user && !(user.is_breeder || user.is_seller)) && <>
               <Link aria-label="Compare" className="position-relative me-1 d-xl-none" href="/compares">
                 <svg width="20" height="24" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M7 1H12C12.7956 1 13.5587 1.31607 14.1213 1.87868C14.6839 2.44129 15 3.20435 15 4V15M11 8V19L6 16L1 19V8C1 7.20435 1.31607 6.44129 1.87868 5.87868C2.44129 5.31607 3.20435 5 4 5H8C8.79565 5 9.55871 5.31607 10.1213 5.87868C10.6839 6.44129 11 7.20435 11 8Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -185,7 +185,7 @@ const Navbarv2 = ({ type }: { type?: string | undefined }) => {
               </Link>
             </li>
             {
-              (user?.roles?.includes('seller') || !user) &&
+              (user?.is_seller || !user) &&
               <li className="nav-item">
                 <Link aria-label="List Ur Puppy" prefetch className="nav-link text-white" href="/seller/create">
                   + List Ur Puppy

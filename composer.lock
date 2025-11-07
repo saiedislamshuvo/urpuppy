@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0aa88bd5be958c17c4119a9ae83dac50",
+    "content-hash": "009cfb39dee3dab2eb72579dd3689b8c",
     "packages": [
         {
             "name": "andrew/filament-blog",
@@ -1039,6 +1039,77 @@
             "time": "2024-09-10T14:09:25+00:00"
         },
         {
+            "name": "codeat3/blade-phosphor-icons",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeat3/blade-phosphor-icons.git",
+                "reference": "2812a27ec642359344429d344c7f7bbdfad489ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeat3/blade-phosphor-icons/zipball/2812a27ec642359344429d344c7f7bbdfad489ce",
+                "reference": "2812a27ec642359344429d344c7f7bbdfad489ce",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.1",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "codeat3/blade-icon-generation-helpers": "^0.10",
+                "codeat3/phpcs-styles": "^1.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0|^10.0",
+                "phpunit/phpunit": "^9.0|^10.5|^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Codeat3\\BladePhosphorIcons\\BladePhosphorIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codeat3\\BladePhosphorIcons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Swapnil Sarwe",
+                    "homepage": "https://swapnilsarwe.com"
+                },
+                {
+                    "name": "Dries Vints",
+                    "homepage": "https://driesvints.com"
+                }
+            ],
+            "description": "A package to easily make use of \"Phosphor Icons\" in your Laravel Blade views.",
+            "homepage": "https://github.com/codeat3/blade-phosphor-icons",
+            "keywords": [
+                "blade",
+                "laravel",
+                "phosphor-icons"
+            ],
+            "support": {
+                "issues": "https://github.com/codeat3/blade-phosphor-icons/issues",
+                "source": "https://github.com/codeat3/blade-phosphor-icons/tree/2.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/swapnilsarwe",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-02-25T06:29:09+00:00"
+        },
+        {
             "name": "composer/semver",
             "version": "3.4.4",
             "source": {
@@ -1963,6 +2034,118 @@
             "time": "2023-08-08T05:53:35+00:00"
         },
         {
+            "name": "filafly/filament-icons",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/filafly/filament-icons.git",
+                "reference": "a0327d3d54c4e0acbed5b627c6e26646de4ab7ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/filafly/filament-icons/zipball/a0327d3d54c4e0acbed5b627c6e26646de4ab7ca",
+                "reference": "a0327d3d54c4e0acbed5b627c6e26646de4ab7ca",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.2.3|^4.0@beta",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.20"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Filafly\\Icons\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nolan Nordlund",
+                    "email": "nolan@filafly.com",
+                    "homepage": "https://www.filafly.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Core package for managing Filament icon drivers via a common interface.",
+            "homepage": "https://filafly.com/plugins/filament-icons",
+            "keywords": [
+                "Phosphor",
+                "filament",
+                "font awesome",
+                "icons",
+                "laravel",
+                "replace",
+                "swap"
+            ],
+            "support": {
+                "issues": "https://github.com/filafly/filament-icons/issues",
+                "source": "https://github.com/filafly/filament-icons/tree/v1.0.3"
+            },
+            "time": "2025-06-13T16:07:29+00:00"
+        },
+        {
+            "name": "filafly/filament-phosphor-icons",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/filafly/filament-phosphor-icons.git",
+                "reference": "1623665ad3ce0f0d5939eaad53a96cb0c826ab07"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/filafly/filament-phosphor-icons/zipball/1623665ad3ce0f0d5939eaad53a96cb0c826ab07",
+                "reference": "1623665ad3ce0f0d5939eaad53a96cb0c826ab07",
+                "shasum": ""
+            },
+            "require": {
+                "codeat3/blade-phosphor-icons": "^2.3",
+                "filafly/filament-icons": "^1.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.22"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Filafly\\Icons\\Phosphor\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nolan Nordlund",
+                    "email": "nolan@filafly.com",
+                    "homepage": "https://www.filafly.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Phosphor icon pack for Filament Icons",
+            "homepage": "https://filafly.com/plugins/filament-icons",
+            "keywords": [
+                "Phosphor",
+                "filament",
+                "icons",
+                "laravel",
+                "replace",
+                "swap"
+            ],
+            "support": {
+                "issues": "https://github.com/filafly/filament-phosphor-icons/issues",
+                "source": "https://github.com/filafly/filament-phosphor-icons/tree/v1.0.1"
+            },
+            "time": "2025-05-25T12:49:13+00:00"
+        },
+        {
             "name": "filament/actions",
             "version": "v3.3.43",
             "source": {
@@ -2275,6 +2458,53 @@
                 "source": "https://github.com/filamentphp/filament"
             },
             "time": "2025-02-25T08:18:59+00:00"
+        },
+        {
+            "name": "filament/spatie-laravel-settings-plugin",
+            "version": "v3.3.43",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/filamentphp/spatie-laravel-settings-plugin.git",
+                "reference": "80c9e960b30890fdc731da262b71255cb39bee31"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/filamentphp/spatie-laravel-settings-plugin/zipball/80c9e960b30890fdc731da262b71255cb39bee31",
+                "reference": "80c9e960b30890fdc731da262b71255cb39bee31",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "self.version",
+                "illuminate/console": "^10.45|^11.0|^12.0",
+                "illuminate/filesystem": "^10.45|^11.0|^12.0",
+                "illuminate/support": "^10.45|^11.0|^12.0",
+                "php": "^8.1",
+                "spatie/laravel-settings": "^2.2|^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Filament\\SpatieLaravelSettingsPluginServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Filament\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Filament support for `spatie/laravel-settings`.",
+            "homepage": "https://github.com/filamentphp/filament",
+            "support": {
+                "issues": "https://github.com/filamentphp/filament/issues",
+                "source": "https://github.com/filamentphp/filament"
+            },
+            "time": "2025-04-23T06:39:48+00:00"
         },
         {
             "name": "filament/spatie-laravel-tags-plugin",
@@ -3197,83 +3427,6 @@
             "time": "2023-02-23T15:00:54+00:00"
         },
         {
-            "name": "ijpatricio/mingle",
-            "version": "v0.0.21",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ijpatricio/mingle.git",
-                "reference": "a561ae199f0178da4af3602a1955f2af43171fdd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ijpatricio/mingle/zipball/a561ae199f0178da4af3602a1955f2af43171fdd",
-                "reference": "a561ae199f0178da4af3602a1955f2af43171fdd",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/contracts": "^10.0||^11.0||^12.0",
-                "php": "^8.2",
-                "spatie/laravel-package-tools": "^1.16"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.14",
-                "laravel/sail": "^1.30",
-                "nunomaduro/collision": "^8.1.1||^7.10.0",
-                "orchestra/testbench": "^9.0.0||^8.22.0||^10.0",
-                "pestphp/pest": "^2.34||^3.7",
-                "pestphp/pest-plugin-arch": "^2.7||^3.0",
-                "pestphp/pest-plugin-laravel": "^2.3||^3.1",
-                "spatie/laravel-ray": "^1.35"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "aliases": {
-                        "Mingle": "Ijpatricio\\Mingle\\Facades\\Mingle"
-                    },
-                    "providers": [
-                        "Ijpatricio\\Mingle\\MingleServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Ijpatricio\\Mingle\\": "src/",
-                    "Ijpatricio\\Mingle\\Database\\Factories\\": "database/factories/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Joao Patricio",
-                    "email": "ijpatricio@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Use Vue and React in Laravel Livewire Applications.",
-            "homepage": "https://github.com/ijpatricio/mingle",
-            "keywords": [
-                "laravel",
-                "livewire",
-                "react",
-                "vue"
-            ],
-            "support": {
-                "issues": "https://github.com/ijpatricio/mingle/issues",
-                "source": "https://github.com/ijpatricio/mingle/tree/v0.0.21"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/ijpatricio",
-                    "type": "github"
-                }
-            ],
-            "time": "2025-02-18T10:28:13+00:00"
-        },
-        {
             "name": "inertiajs/inertia-laravel",
             "version": "v2.0.1",
             "source": {
@@ -4013,16 +4166,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.36.1",
+            "version": "v12.37.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "cad110d7685fbab990a6bb8184d0cfd847d7c4d8"
+                "reference": "3c3c4ad30f5b528b164a7c09aa4ad03118c4c125"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/cad110d7685fbab990a6bb8184d0cfd847d7c4d8",
-                "reference": "cad110d7685fbab990a6bb8184d0cfd847d7c4d8",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3c3c4ad30f5b528b164a7c09aa4ad03118c4c125",
+                "reference": "3c3c4ad30f5b528b164a7c09aa4ad03118c4c125",
                 "shasum": ""
             },
             "require": {
@@ -4228,7 +4381,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-10-29T14:20:57+00:00"
+            "time": "2025-11-04T15:39:33+00:00"
         },
         {
             "name": "laravel/helpers",
@@ -9532,6 +9685,91 @@
                 }
             ],
             "time": "2025-10-20T09:50:21+00:00"
+        },
+        {
+            "name": "spatie/laravel-settings",
+            "version": "3.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-settings.git",
+                "reference": "bdb12449ce1f7afcf12fac59f6c7a63a39513fe7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-settings/zipball/bdb12449ce1f7afcf12fac59f6c7a63a39513fe7",
+                "reference": "bdb12449ce1f7afcf12fac59f6c7a63a39513fe7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/database": "^11.0|^12.0",
+                "php": "^8.2",
+                "phpdocumentor/type-resolver": "^1.5",
+                "spatie/temporary-directory": "^1.3|^2.0"
+            },
+            "require-dev": {
+                "ext-redis": "*",
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^9.0|^10.0",
+                "pestphp/pest": "^2.0|^3.0",
+                "pestphp/pest-plugin-laravel": "^2.0|^3.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "spatie/laravel-data": "^2.0.0|^4.0.0",
+                "spatie/pest-plugin-snapshots": "^2.0",
+                "spatie/phpunit-snapshot-assertions": "^4.2|^5.0",
+                "spatie/ray": "^1.36"
+            },
+            "suggest": {
+                "spatie/data-transfer-object": "Allows for DTO casting to settings. (deprecated)"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\LaravelSettings\\LaravelSettingsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\LaravelSettings\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ruben Van Assche",
+                    "email": "ruben@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Store your application settings",
+            "homepage": "https://github.com/spatie/laravel-settings",
+            "keywords": [
+                "laravel-settings",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-settings/issues",
+                "source": "https://github.com/spatie/laravel-settings/tree/3.5.0"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-10-24T13:01:51+00:00"
         },
         {
             "name": "spatie/laravel-sitemap",
