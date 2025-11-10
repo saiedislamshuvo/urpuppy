@@ -5,9 +5,10 @@ import MapboxMapInput from './MapboxMapInput';
 
 export interface LocationData {
   address: string;
-  lat: number;
-  lng: number;
+  lat: number | null;
+  lng: number | null;
   street: string;
+  houseNo?: string;
   city: string;
   state: string;
   shortState: string;
@@ -17,8 +18,9 @@ export interface LocationData {
 interface MapInputProps {
   onLocationSelect: (location: LocationData) => void;
   initialAddress?: string;
-  initialLocation?: { lat: number; lng: number } | null;
+  initialLocation?: { lat: number | null; lng: number | null } | null;
   provider?: 'google' | 'mapbox' | 'openstreetmap' | 'none';
+  skipInitialLocationSelect?: boolean; // If true, don't call onLocationSelect on initial load
 }
 
 const MapInput: React.FC<MapInputProps> = ({
@@ -26,6 +28,7 @@ const MapInput: React.FC<MapInputProps> = ({
   initialAddress,
   initialLocation,
   provider = 'openstreetmap',
+  skipInitialLocationSelect = false,
 }) => {
   // If provider is 'none', default to openstreetmap
   const mapProvider = provider === 'none' ? 'openstreetmap' : provider;
@@ -37,6 +40,7 @@ const MapInput: React.FC<MapInputProps> = ({
           onLocationSelect={onLocationSelect}
           initialAddress={initialAddress}
           initialLocation={initialLocation}
+          skipInitialLocationSelect={skipInitialLocationSelect}
         />
       );
     case 'mapbox':
@@ -45,6 +49,7 @@ const MapInput: React.FC<MapInputProps> = ({
           onLocationSelect={onLocationSelect}
           initialAddress={initialAddress}
           initialLocation={initialLocation}
+          skipInitialLocationSelect={skipInitialLocationSelect}
         />
       );
     case 'openstreetmap':
@@ -54,6 +59,7 @@ const MapInput: React.FC<MapInputProps> = ({
           onLocationSelect={onLocationSelect}
           initialAddress={initialAddress}
           initialLocation={initialLocation}
+          skipInitialLocationSelect={skipInitialLocationSelect}
         />
       );
   }

@@ -26,10 +26,8 @@ export default function Index({
     new_arrivals,
     featured_breeds,
     post_data,
-    header_label,
     videos,
-    subheader_label,
-}: PageProps<{ laravelVersion: string; phpVersion: string; users: string, puppy_spotlights: App.Data.PuppyCardData[], top_pick_puppy: App.Data.PuppyData, trusted_breeders: App.Data.BreederFullData[] , new_arrivals: App.Data.PuppyCardData[], featured_breeds: App.Data.BreedData[], header_label: string, subheader_label: string , videos: App.Data.VideoData[], post_data: App.Data.PostData[] }>) {
+}: PageProps<{ laravelVersion: string; phpVersion: string; users: string, puppy_spotlights: App.Data.PuppyCardData[], top_pick_puppy: App.Data.PuppyData, trusted_breeders: App.Data.BreederFullData[], new_arrivals: App.Data.PuppyCardData[], featured_breeds: App.Data.BreedData[], videos: App.Data.VideoData[], post_data: App.Data.PostData[] }>) {
 
     const [userState, setUserState] = useState('');
 
@@ -41,30 +39,30 @@ export default function Index({
     return (
         <>
             <Layout>
-            <Banner header={header_label} subheader={subheader_label}/>
-            <MetaTags title="Home" />
-            <div className="page-wrapper position-relative overflow-hidden">
-            <FeaturedBreeds featured_breeds={featured_breeds}/>
-            <PuppySpotlight puppy_spotlights={puppy_spotlights}/>
-            {top_pick_puppy &&
-                <TopPicks puppy={top_pick_puppy}/>
-            }
-            <TrustedBreeders breeders={trusted_breeders}/>
+                <Banner />
+                <MetaTags title="Home" />
+                <div className="page-wrapper position-relative overflow-hidden">
+                    <FeaturedBreeds featured_breeds={featured_breeds || []} />
+                    <PuppySpotlight puppy_spotlights={puppy_spotlights || []} />
+                    {top_pick_puppy &&
+                        <TopPicks puppy={top_pick_puppy} />
+                    }
+                    <TrustedBreeders breeders={trusted_breeders || []} />
 
-            <NewArrivals new_arrivals={new_arrivals}/>
-            { videos.length > 0 &&
-                <FooterVideos videos={videos} />
-            }
+                    <NewArrivals new_arrivals={new_arrivals || []} />
+                    {videos && videos.length > 0 &&
+                        <FooterVideos videos={videos} />
+                    }
 
-            <BlogShowcase post_data={post_data} />
+                    <BlogShowcase post_data={post_data || []} />
 
-            <section className="bg-extralight  py-md-5 py-4">
-              <div className="container">
+                    <section className="bg-extralight  py-md-5 py-4">
+                        <div className="container">
                             <SecondaryJumbotron />
-              </div>
-            </section>
+                        </div>
+                    </section>
 
-            </div>
+                </div>
             </Layout>
         </>
     );

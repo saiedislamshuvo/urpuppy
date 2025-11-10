@@ -4,7 +4,7 @@ import Tooltip from './Tooltip'
 const CompareButton = ({ puppyId, sellerId, isCompared, uniqueId = null }: {
     uniqueId?: string | null
     puppyId: number
-    sellerId: number,
+    sellerId?: number | null,
     isCompared?: boolean | null
 }) => {
     return <> <Tooltip content={(

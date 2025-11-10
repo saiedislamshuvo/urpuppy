@@ -28,6 +28,7 @@ class AuthenticatedSessionController extends Controller
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
             'puppy' => PuppyData::optional(Puppy::with(['breeds', 'seller'])->hasSubscribedUsers()->inRandomOrder()->first()),
+            'recaptchaSiteKey' => env('NOCAPTCHA_SITEKEY', ''),
         ]);
     }
 

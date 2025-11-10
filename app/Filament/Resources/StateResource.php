@@ -29,6 +29,17 @@ class StateResource extends Resource
     protected static ?string $pluralModelLabel = 'States';
 
     protected static ?string $recordTitleAttribute = 'name';
+    
+
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 50 ? 'success' : 'primary';
+    }
 
 
     public static function getNavigationGroup(): ?string

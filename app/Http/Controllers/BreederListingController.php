@@ -54,11 +54,6 @@ class BreederListingController extends Controller
             return redirect()->route('home')->with('message.error', 'Please subscribe to create listings');
         }
 
-        /* dd($request->validated()); */
-        /* $validate = Validator::make(request()->all(), [ */
-        /* 'g-recaptcha-response' => 'required|captcha' */
-        /* ]); */
-        /* dd($validate); */
         Cache::flush();
         $data = array_merge($request->except('breeds', 'file', 'misc', 'captcha', 'video', 'colors', 'characteristics', 'puppy_patterns'), [
             'user_id' => auth()->id(),

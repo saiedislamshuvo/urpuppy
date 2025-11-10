@@ -4,6 +4,26 @@ import InitialName from '../InitialName'
 import Avatar from '../Avatar'
 
 const AccountDropdownButton = ({ user }: { user: App.Data.UserData }) => {
+  // Determine the user's role
+  const getRole = (): string => {
+    // Fallback to role determination based on flags
+    if (user.is_breeder) {
+      return 'Breeder';
+    }
+    if (user.is_seller) {
+      return 'Seller';
+    }
+    if(user.is_superadmin) {
+      return 'Super Admin';
+    }
+    if(user.is_admin) {
+      return 'Admin';
+    }
+    return 'Buyer';
+  };
+
+  const role = getRole();
+
   return (
 
     <div className="dropdown position-relative user-profile-dropdown">
@@ -14,7 +34,7 @@ const AccountDropdownButton = ({ user }: { user: App.Data.UserData }) => {
         width: 'max-content'
       }} >
         <div className="border-bottom pb-2">
-          <h5 className="mb-0">User Profile</h5>
+          <h5 className="mb-0">{role} Profile</h5>
         </div>
         <div className="d-flex align-items-center gap-6 my-4">
           <Avatar image_url={user.avatar} initial_name={user.initial_name} size={'sm'} />
@@ -33,22 +53,16 @@ const AccountDropdownButton = ({ user }: { user: App.Data.UserData }) => {
         <li><Link aria-label="Settings" prefetch className="dropdown-item rounded py-2" href="/profile">Settings</Link></li>
         {
           (user?.is_seller || user?.is_breeder) &&
-          <li><Link aria-label="My Subscription" className="dropdown-item rounded py-2" href="/profile" data={{
-            tab: 'My Subscription'
-          }}>My Subscriptions</Link></li>
+          <li><Link aria-label="My Subscription" className="dropdown-item rounded py-2" href="/my-subscription">My Subscriptions</Link></li>
         }
         {
           !(user?.is_seller || user?.is_breeder) &&
-          <li><Link aria-label="Saved Search" className="dropdown-item rounded py-2" href="/profile" data={{
-            tab: 'Saved Search'
-          }} >Saved Search</Link></li>
+          <li><Link aria-label="Saved Search" className="dropdown-item rounded py-2" href="/profile?tab=Saved Search">Saved Search</Link></li>
         }
         {
 
           (user?.is_seller || user?.is_breeder) &&
-          <li><Link aria-label="My Puppies" className="dropdown-item rounded py-2" href="/profile" data={{
-            tab: 'My Puppies'
-          }} >My Puppies</Link></li>
+          <li><Link aria-label="My Puppies" className="dropdown-item rounded py-2" href="/profile?tab=My Puppies">My Puppies</Link></li>
         }
 
         <div className="mt-3">

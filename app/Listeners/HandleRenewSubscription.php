@@ -2,6 +2,8 @@
 
 namespace App\Listeners;
 
+use App\Models\Puppy;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Events\WebhookReceived;
@@ -50,6 +52,30 @@ class HandleRenewSubscription
             \Log::warning('No user found for Stripe customer ID', ['customer_id' => $customerId]);
 
             return;
+        }
+
+        // Resume paused listings when subscription is renewed
+        try {
+            $pausedPuppies = Puppy::where('user_id', $user->id)
+                ->where('status', 'paused')
+                ->whereNotNull('paused_at')
+                ->get();
+
+            foreach ($pausedPuppies as $puppy) {
+                $puppy->resume();
+            }
+
+            if ($pausedPuppies->count() > 0) {
+                Log::info('Resumed listings due to subscription renewal', [
+                    'user_id' => $user->id,
+                    'puppies_resumed' => $pausedPuppies->count(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error resuming listings on subscription renewal', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         // Fetch metadata (from the subscription object, not the invoice object)

@@ -57,6 +57,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->brandLogo('/logo-dark.svg')
             ->darkModeBrandLogo('/logo.svg')
+            ->favicon(fn () => url('/images/logos/favicon.png'))
             ->login()
             ->colors([
                 'primary' => Color::Orange,
@@ -67,10 +68,7 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
-                Widgets\AccountWidget::class,
-                LatestUsersWidget::class,
-            ])
+            ->widgets([])
             ->font('Poppins')
             ->breadcrumbs(false)
             ->globalSearchDebounce('750ms')
@@ -88,79 +86,6 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            // ->navigation(function (NavigationBuilder $builder) {
-
-            //     $is_admin = auth()->user()->roles->contains('super_admin') || auth()->user()->roles->contains('admin');
-
-            //     $admin_items = [];
-
-            //     if ($is_admin) {
-            //         $admin_items = [
-            //             NavigationGroup::make('UrPuppy')->items([
-            //                 ...PuppyResource::getNavigationItems(),
-            //                 ...BreedResource::getNavigationItems(),
-            //                 ...PuppyColorResource::getNavigationItems(),
-            //                 ...PuppyPatternResource::getNavigationItems(),
-
-            //             ]),
-            //             NavigationGroup::make('Messages')->items([
-            //                 ...BreederRequestResource::getNavigationItems(),
-            //                 ...ReportResource::getNavigationItems(),
-            //                 ...ContactResource::getNavigationItems(),
-
-            //             ]),
-            //             NavigationGroup::make('Stripe')->items([
-            //                 ...PlanResource::getNavigationItems(),
-            //                 ...SubscriptionResource::getNavigationItems(),
-            //                 ...DiscountResource::getNavigationItems(),
-
-            //             ]),
-            //             NavigationGroup::make('Emails')->items([
-            //                 ...MailResource::getNavigationItems(),
-
-            //             ]),
-            //             NavigationGroup::make('Blog')->items([
-            //                 ...PostResource::getNavigationItems(),
-            //                 ...CategoryResource::getNavigationItems(),
-            //                 ...AuthorResource::getNavigationItems(),
-
-            //             ]),
-            //             NavigationGroup::make('Authentication')->items([
-            //                 ...UserResource::getNavigationItems(),
-            //                 ...RoleResource::getNavigationItems(),
-
-            //             ]),
-
-            //             NavigationGroup::make('Settings')->items([
-            //                 NavigationItem::make('Log')
-            //                     ->url('/log-viewer', shouldOpenInNewTab: true)
-            //                     ->icon('heroicon-o-book-open'),
-            //                 NavigationItem::make('Horizon')
-            //                     ->url('/horizon', shouldOpenInNewTab: true)
-            //                     ->icon('heroicon-o-book-open'),
-
-            //             ]),
-
-            //         ];
-            //     } else {
-            //         $admin_items = [
-            //             NavigationGroup::make('Blog')->items([
-            //                 ...PostResource::getNavigationItems(),
-            //                 ...CategoryResource::getNavigationItems(),
-            //                 ...AuthorResource::getNavigationItems(),
-
-            //             ]),
-            //         ];
-            //     }
-
-            //     return $builder
-            //         ->items([
-            //             NavigationItem::make('Dashboard')
-            //                 ->icon('heroicon-o-book-open')
-            //                 ->url('/admin'),
-            //         ])
-            //         ->groups($admin_items);
-            // })
             ->routes(fn () => FilamentMails::routes())
             ->authMiddleware([
                 Authenticate::class,

@@ -11,7 +11,8 @@ import DeleteAccountModal from '@/Components/Modals/DeleteAccountModal'
 import StateDropdown from '@/Components/StateDropdown'
 import DateInput from '@/Components/DateInput'
 import PhoneNumberInput from '@/Components/PhoneNumberInput'
-import MapInput from '@/Components/Map/MapInput'
+import MapInput, { LocationData } from '@/Components/Map/MapInput'
+import PhoneVerification from '@/Components/PhoneVerification'
 
 const UserProfile = () => {
 
@@ -126,9 +127,14 @@ const UserProfile = () => {
               </div>
               <div className="col-6">
                 <div className="">
-                  <InputLabel value="Phone" />
-                  <PhoneNumberInput value={data.phone} onChange={(e: any) => setData('phone', e)}
+                  {/* <InputLabel value="Phone" /> */}
+                  {/* <PhoneNumberInput value={data.phone} onChange={(e: any) => setData('phone', e)}
                     className="phone-input form-control"
+                  /> */}
+                  <PhoneVerification
+                    phoneNumber={data.phone || (user as any)?.phone}
+                    phoneType="phone"
+                    isVerified={(user as any)?.phone_verified_at ? true : false}
                   />
                   {errors.phone &&
                     <InputError message={errors.phone} />
@@ -145,7 +151,13 @@ const UserProfile = () => {
                 <div className="col-md-12">
                   <MapInput
                     initialAddress={user.gmap_address ?? ""}
-                    onLocationSelect={setSelectedGMap} />
+                    onLocationSelect={(location: LocationData) => {
+                      if (location.lat != null && location.lng != null) {
+                        setSelectedGMap({ lat: location.lat, lng: location.lng });
+                      } else {
+                        setSelectedGMap(null);
+                      }
+                    }} />
                 </div>
               </div>
             </div>
@@ -155,11 +167,9 @@ const UserProfile = () => {
               <div className="pb-4 mb-4 border-bottom">
                 <div className="d-flex justify-content-between">
                   <h5 className="mb-4 fs-7">Company Details</h5>
-                  <Button href={`/breeders/create`} variant="white">Edit More Details</Button>
+                  <Button href={`/breeders-create`} variant="white">Edit More Details</Button>
                 </div>
                 <div className="row">
-
-
                   <div className="col-lg-12">
                     <div className="mb-3 pb-1">
                       <InputLabel isRequired={true} value="Company Logo" />
@@ -217,7 +227,6 @@ const UserProfile = () => {
                   <div className="col-lg-6">
                     <div className="mb-3 pb-1">
                       <InputLabel value="Company Phone" />
-
                       <PhoneNumberInput value={data.company_phone} onChange={(e: any) => setData('company_phone', e)}
                         className="phone-input form-control"
                       />
@@ -227,13 +236,13 @@ const UserProfile = () => {
                     </div>
                   </div>
 
-
-
                   <div className="col-lg-6">
                     <div className="mb-3 pb-1">
                       <InputLabel value="Company Established on" isRequired={true} />
-                      <DateInput name="company_established_on" setData={setData} value={data.company_established_on} />
-                      {errors.company_established_on && <InputError message={errors.company_established_on} />}
+                      <div>
+                        <DateInput name="company_established_on" setData={setData} value={data.company_established_on} />
+                        {errors.company_established_on && <InputError message={errors.company_established_on} />}
+                      </div>
                     </div>
                   </div>
 
@@ -256,7 +265,13 @@ const UserProfile = () => {
                   <div className="col-lg-12">
                     <div className="mb-3 pb-1">
                       <InputLabel value="About" />
-                      <TextInput placeholder="About" onChange={e => setData('company_about', e.target.value)} value={data.company_about ?? ""} />
+                      <textarea
+                        rows={2}
+                        className="form-control rounded"
+                        placeholder="About"
+                        value={data.company_about ?? ""}
+                        onChange={e => setData('company_about', e.target.value)}
+                      />
                       {errors.company_about &&
                         <InputError message={errors.company_about} />
                       }
@@ -270,7 +285,6 @@ const UserProfile = () => {
             </>
 
           }
-
 
           <div className="pb-4 mb-4 border-bottom">
             <h5 className="mb-4 fs-7">Social Profiles</h5>

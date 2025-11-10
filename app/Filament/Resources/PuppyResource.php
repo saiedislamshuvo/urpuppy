@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PuppyResource\Pages\CreatePuppy;
 use App\Filament\Resources\PuppyResource\Pages\EditPuppy;
 use App\Filament\Resources\PuppyResource\Pages\ListPuppies;
+use App\Filament\Forms\Components\MapboxLocationPicker;
 use App\Models\Puppy;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
@@ -278,6 +279,72 @@ class PuppyResource extends Resource
                             ]),
                     ])
                     ->columnSpan(['lg' => 1]),
+                
+                Section::make('Location Information')
+                    ->description('Enter the location details for the puppy')
+                    ->icon('heroicon-o-map-pin')
+                    ->schema([
+                        Grid::make(3)
+                            ->schema([
+                                TextInput::make('address')
+                                    ->label('Address')
+                                    ->placeholder('e.g., 123 Main Street')
+                                    ->maxLength(255)
+                                    ->columnSpan(1),
+                                
+                                TextInput::make('street')
+                                    ->label('Street')
+                                    ->placeholder('Street name')
+                                    ->maxLength(255)
+                                    ->columnSpan(1),
+                                
+                                TextInput::make('city')
+                                    ->label('City')
+                                    ->placeholder('e.g., New York')
+                                    ->maxLength(100)
+                                    ->columnSpan(1),
+                            ]),
+                        
+                        Grid::make(2)
+                            ->schema([
+                                Select::make('state_id')
+                                    ->relationship(name: 'state', titleAttribute: 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->label('State')
+                                    ->placeholder('Select state')
+                                    ->helperText('Select the state/province')
+                                    ->columnSpan(1),
+                                
+                                TextInput::make('zip_code')
+                                    ->label('Zip Code')
+                                    ->placeholder('e.g., 12345')
+                                    ->maxLength(20)
+                                    ->columnSpan(1),
+                            ]),
+                        
+                        MapboxLocationPicker::make('location')
+                            ->label('Location on Map')
+                            ->helperText('Click on the map or search for an address to set the location')
+                            ->defaultLocation(37.7749, -122.4194)
+                            ->zoom(10)
+                            ->columnSpanFull(),
+                        
+                        // Hidden fields for lat/lng that will be updated by the map
+                        TextInput::make('lat')
+                            ->numeric()
+                            ->hidden()
+                            ->dehydrated()
+                            ->default(fn ($record) => $record?->lat),
+                        
+                        TextInput::make('lng')
+                            ->numeric()
+                            ->hidden()
+                            ->dehydrated()
+                            ->default(fn ($record) => $record?->lng),
+                    ])
+                    ->collapsible()
+                    ->columnSpanFull(),
             ])
             ->columns(3);
     }

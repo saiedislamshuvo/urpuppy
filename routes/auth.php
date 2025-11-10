@@ -53,6 +53,15 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1')
         ->name('verification.send');
 
+    // Phone verification routes
+    Route::post('phone/verification-notification', [\App\Http\Controllers\Auth\PhoneVerificationNotificationController::class, 'store'])
+        ->middleware('throttle:6,1')
+        ->name('phone.verification.send');
+
+    Route::post('phone/verify', \App\Http\Controllers\Auth\VerifyPhoneController::class)
+        ->middleware('throttle:6,1')
+        ->name('phone.verification.verify');
+
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
         ->name('password.confirm');
 

@@ -26,7 +26,7 @@ class SellerRegistrationRequest extends FormRequest
         $rules = [
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
-            'phone' => ['nullable', 'string', 'max:100'],
+            'phone' => ['required', 'string', 'max:100', 'regex:/^\+?[1-9]\d{1,14}$/'],
             'website' => ['nullable', 'max:100', 'url'],
             'social_fb' => ['nullable', 'string', 'max:100', 'url'],
             'social_ig' => ['nullable', 'string', 'max:100', 'url'],
@@ -34,11 +34,6 @@ class SellerRegistrationRequest extends FormRequest
             'social_x' => ['nullable', 'string', 'max:100', 'url'],
             'zip_code' => ['nullable', 'string', 'max:20'],
         ];
-
-        // If profile is not completed, require phone
-        if (! $request->user()->profile_completed) {
-            $rules['phone'] = ['required', 'string', 'max:100', 'regex:/^\+?[1-9]\d{1,14}$/'];
-        }
         
         // Location fields (optional)
         $rules['location_lat'] = ['nullable', 'numeric', 'between:-90,90'];

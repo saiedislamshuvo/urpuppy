@@ -69,20 +69,11 @@ class HomeController extends Controller
                         ->get();
                     
                     return $breeds->map(function ($breed) {
-                        // Get a random breeder for this breed
-                        $randomBreeder = User::breeders()
-                            ->whereHas('breeds', function ($q) use ($breed) {
-                                $q->where('breeds.id', $breed->id);
-                            })
-                            ->inRandomOrder()
-                            ->first();
-                        
                         // Create BreedData with random_breeder_slug
                         return BreedData::from([
                             'name' => $breed->name,
                             'slug' => $breed->slug,
                             'image' => $breed->image,
-                            'random_breeder_slug' => $randomBreeder?->slug,
                         ]);
                     });
                 });
@@ -115,6 +106,8 @@ class HomeController extends Controller
         $newArrivals = app(CompareService::class)->applyCompares(
             app(FavoriteService::class)->applyFavorites(PuppyCardData::collect($results['new_arrivals']))
         );
+
+        // return $newArrivals;
 
         return Inertia::render('Home/Index', [
             'breed_filter_list' => inertia()->optional(fn() =>

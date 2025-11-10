@@ -23,9 +23,34 @@ const MyPuppies = ({ puppies }: {
               <PuppyCard className="" puppy={puppy} />
 
               <Link aria-label='Edit' className="btn btn-primary mt-2 btn-sm" style={{ marginRight: "4px" }} href={`/seller/create/${puppy.id}`}>Edit </Link>
+              <button
+                aria-label={puppy.is_sold === true ? 'Unmark as Sold' : 'Mark as Sold'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (puppy.is_sold === true) {
+                    router.post(`/puppies-listing/${puppy.id}/unmark-sold`, {}, {
+                      preserveScroll: true,
+                      onSuccess: () => {
+                        // Success handled by backend redirect
+                      }
+                    });
+                  } else {
+                    router.post(`/puppies-listing/${puppy.id}/mark-sold`, {}, {
+                      preserveScroll: true,
+                      onSuccess: () => {
+                        // Success handled by backend redirect
+                      }
+                    });
+                  }
+                }}
+                className={`btn btn-sm mt-2 ${puppy.is_sold === true ? 'btn-secondary' : 'bg-secondary'}`}
+                style={{ marginRight: "4px" }}
+              >
+                {puppy.is_sold === true ? 'Unmark as Sold' : 'Mark as Sold'}
+              </button>
               <Link
                 aria-label='Delete'
-                href="/subscriptions"
+                href="/profile"
                 method="delete"
                 as="button"
                 onClick={(e) => {
@@ -36,7 +61,7 @@ const MyPuppies = ({ puppies }: {
                 }}
                 data-bs-toggle="modal"
                 data-bs-target="#CancelPlan"
-                className="btn btn-secondary btn-sm mt-2 "
+                className="btn btn-danger btn-sm mt-2 "
               >
                 Delete
               </Link>

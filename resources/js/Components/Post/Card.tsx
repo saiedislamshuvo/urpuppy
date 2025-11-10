@@ -18,7 +18,7 @@ const Card = ({ post }: {
           </Link>
           <div className="puppy-spotlight-details">
             <div className="p-3">
-              <p className="fs-2 mb-1 text-uppercase fw-medium">{post.category.name}</p>
+              {post.category && <p className="fs-2 mb-1 text-uppercase fw-medium">{post.category.name}</p>}
 
               <Link aria-label='View Details' prefetch preserveScroll={false} href={`/posts/${post.slug}`} className="puppy-spotlight-img position-relative overflow-hidden d-block d-block">
                 <h3 className="fs-6 font-work-sans">{post.title}</h3>
@@ -36,13 +36,6 @@ const Card = ({ post }: {
                 </div>
 
                 <div className="col-12">
-                  <div className="d-flex align-items-center gap-2 mb-2">
-                    <img loading="lazy" src="/images/svgs/icon-user-circle.svg" alt="urpuppy-img" className="rounded-circle" width="18" height="18" />
-                    <p className="mb-0">{post.author.name}</p>
-                  </div>
-                </div>
-
-                <div className="col-12 justify-content-between"><div className="">
                   <Link
                     href={`/posts/${post.slug}`}
                     className="btn btn-primary btn-sm mt-2"
@@ -51,6 +44,15 @@ const Card = ({ post }: {
                   >
                     Read More
                   </Link>
+                  {post.author && (
+                    <div className="d-flex align-items-center gap-2 my-2">
+                      <img loading="lazy" src="/images/svgs/icon-user-circle.svg" alt="urpuppy-img" className="rounded-circle" width="18" height="18" />
+                      <p className="mb-0">{post.author.name}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="col-12 justify-content-between"><div className="">
                 </div>
                   <div className="d-flex align-items-center gap-2 mb-2">
                     <img loading="lazy" src="/images/svgs/icon-calendar.svg" alt="urpuppy-img" width="20" height="20" />

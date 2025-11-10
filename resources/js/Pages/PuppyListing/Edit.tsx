@@ -15,7 +15,7 @@ const Edit = ({ url, puppy_edit }: { url: string; puppy_edit: App.Data.PuppyEdit
             </Head>
             <div className="space-y-4">
                 <Breadcrumb links={[
-                    { label: 'My Puppies', link: '/profile/edit?tab=My Puppies' },
+                    { label: 'My Puppies', link: '/profile?tab=My Puppies' },
                     { label: 'Edit Listing', link: '#' },
                 ]} />
                 <Heading title="Edit your puppy listing" description="Update your puppy listing information." />

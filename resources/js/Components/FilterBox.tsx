@@ -67,24 +67,24 @@ const FilterBox = () => {
     const renderDesktopFilters = React.useCallback(() => (
         <div className="grid-filter d-none d-lg-block">
             <div className="d-flex align-items-center justify-content-between">
-                <div className="breed d-flex gap-2 border-end">
+                <div className="breed d-flex gap-2 border-end align-items-center">
                     <BreedFilter setBreed={setFilter} defaultValue={filter.breed} />
                 </div>
-                <div className="sex d-flex gap-2 border-end">
+                <div className="sex d-flex gap-2 border-end align-items-center">
                     <GenderFilter setGender={setFilter} defaultValue={filter.gender} />
                 </div>
-                <div className="age d-flex gap-2 border-end">
+                <div className="age d-flex gap-2 border-end align-items-center">
                     <AgeFilter setAge={setFilter} defaultValue={filter.age} />
                 </div>
-                <div className="price-range d-flex gap-2 border-end flex-shrink-0">
+                <div className="price-range d-flex gap-2 border-end flex-shrink-0 align-items-center" style={{ minWidth: '250px' }}>
                     <PriceFilter setPrice={setFilter as any}  />
                 </div>
-                <div className="state d-flex gap-2">
+                <div className="state d-flex gap-2 align-items-center">
                     <StateFilter setState={setFilter} defaultValue={filter.state} />
                 </div>
                 <span
                     onClick={handleSearch}
-                    className="btn btn-primary round-48 flex-shrink-0 p-2 d-flex align-items-center justify-content-center"
+                    className="btn btn-primary round-48 flex-shrink-0 p-2 d-flex align-items-center justify-content-center align-items-center"
                 >
                     <img src="/images/svgs/icon-search.svg" alt="urpuppy-img" />
                 </span>

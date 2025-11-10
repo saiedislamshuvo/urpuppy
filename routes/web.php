@@ -100,6 +100,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/profile/avatar', [ProfileController::class, 'destroyAvatar'])->name('profile.destroy.avatar');
+    Route::get('/my-subscription', [ProfileController::class, 'subscription'])->name('profile.subscription');
+    
+    // Media management routes
+    Route::get('/my-media', [\App\Http\Controllers\MediaController::class, 'index'])->name('media.index');
+    Route::post('/my-media/update', [\App\Http\Controllers\MediaController::class, 'update'])->name('media.update');
+    Route::post('/api/media/upload', [\App\Http\Controllers\MediaController::class, 'upload'])->name('media.upload');
+    Route::delete('/api/media/delete', [\App\Http\Controllers\MediaController::class, 'delete'])->name('media.delete');
+    Route::get('/api/media/limits', [\App\Http\Controllers\MediaController::class, 'limits'])->name('media.limits');
     
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
     Route::patch('/favorites/{puppy}', FavoriteController::class)->name('favorite.toggle');
@@ -121,6 +129,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/puppies-listing/{id}/edit', [\App\Http\Controllers\PuppyListingController::class, 'edit'])->name('account.puppies.edit');
         Route::put('/puppies-listing/{id}', [\App\Http\Controllers\PuppyListingController::class, 'update'])->name('account.puppies.update');
         Route::delete('/puppies-listing/{id}', [\App\Http\Controllers\PuppyListingController::class, 'destroy'])->name('account.puppies.destroy');
+        Route::post('/puppies-listing/{id}/mark-sold', [\App\Http\Controllers\PuppyListingController::class, 'markAsSold'])->name('account.puppies.mark-sold');
+        Route::post('/puppies-listing/{id}/unmark-sold', [\App\Http\Controllers\PuppyListingController::class, 'unmarkAsSold'])->name('account.puppies.unmark-sold');
+        Route::post('/puppies-listing/{id}/pause', [\App\Http\Controllers\PuppyListingController::class, 'pause'])->name('account.puppies.pause');
+        Route::post('/puppies-listing/{id}/resume', [\App\Http\Controllers\PuppyListingController::class, 'resume'])->name('account.puppies.resume');
     });
 
     Route::middleware('verified')->group(function () {

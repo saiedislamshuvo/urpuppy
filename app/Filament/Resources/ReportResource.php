@@ -16,6 +16,17 @@ class ReportResource extends Resource
     protected static ?string $model = Report::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-flag';
+    
+
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 50 ? 'success' : 'primary';
+    }
 
     public static function getNavigationSort(): ?int
     {

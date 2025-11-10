@@ -72,14 +72,17 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked, url }
              <JsonLdArticle post={post} />
             <article className="puppy-spotlight py-7 py-md-5 py-xl-9" id="scroll-target">
                 <div className="container">
-                    <div className="mb-8">
-                        <span style={{ backgroundColor: 'rgba(0, 122, 255, 0.1)', color: 'rgba(0, 122, 255, 1)', fontWeight: '500' }} className="btn py-1 mb-3">
-                            {post.category.name}
-                        </span>
-                        <h1 className="mb-2">{post.title}</h1>
-                        <p className="fs-4">{post.excerpt}</p>
-                    </div>
 
+                    <div
+                        className="rounded-2 mb-4 mt-4"
+                        style={{
+                            backgroundImage: `url('${post.banner_url}')`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'center',
+                            backgroundSize: 'cover',
+                            height: "500px"
+                        }}
+                    ></div>
                     <div className="d-flex flex-column flex-sm-column flex-md-row align-items-center justify-content-between">
                         <div className="d-flex gap-3 mb-2">
                             {
@@ -146,19 +149,16 @@ const Show: React.FC<ShowProps> = ({ post, comments, is_liked, is_unliked, url }
                             </div>
                         </div>
                     </div>
+                    <div className="my-5">
+                        <span style={{ backgroundColor: 'rgba(0, 122, 255, 0.1)', color: 'rgba(0, 122, 255, 1)', fontWeight: '500' }} className="btn py-1 mb-3">
+                            {post.category.name}
+                        </span>
+                        <h1 className="mb-2">{post.title}</h1>
+                        <p className="fs-4">{post.excerpt}</p>
+                    </div>
 
-                    <div
-                        className="rounded-2 mb-4 mt-4"
-                        style={{
-                            backgroundImage: `url('${post.banner_url}')`,
-                            backgroundRepeat: 'no-repeat',
-                            backgroundPosition: 'center',
-                            backgroundSize: 'cover',
-                            height: "500px"
-                        }}
-                    ></div>
 
-                    <div style={{ maxWidth: '904px', margin: '0 auto' }}>
+                    <div style={{ margin: '0 auto' }}>
                         <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
 
                         <div className="mb-8 mt-8" style={{ background: 'rgba(8, 49, 78, 0.1)', width: "100%", height: "1px" }}></div>

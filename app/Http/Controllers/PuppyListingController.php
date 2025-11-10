@@ -101,6 +101,63 @@ class PuppyListingController extends Controller
             return DB::transaction(function () use ($request) {
                 $user = $request->user();
 
+                // For breeders: Check approval status first
+                if ($user->is_breeder) {
+                    $breederRequest = $user->breeder_requests()->latest()->first();
+                    
+                    // If request exists and status is not approved, block creation
+                    if (!$breederRequest || $breederRequest->status != 'approved') {
+                        if ($breederRequest && $breederRequest->status == 'pending') {
+                            return error('home', 'Your breeder account is pending approval. Please wait for confirmation before creating listings.');
+                        }
+                        
+                        if ($breederRequest && $breederRequest->status == 'rejected') {
+                            return error('home', 'Your breeder request has been rejected. Please contact support or request again.');
+                        }
+                        
+                        return error('home', 'Your breeder account must be approved before creating listings.');
+                    }
+                }
+
+                // Check for active subscription
+                $activeSubscriptions = $user->getActiveSubscriptions()->load('plan');
+                $hasPlan = false;
+                
+                if ($activeSubscriptions->isNotEmpty()) {
+                    if ($user->is_breeder) {
+                        // For breeders, check if any subscription has type 'breeder' or plan type 'breeder'
+                        $hasPlan = $activeSubscriptions->filter(function ($subscription) {
+                            if ($subscription->type === 'breeder') {
+                                return true;
+                            }
+                            if (!$subscription->type && $subscription->plan) {
+                                return $subscription->plan->type === 'breeder';
+                            }
+                            return false;
+                        })->isNotEmpty();
+                    } else {
+                        // For sellers, check if any subscription has type 'free', 'seller', or 'premium'
+                        $hasPlan = $activeSubscriptions->filter(function ($subscription) {
+                            if (in_array($subscription->type, ['free', 'seller', 'premium'])) {
+                                return true;
+                            }
+                            if (!$subscription->type && $subscription->plan) {
+                                return in_array($subscription->plan->type, ['free', 'seller', 'premium']);
+                            }
+                            return false;
+                        })->isNotEmpty();
+                    }
+                }
+
+                if (!$hasPlan) {
+                    // Redirect to appropriate plan page
+                    if ($user->is_breeder) {
+                        return error('plans.breeder', 'Please subscribe to a plan before creating listings.');
+                    } else {
+                        return error('plans.index', 'Please subscribe to a plan before creating listings.');
+                    }
+                }
+
                 // Check listing limit
                 if ($user->puppies()->count() >= ($user->premium_plan?->plan?->listing_limit ?? 0) &&
                     $user->premium_plan?->plan?->listing_limit != 0) {
@@ -304,5 +361,94 @@ class PuppyListingController extends Controller
                 $puppy->update(['certificate_document_url' => $filePaths[0]]);
             }
         }
+    }
+
+    /**
+     * Mark a puppy listing as sold.
+     */
+    public function markAsSold(Request $request, int $id)
+    {
+        $puppy = Puppy::where('user_id', $request->user()->id)->findOrFail($id);
+        
+        $puppy->markAsSold();
+        
+        Cache::forget("seller_{$request->user()->slug}_puppies_*");
+        
+        return redirect()->back()->with('message.success', 'Listing marked as sold.');
+    }
+
+    /**
+     * Mark a puppy listing as paused.
+     */
+    public function pause(Request $request, int $id)
+    {
+        $puppy = Puppy::where('user_id', $request->user()->id)->findOrFail($id);
+        
+        $puppy->markAsPaused();
+        
+        Cache::forget("seller_{$request->user()->slug}_puppies_*");
+        
+        return redirect()->back()->with('message.success', 'Listing paused.');
+    }
+
+    /**
+     * Resume a paused puppy listing.
+     */
+    public function resume(Request $request, int $id)
+    {
+        $user = $request->user();
+        $puppy = Puppy::where('user_id', $user->id)->findOrFail($id);
+        
+        // Check if user has active subscription before resuming
+        $activeSubscriptions = $user->getActiveSubscriptions()->load('plan');
+        $hasPlan = false;
+        
+        if ($activeSubscriptions->isNotEmpty()) {
+            if ($user->is_breeder) {
+                $hasPlan = $activeSubscriptions->filter(function ($subscription) {
+                    if ($subscription->type === 'breeder') {
+                        return true;
+                    }
+                    if (!$subscription->type && $subscription->plan) {
+                        return $subscription->plan->type === 'breeder';
+                    }
+                    return false;
+                })->isNotEmpty();
+            } else {
+                $hasPlan = $activeSubscriptions->filter(function ($subscription) {
+                    if (in_array($subscription->type, ['free', 'seller', 'premium'])) {
+                        return true;
+                    }
+                    if (!$subscription->type && $subscription->plan) {
+                        return in_array($subscription->plan->type, ['free', 'seller', 'premium']);
+                    }
+                    return false;
+                })->isNotEmpty();
+            }
+        }
+
+        if (!$hasPlan) {
+            return redirect()->back()->with('message.error', 'You need an active subscription to resume listings. Please renew your subscription.');
+        }
+        
+        $puppy->resume();
+        
+        Cache::forget("seller_{$user->slug}_puppies_*");
+        
+        return redirect()->back()->with('message.success', 'Listing resumed.');
+    }
+
+    /**
+     * Unmark a puppy listing as sold.
+     */
+    public function unmarkAsSold(Request $request, int $id)
+    {
+        $puppy = Puppy::where('user_id', $request->user()->id)->findOrFail($id);
+        
+        $puppy->unmarkAsSold();
+        
+        Cache::forget("seller_{$request->user()->slug}_puppies_*");
+        
+        return redirect()->back()->with('message.success', 'Listing unmarked as sold.');
     }
 }

@@ -15,7 +15,7 @@ class StateController extends Controller
 
         $states = [];
         if ($countryState !== null) {
-            $states = $countryState->where('abbreviation', '!=', null)->select('id', 'name');
+            $states = $countryState->where('abbreviation', '!=', null)->select('id', 'name', 'abbreviation');
 
             if ($request->filled('search')) {
                 $searchTerm = strtolower($request->search);
@@ -29,10 +29,11 @@ class StateController extends Controller
                 return [
                     'value' => $state->id,
                     'label' => ucwords($state->name),
+                    'abbreviation' => $state->abbreviation,
                 ];
             });
 
-            if ($request->has('all')) {
+            if ($request->has('all') && $request->all != 'false') {
                 $states->prepend([
                     'value' => 'All',
                     'label' => 'All',

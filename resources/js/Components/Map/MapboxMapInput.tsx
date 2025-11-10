@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { usePage } from "@inertiajs/react";
@@ -39,10 +39,11 @@ interface MapboxMapInputProps {
         zipCode: string;
     }) => void;
     initialAddress?: string;
-    initialLocation?: { lat: number; lng: number } | null;
+    initialLocation?: { lat: number | null; lng: number | null } | null;
+    skipInitialLocationSelect?: boolean;
 }
 
-const center: Location = { lat: 37.7749, lng: -122.4194 }; // Default to San Francisco
+const center: Location = { lat: 39.8283, lng: -98.5795 }; // Center of USA
 
 // Component to handle map clicks
 function MapClickHandler({ onMapClick }: { onMapClick: (lat: number, lng: number) => void }) {
@@ -54,18 +55,38 @@ function MapClickHandler({ onMapClick }: { onMapClick: (lat: number, lng: number
     return null;
 }
 
+// Component to fit bounds when no marker
+function FitBounds({ bounds, hasMarker }: { bounds: L.LatLngBoundsExpression; hasMarker: boolean }) {
+    const map = useMap();
+
+    useEffect(() => {
+        if (!hasMarker) {
+            map.fitBounds(bounds);
+        }
+    }, [map, bounds, hasMarker]);
+
+    return null;
+}
+
 const MapboxMapInput: React.FC<MapboxMapInputProps> = ({
     onLocationSelect,
     initialAddress: propInitialAddress,
     initialLocation: propInitialLocation,
+    skipInitialLocationSelect = false,
 }) => {
-    // Use initialLocation if provided, otherwise use center
-    const defaultCenter = propInitialLocation ? { lat: propInitialLocation.lat, lng: propInitialLocation.lng } : center;
-    const [marker, setMarker] = useState<Location | null>(defaultCenter);
+    // Use initialLocation if provided and valid, otherwise use center
+    const hasInitialLocation = propInitialLocation && propInitialLocation.lat != null && propInitialLocation.lng != null;
+    const defaultCenter = hasInitialLocation && propInitialLocation.lat != null && propInitialLocation.lng != null
+        ? { lat: propInitialLocation.lat, lng: propInitialLocation.lng }
+        : center;
+    const [marker, setMarker] = useState<Location | null>(hasInitialLocation ? defaultCenter : null);
     const [address, setAddress] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [initialAddress, setInitialAddress] = useState<string | undefined>(propInitialAddress);
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const mapRef = useRef<L.Map | null>(null);
+    const lastFetchedLocation = useRef<{ lat: number; lng: number } | null>(null);
+    const hasFetchedInitial = useRef<boolean>(false);
     // Get mapbox token from Inertia page props
     const mapboxAccessToken = (usePage().props as any).mapboxAccessToken || '';
 
@@ -76,6 +97,16 @@ const MapboxMapInput: React.FC<MapboxMapInputProps> = ({
     ];
 
     const fetchAddress = useCallback(async ({ lat, lng }: Location) => {
+        // Check if we've already fetched for this exact location
+        if (lastFetchedLocation.current &&
+            Math.abs(lastFetchedLocation.current.lat - lat) < 0.0001 &&
+            Math.abs(lastFetchedLocation.current.lng - lng) < 0.0001) {
+            return; // Skip if same location
+        }
+
+        // Update last fetched location
+        lastFetchedLocation.current = { lat, lng };
+
         try {
             const response = await fetch(`/api/reverse-geocode?lat=${lat}&lng=${lng}`);
             const data = await response.json();
@@ -121,6 +152,8 @@ const MapboxMapInput: React.FC<MapboxMapInputProps> = ({
                 // Combine street number and route, trim to remove any extra spaces
                 addressDetails.street = `${streetNumber} ${route}`.trim();
 
+                // Always call onLocationSelect - the handler will decide what to update
+                // If skipInitialLocationSelect is true, handler will only update lat/lng
                 onLocationSelect({
                     address: formattedAddress,
                     lat,
@@ -136,16 +169,22 @@ const MapboxMapInput: React.FC<MapboxMapInputProps> = ({
     }, [onLocationSelect]);
 
     useEffect(() => {
-        // If initialLocation is provided, use it directly
-        if (propInitialLocation) {
-            const location: Location = { lat: propInitialLocation.lat, lng: propInitialLocation.lng };
-            setMarker(location);
-            // Fetch address for the initial location
-            fetchAddress(location);
-        } else if (initialAddress) {
-            fetchCoordinates(initialAddress);
+        // Only fetch on initial load, not on every prop change
+        if (!hasFetchedInitial.current) {
+            // If initialLocation is provided and valid, use it directly
+            if (propInitialLocation && propInitialLocation.lat != null && propInitialLocation.lng != null) {
+                const location: Location = { lat: propInitialLocation.lat, lng: propInitialLocation.lng };
+                setMarker(location);
+                // Fetch address for the initial location only once
+                fetchAddress(location);
+                hasFetchedInitial.current = true;
+            } else if (initialAddress) {
+                fetchCoordinates(initialAddress);
+                hasFetchedInitial.current = true;
+            }
         }
-    }, [initialAddress, propInitialLocation, fetchAddress]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Only run once on mount - we intentionally don't want to re-run on prop changes
 
     const fetchCoordinates = async (address: string) => {
         try {
@@ -205,7 +244,7 @@ const MapboxMapInput: React.FC<MapboxMapInputProps> = ({
         const newLocation: Location = { lat, lng };
         setMarker(newLocation);
         fetchAddress(newLocation);
-    }, []);
+    }, [fetchAddress]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -215,13 +254,13 @@ const MapboxMapInput: React.FC<MapboxMapInputProps> = ({
         }
     };
 
-    const handleMarkerDragEnd = (e: L.DragEndEvent) => {
+    const handleMarkerDragEnd = useCallback((e: L.DragEndEvent) => {
         const marker = e.target;
         const position = marker.getLatLng();
         const newLocation: Location = { lat: position.lat, lng: position.lng };
         setMarker(newLocation);
         fetchAddress(newLocation);
-    };
+    }, [fetchAddress]);
 
     // Mapbox tile URL - uses Mapbox styles with access token
     const mapboxTileUrl = mapboxAccessToken
@@ -267,11 +306,14 @@ const MapboxMapInput: React.FC<MapboxMapInputProps> = ({
 
             <MapContainer
                 center={marker ? [marker.lat, marker.lng] : [center.lat, center.lng]}
-                zoom={18}
+                zoom={marker ? 18 : 3}
                 style={{ width: "100%", height: "400px", zIndex: "0" }}
-                bounds={usaBounds}
+                bounds={marker ? undefined : usaBounds}
                 maxBounds={usaBounds}
                 maxBoundsViscosity={1.0}
+                whenReady={() => {
+                    // Map is ready - bounds will be applied automatically via bounds prop
+                }}
             >
                 <TileLayer
                     attribution={mapboxAccessToken
@@ -289,6 +331,7 @@ const MapboxMapInput: React.FC<MapboxMapInputProps> = ({
                         }}
                     />
                 )}
+                <FitBounds bounds={usaBounds} hasMarker={!!marker} />
                 <MapClickHandler onMapClick={handleMapClick} />
             </MapContainer>
         </div>

@@ -2,7 +2,76 @@ import { Link, usePage } from '@inertiajs/react'
 import React from 'react'
 
 const Footer = () => {
-  const user = usePage().props.auth.user
+  const { settings } = usePage().props as any;
+  const user = usePage().props.auth.user;
+
+  // Footer logo - use settings or fallback to default
+  const footerLogo = settings?.footer_logo || '/logo.svg';
+
+  // Footer columns - use settings or fallback to default static content
+  const column1 = {
+    title: settings?.footer_coloum1_title || 'Find A Puppy',
+    links: settings?.footer_coloum1?.length > 0 ? settings.footer_coloum1 : [
+      { title: 'View All Puppies', link: '/puppies' },
+      { title: 'View All Breeds', link: '/breeds' }
+    ]
+  };
+
+  const column2 = {
+    title: settings?.footer_coloum2_title || 'Accounts',
+    links: settings?.footer_coloum2?.length > 0 ? settings.footer_coloum2 : [
+      { title: 'Buyer Register', link: '/register' },
+      { title: 'Seller Register', link: '/register-seller' },
+      { title: 'Breeder Register', link: '/register-breeder' }
+    ]
+  };
+
+  const column3 = {
+    title: settings?.footer_coloum3_title || 'About urpuppy',
+    links: settings?.footer_coloum3?.length > 0 ? settings.footer_coloum3 : [
+      { title: 'Blog', link: '/posts' },
+      { title: 'About Us', link: '/about-us' },
+      { title: 'Contact Us', link: '/contact-us' }
+    ]
+  };
+
+  const column4 = {
+    title: settings?.footer_coloum4_title || 'Other',
+    links: settings?.footer_coloum4?.length > 0 ? settings.footer_coloum4 : [
+      { title: 'Privacy Policy', link: '/privacy-policy' },
+      { title: 'Terms of Use', link: '/terms-of-use' }
+    ]
+  };
+
+  // Social media links - use settings or fallback to default
+  const socialMedia = settings?.footer_social_media?.length > 0 ? settings.footer_social_media : [
+    { icon: 'fa-twitter', link: 'https://x.com/UrpuppyDotCom' },
+    { icon: 'fa-facebook', link: 'https://www.facebook.com/UrPuppyLLC' },
+    { icon: 'fa-instagram', link: 'https://www.instagram.com/urpupppydotcom' }
+  ];
+
+  // Social media icon mapping
+  const socialIconMap: { [key: string]: string } = {
+    'fa-twitter': '/images/svgs/icon-twitter.svg',
+    'fa-facebook': '/images/svgs/icon-facebook.svg',
+    'fa-instagram': '/images/svgs/icon-instagram.svg',
+  };
+
+  const copyrightText = settings?.footer_copyright_text || '©2025 Urpuppy.com, LLC. All Rights Reserved';
+
+  const renderColumn = (column: { title: string; links: Array<{ title: string; link: string }> }, colClass: string) => (
+    <div className={colClass}>
+      <span className="fw-semibold font-work-sans mb-6 text-white">{column.title}</span>
+      <ul className="list-unstyled footer-memu mb-0 mt-2">
+        {column.links.map((item: any, index: number) => (
+          <li key={index} className={index < column.links.length - 1 ? 'mb-6' : ''}>
+            <Link aria-label={item.title} href={item.link} className="fs-3 d-block fw-normal">{item.title}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
   return (
     <footer className="footer bg-secondary">
       <div className="container">
@@ -11,86 +80,49 @@ const Footer = () => {
             <div className="col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
               <div className="footer-logo">
                 <Link aria-label="urpuppy" href="/">
-                  <img loading="lazy" src="/logo.svg" alt="urpuppy-img" />
+                  <img loading="lazy" src={footerLogo} alt="urpuppy-img" />
                 </Link>
               </div>
             </div>
-            <div className="col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0 ps-lg-7">
-              <span className="fw-semibold font-work-sans mb-6 text-white">Find A Puppy</span>
-              <ul className="list-unstyled footer-memu mb-0 mt-2">
-                <li className="mb-6">
-                  <Link aria-label="View All Puppies" href="/puppies" className="fs-3 d-block fw-normal">View All Puppies</Link>
-                </li>
-                <li>
-                  <Link aria-label="View All Breeds" href="/breeds" className="fs-3 d-block fw-normal">View All Breeds</Link>
-                </li>
-              </ul>
-            </div>
-            <div className="col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
-              <span className="fw-semibold font-work-sans mb-6 text-white">Accounts</span>
-              <ul className="list-unstyled footer-memu mb-0 mt-2">
-                <li className="mb-6">
-                  <Link aria-label="Buyer Register" href="/register" className="fs-3 d-block fw-normal">Buyer Register</Link>
-                </li>
-                <li className="mb-6">
-                  <Link aria-label="Seller Register" href="/register-seller" className="fs-3 d-block fw-normal">Seller Register</Link>
-                </li>
-                <li className="mb-6">
-                  <Link aria-label="Breeder Register" href="/register-breeder" className="fs-3 d-block fw-normal">Breeder Register</Link>
-                </li>
-              </ul>
-            </div>
-            <div className="col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
-              <span className="fw-semibold font-work-sans mb-6 text-white">About urpuppy</span>
-              <ul className="list-unstyled footer-memu mb-0 mt-2">
-                <li className="mb-6">
-                  <Link aria-label="Blog" href="/posts" className="fs-3 d-block fw-normal">Blog</Link>
-                </li>
-                <li className="mb-6">
-                  <Link aria-label="About Us" href="/about-us" className="fs-3 d-block fw-normal">About Us</Link>
-                </li>
-                <li>
-                  <Link aria-label="Contact Us" href="/contact-us" className="fs-3 d-block fw-normal">Contact Us</Link>
-                </li>
-              </ul>
-            </div>
-            <div className="col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
-              <span className="fw-semibold font-work-sans mb-6 text-white">Other</span>
-              <ul className="list-unstyled footer-memu mb-0 mt-2">
-                <li className="mb-6">
-                  <Link aria-label="Privacy Policy" href="/privacy-policy" className="fs-3 d-block fw-normal">Privacy Policy</Link>
-                </li>
-                <li className="mb-6">
-                  <Link aria-label="Terms of Use" href="/terms-of-use" className="fs-3 d-block fw-normal">Terms of Use</Link>
-                </li>
-
-              </ul>
-            </div>
+            {renderColumn(column1, 'col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0 ps-lg-7')}
+            {renderColumn(column2, 'col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0')}
+            {renderColumn(column3, 'col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0')}
+            {renderColumn(column4, 'col-6 col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0')}
             <div className="col-md-4 col-lg-2 mb-7 pb-1 pb-lg-0 mb-lg-0">
               <span className="fw-semibold font-work-sans mb-6 text-white">Socials</span>
               <ul className="list-unstyled d-flex align-items-center gap-6 social-icon mb-0 mt-2">
-                <li>
-                  <a rel='nofollow' href="https://x.com/UrpuppyDotCom" data-bs-toggle="tooltip" data-bs-title="Twitter" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
-                    <img loading="lazy" src="/images/svgs/icon-twitter.svg" alt="urpuppy-img" />
-                  </a>
-                </li>
-                <li>
-                  <a rel='nofollow' href="https://www.facebook.com/UrPuppyLLC" target="_blank" data-bs-toggle="tooltip" data-bs-title="Facebook" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
-                    <img loading="lazy" src="/images/svgs/icon-facebook.svg" alt="urpuppy-img" />
-                  </a>
-                </li>
-                <li>
-                  <a rel='nofollow' href="https://www.instagram.com/urpupppydotcom" data-bs-toggle="tooltip" data-bs-title="Instagram" className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle">
-                    <img loading="lazy" src="/images/svgs/icon-instagram.svg" alt="urpuppy-img" />
-                  </a>
-                </li>
+                {socialMedia.map((social: any, index: number) => {
+                  const iconSrc = social.icon?.startsWith('/') || social.icon?.startsWith('http')
+                    ? social.icon
+                    : socialIconMap[social.icon] || `/images/svgs/icon-${social.icon?.replace('fa-', '') || 'default'}.svg`;
+                  const isFontAwesome = social.icon?.startsWith('fa-') && !socialIconMap[social.icon];
+
+                  return (
+                    <li key={index}>
+                      <a
+                        rel='nofollow'
+                        href={social.link}
+                        target={social.link?.startsWith('http') ? '_blank' : undefined}
+                        data-bs-toggle="tooltip"
+                        data-bs-title={social.title || social.icon}
+                        className="bg-white bg-opacity-10 d-flex align-items-center justify-content-center round-40 rounded-circle"
+                      >
+                        {isFontAwesome ? (
+                          <i className={social.icon}></i>
+                        ) : (
+                          <img loading="lazy" src={iconSrc} alt={social.title || social.icon} />
+                        )}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>
         </div>
         <div className="border-top   border-white border-opacity-10 py-3 d-md-flex align-items-center justify-content-center">
           <p className="d-flex align-items-center gap-2  mb-md-0 text-white fw-normal  opacity-50">
-            <span> ©2025 Urpuppy.com, LLC. All Rights Reserved </span>
+            <span>{copyrightText}</span>
           </p>
         </div>
       </div>

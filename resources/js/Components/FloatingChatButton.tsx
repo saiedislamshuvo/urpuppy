@@ -32,6 +32,7 @@ const FloatingChatButton: React.FC = () => {
     };
 
     const storedState = loadStoredState();
+    const { url } = usePage();
     const [unreadCount, setUnreadCount] = useState(0);
     const [isOpen, setIsOpen] = useState(storedState?.isOpen || false);
     const [currentChatId, setCurrentChatId] = useState<number | null>(storedState?.chatId || null);
@@ -57,8 +58,20 @@ const FloatingChatButton: React.FC = () => {
     };
 
     useEffect(() => {
+        // Check if we should fetch chat count
+        // Only fetch if we're on the chat page OR the popup is open
+        const shouldFetchChatCount = () => {
+            const isOnChatPage = url.startsWith('/chat');
+            return isOnChatPage || isOpen;
+        };
+
         // Fetch unread count on mount and periodically
         const fetchUnreadCount = async () => {
+            // Only fetch if we're on chat page or popup is open
+            if (!shouldFetchChatCount()) {
+                return;
+            }
+
             try {
                 const response = await fetch('/api/chat/unread/count', {
                     credentials: 'same-origin',
@@ -70,7 +83,11 @@ const FloatingChatButton: React.FC = () => {
             }
         };
 
-        fetchUnreadCount();
+        // Only start polling if we should fetch
+        if (shouldFetchChatCount()) {
+            fetchUnreadCount();
+        }
+
         const interval = setInterval(fetchUnreadCount, 10000); // Poll every 10s
 
         // Listen for openChatPopup events
@@ -93,7 +110,7 @@ const FloatingChatButton: React.FC = () => {
             clearInterval(interval);
             window.removeEventListener('openChatPopup', handleOpenChat);
         };
-    }, []);
+    }, [isOpen, url]); // Re-run when isOpen or url changes
 
     const toggleChat = () => {
         const newIsOpen = !isOpen;

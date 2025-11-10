@@ -4,7 +4,7 @@ import Tooltip from './Tooltip'
 const FavoriteButton = ({ puppyId, sellerId, isFavorite, uniqueId = null }: {
     uniqueId?: string | null
     puppyId: number
-    sellerId: number,
+    sellerId?: number | null,
     isFavorite?: boolean | null
 }) => {
     return <> <Tooltip content={(

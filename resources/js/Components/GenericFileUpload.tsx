@@ -16,7 +16,7 @@ export interface WatermarkConfig {
 interface GenericFileUploadProps {
     required?: boolean;
     name: string;
-    setData: (key: string, value: File[]) => void;
+    setData: (key: string, value: (File | string)[]) => void;
     errors?: any;
     defaultFiles?: string[];
     defaultUrls?: string[];
@@ -49,7 +49,28 @@ const getAcceptedFileTypes = (fileType: FileType): string[] => {
     return typeMap[fileType] || [];
 };
 
+// Helper function to get file extensions from MIME type
+const getExtensionsFromMimeType = (mimeType: string): string[] => {
+    const extensionMap: Record<string, string[]> = {
+        'image/jpeg': ['.jpg', '.jpeg'],
+        'image/jpg': ['.jpg', '.jpeg'],
+        'image/png': ['.png'],
+        'image/gif': ['.gif'],
+        'image/webp': ['.webp'],
+        'video/mp4': ['.mp4'],
+        'video/quicktime': ['.mov'],
+        'video/mov': ['.mov'],
+        'video/avi': ['.avi'],
+        'video/webm': ['.webm'],
+        'application/pdf': ['.pdf'],
+        'application/msword': ['.doc'],
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+    };
+    return extensionMap[mimeType] || [];
+};
+
 // Helper function to get accept string for dropzone
+// react-dropzone expects: { 'image/*': ['.jpg', '.png'], 'application/pdf': ['.pdf'] }
 const getAcceptString = (fileType: FileType, customAccept?: string): Record<string, string[]> | undefined => {
     if (customAccept) {
         // Parse custom accept string like ".jpg,.png,.mp4" or "image/*,video/*"
@@ -58,17 +79,39 @@ const getAcceptString = (fileType: FileType, customAccept?: string): Record<stri
             type = type.trim();
             if (type.startsWith('.')) {
                 // Extension like .jpg
-                const ext = type.substring(1);
-                const mimeType = getMimeTypeFromExtension(ext);
+                const ext = type;
+                const mimeType = getMimeTypeFromExtension(ext.substring(1));
                 if (mimeType) {
+                    // Group by MIME category with wildcard
                     const category = mimeType.split('/')[0];
-                    if (!types[category]) types[category] = [];
-                    types[category].push(mimeType);
+                    const mimeKey = `${category}/*`;
+                    if (!types[mimeKey]) types[mimeKey] = [];
+                    if (!types[mimeKey].includes(ext)) {
+                        types[mimeKey].push(ext);
+                    }
                 }
             } else if (type.includes('/*')) {
-                // MIME type like image/*
+                // MIME type like image/* - this is already in the correct format
+                // We need to provide extensions for it
                 const category = type.split('/')[0];
-                types[category] = [type];
+                if (category === 'image') {
+                    types[type] = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+                } else if (category === 'video') {
+                    types[type] = ['.mp4', '.mov', '.avi', '.webm'];
+                } else if (category === 'application') {
+                    types[type] = ['.pdf', '.doc', '.docx'];
+                }
+            } else if (type.includes('/')) {
+                // Full MIME type like image/jpeg
+                const exts = getExtensionsFromMimeType(type);
+                if (exts.length > 0) {
+                    if (!types[type]) types[type] = [];
+                    exts.forEach(ext => {
+                        if (!types[type].includes(ext)) {
+                            types[type].push(ext);
+                        }
+                    });
+                }
             }
         });
         return Object.keys(types).length > 0 ? types : undefined;
@@ -77,11 +120,21 @@ const getAcceptString = (fileType: FileType, customAccept?: string): Record<stri
     const acceptedTypes = getAcceptedFileTypes(fileType);
     if (acceptedTypes.length === 0) return undefined;
 
+    // Group by MIME category (image/*, video/*, etc.) with extensions
     const grouped: Record<string, string[]> = {};
     acceptedTypes.forEach(mimeType => {
         const category = mimeType.split('/')[0];
-        if (!grouped[category]) grouped[category] = [];
-        grouped[category].push(mimeType);
+        const mimeKey = `${category}/*`;
+        const exts = getExtensionsFromMimeType(mimeType);
+
+        if (exts.length > 0) {
+            if (!grouped[mimeKey]) grouped[mimeKey] = [];
+            exts.forEach(ext => {
+                if (!grouped[mimeKey].includes(ext)) {
+                    grouped[mimeKey].push(ext);
+                }
+            });
+        }
     });
 
     return grouped;
@@ -362,9 +415,34 @@ function GenericFileUpload({
         return '';
     };
 
-    // Clean up preview URLs from state (for old implementation)
+    // Ensure previews are created for all files that need them
+    useEffect(() => {
+        setPreviews(prev => {
+            const missingPreviews: Record<string, string> = {};
+            files.forEach(file => {
+                if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+                    const previewKey = (file as any).__previewKey || `${file.name}-${file.size}-${file.lastModified}`;
+                    if (!prev[previewKey]) {
+                        const preview = createPreview(file);
+                        if (preview) {
+                            missingPreviews[previewKey] = preview;
+                            (file as any).__previewKey = previewKey;
+                        }
+                    }
+                }
+            });
+            // Only update if there are actually new previews
+            if (Object.keys(missingPreviews).length > 0) {
+                return { ...prev, ...missingPreviews };
+            }
+            return prev;
+        });
+    }, [files]);
+
+    // Clean up blob URLs when files are removed or component unmounts
     useEffect(() => {
         return () => {
+            // Cleanup all preview URLs on unmount
             Object.values(previews).forEach(url => {
                 if (url && url.startsWith('blob:')) {
                     URL.revokeObjectURL(url);
@@ -372,34 +450,6 @@ function GenericFileUpload({
             });
         };
     }, [previews]);
-
-    // Clean up blob URLs created directly from files when component unmounts or files change
-    useEffect(() => {
-        return () => {
-            // Cleanup will happen automatically when files are removed
-            // Blob URLs are cleaned up when files are removed via handleRemove
-        };
-    }, [files]);
-
-    // Ensure previews are created for all files that need them
-    useEffect(() => {
-        const missingPreviews: Record<string, string> = {};
-        files.forEach(file => {
-            if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
-                const previewKey = (file as any).__previewKey || `${file.name}-${file.size}-${file.lastModified}`;
-                if (!previews[previewKey]) {
-                    const preview = createPreview(file);
-                    if (preview) {
-                        missingPreviews[previewKey] = preview;
-                        (file as any).__previewKey = previewKey;
-                    }
-                }
-            }
-        });
-        if (Object.keys(missingPreviews).length > 0) {
-            setPreviews(prev => ({ ...prev, ...missingPreviews }));
-        }
-    }, [files]);
 
     // Initialize URLs - display them directly without converting to Files
     useEffect(() => {
@@ -415,11 +465,24 @@ function GenericFileUpload({
 
         setUrlItems(prev => [...prev, ...urlItemsToAdd]);
         setInitializedUrls(prev => [...prev, ...newUrls]);
-
-        // For form submission, we'll handle URLs separately
-        // For now, set empty array since URLs are handled differently
-        setData(name, files);
     }, [defaultUrls.join(',')]);
+
+    // Sync form data whenever files or urlItems change
+    // Only sync if we have defaultUrls or urlItems (for backward compatibility)
+    // When defaultUrls is empty and urlItems is empty, the parent component handles the data directly
+    useEffect(() => {
+        if (defaultUrls.length > 0 || urlItems.length > 0) {
+            const remainingUrls = urlItems.map(item => item.url);
+            setData(name, [...files, ...remainingUrls]);
+        } else if (files.length > 0) {
+            // If no defaultUrls and no urlItems, only sync files (parent will handle merging)
+            // This allows the parent to track new files without interfering with existing media
+            setData(name, files);
+        }
+        // Note: We don't sync when files.length is 0 and defaultUrls/urlItems are empty
+        // to prevent clearing form data when the component resets
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [files, urlItems, name]);
 
     const onDrop = useCallback(
         async (incomingFiles: File[]) => {
@@ -499,41 +562,62 @@ function GenericFileUpload({
                 // Update previews first to ensure they're available when rendering
                 setPreviews(prev => ({ ...prev, ...newPreviews }));
 
-                const newFiles = [...files, ...processedFiles];
-                setFiles(newFiles);
+                // Use functional updates to avoid dependency on files
+                setFiles(prevFiles => {
+                    const newFiles = [...prevFiles, ...processedFiles];
 
-                // Combine files and URLs for form submission
-                // URLs will be handled separately by the backend
-                setData(name, newFiles);
-
-                if (hiddenInputRef.current) {
-                    const dataTransfer = new DataTransfer();
-                    newFiles.forEach((v) => {
-                        dataTransfer.items.add(v);
+                    // Update form data with functional updates
+                    setUrlItems(prevUrlItems => {
+                        const remainingUrls = prevUrlItems.map(item => item.url);
+                        setData(name, [...newFiles, ...remainingUrls]);
+                        return prevUrlItems;
                     });
-                    hiddenInputRef.current.files = dataTransfer.files;
-                }
+
+                    if (hiddenInputRef.current) {
+                        const dataTransfer = new DataTransfer();
+                        newFiles.forEach((v) => {
+                            dataTransfer.items.add(v);
+                        });
+                        hiddenInputRef.current.files = dataTransfer.files;
+                    }
+
+                    return newFiles;
+                });
             } catch (error) {
                 console.error('Error processing files:', error);
             } finally {
                 setIsProcessing(false);
             }
         },
-        [files, name, setData, watermark]
+        [name, setData, watermark, maxSize, fileType, accept]
     );
 
     const acceptConfig = getAcceptString(fileType, accept);
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
         onDrop,
         multiple,
         maxSize,
         accept: acceptConfig,
+        noClick: false,
+        noKeyboard: false,
         onDropRejected: (rejectedFiles) => {
             const reasons = rejectedFiles.map(f => f.errors.map(e => e.message).join(', ')).join('; ');
             alert(`Some files were rejected: ${reasons}`);
         },
     });
+
+    // Get input props and add name attribute, capture ref
+    const inputProps = getInputProps();
+    const mergedInputProps = {
+        ...inputProps,
+        name,
+        // @ts-ignore - getInputProps may have internal ref handling, but we need to capture it
+        ref: (node: HTMLInputElement | null) => {
+            // Store ref for form submission
+            (hiddenInputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+        },
+    };
 
     const handleRemove = useCallback(
         (itemToRemove: File | { url: string; id: string }, e: React.MouseEvent) => {
@@ -541,38 +625,63 @@ function GenericFileUpload({
 
             // Check if it's a File or URL item
             if (itemToRemove instanceof File) {
-                // Note: Blob URLs created with URL.createObjectURL are automatically cleaned up
-                // when the File object is garbage collected, but we can't manually revoke them
-                // since they're created inline. The browser will handle cleanup.
+                // Clean up blob URL for this file
+                const previewKey = (itemToRemove as any).__previewKey || `${itemToRemove.name}-${itemToRemove.size}-${itemToRemove.lastModified}`;
+                setPreviews(prev => {
+                    const url = prev[previewKey];
+                    if (url && url.startsWith('blob:')) {
+                        URL.revokeObjectURL(url);
+                    }
+                    const newPreviews = { ...prev };
+                    delete newPreviews[previewKey];
+                    return newPreviews;
+                });
 
-                const newFiles = files.filter((f) => f !== itemToRemove);
-                setFiles(newFiles);
-                setData(name, newFiles);
+                setFiles(prevFiles => {
+                    const newFiles = prevFiles.filter((f) => f !== itemToRemove);
 
-                if (hiddenInputRef.current) {
-                    const dataTransfer = new DataTransfer();
-                    newFiles.forEach((v) => {
-                        dataTransfer.items.add(v);
+                    // Update form data with remaining files and URLs
+                    setUrlItems(prevUrlItems => {
+                        const remainingUrls = prevUrlItems.map(item => item.url);
+                        setData(name, [...newFiles, ...remainingUrls]);
+                        return prevUrlItems;
                     });
-                    hiddenInputRef.current.files = dataTransfer.files;
-                }
+
+                    if (hiddenInputRef.current) {
+                        const dataTransfer = new DataTransfer();
+                        newFiles.forEach((v) => {
+                            dataTransfer.items.add(v);
+                        });
+                        hiddenInputRef.current.files = dataTransfer.files;
+                    }
+
+                    return newFiles;
+                });
             } else {
                 // Remove URL item
-                const newUrlItems = urlItems.filter((item) => item.id !== itemToRemove.id);
-                setUrlItems(newUrlItems);
-                // Remove from initialized URLs so it can be re-added if needed
-                setInitializedUrls(prev => prev.filter(url => url !== itemToRemove.url));
+                setUrlItems(prevUrlItems => {
+                    const newUrlItems = prevUrlItems.filter((item) => item.id !== itemToRemove.id);
+                    // Remove from initialized URLs so it can be re-added if needed
+                    setInitializedUrls(prev => prev.filter(url => url !== itemToRemove.url));
+
+                    // Update form data with remaining URLs
+                    setFiles(prevFiles => {
+                        const remainingUrls = newUrlItems.map(item => item.url);
+                        setData(name, [...prevFiles, ...remainingUrls]);
+                        return prevFiles;
+                    });
+
+                    return newUrlItems;
+                });
             }
         },
-        [files, name, setData, urlItems]
+        [name, setData]
     );
 
     const handleAddMoreClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        if (hiddenInputRef.current) {
-            hiddenInputRef.current.click();
-        }
+        open();
     };
 
     const getFileIcon = (file: File): string => {
@@ -609,14 +718,7 @@ function GenericFileUpload({
                     '--background-color': backgroundColor,
                 } as React.CSSProperties}
             >
-                <input
-                    type="file"
-                    name={name}
-                    style={{ opacity: 0, position: 'absolute', pointerEvents: 'none' }}
-                    ref={hiddenInputRef}
-                    multiple={multiple}
-                />
-                <input {...getInputProps()} />
+                <input {...mergedInputProps} />
                 {isLoading || isProcessing ? (
                     <div className="dz-message">
                         <div className="dz-message-text">
@@ -632,14 +734,18 @@ function GenericFileUpload({
                             <p className="mb-1">{innerText || 'Drop files here or click to upload'}</p>
                             <p className="text-muted small">
                                 {acceptConfig && Object.keys(acceptConfig).length > 0
-                                    ? `Accepted: ${Object.keys(acceptConfig).join(', ')}`
+                                    ? `Accepted: ${Object.keys(acceptConfig).map(key => {
+                                        const category = key.replace('/*', '');
+                                        const extensions = acceptConfig[key]?.join(', ') || '';
+                                        return category.charAt(0).toUpperCase() + category.slice(1) + (extensions ? ` (${extensions})` : '');
+                                    }).join(', ')}`
                                     : 'All file types accepted'}
                                 {maxSize && ` • Max size: ${formatFileSize(maxSize)}`}
                             </p>
                         </div>
                     </div>
                 ) : (
-                    <div className="dz-preview-container">
+                    <div className="dz-preview-container mt-0">
                         {/* Render URL items (existing images) */}
                         {urlItems.map((urlItem, index) => {
                             const errorKey = `${name}.${index}`;
@@ -697,13 +803,12 @@ function GenericFileUpload({
                             const errorKey = `${name}.${urlItems.length + index}`;
                             const fileError = errors?.[errorKey] ?? null;
 
-                            // Create preview URL directly from file using URL.createObjectURL
-                            const previewUrl = (file.type.startsWith('image/') || file.type.startsWith('video/'))
-                                ? URL.createObjectURL(file)
-                                : null;
+                            // Get preview URL from state using preview key
+                            const previewKey = (file as any).__previewKey || `${file.name}-${file.size}-${file.lastModified}`;
+                            const previewUrl = previews[previewKey] || null;
 
                             return (
-                                <div key={`${file.name}-${file.size}-${index}`} className="dz-preview dz-file-preview">
+                                <div key={`${file.name}-${file.size}-${file.lastModified}-${index}`} className="dz-preview dz-file-preview">
                                     <div className="dz-image">
                                         {previewUrl ? (
                                             file.type.startsWith('image/') ? (
@@ -712,13 +817,9 @@ function GenericFileUpload({
                                                     alt={file.name}
                                                     style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
                                                     onError={(e) => {
-                                                        console.error('Image preview failed to load:', previewUrl, 'File:', file.name);
                                                         (e.target as HTMLImageElement).style.display = 'none';
                                                         const fallback = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
                                                         if (fallback) fallback.classList.remove('d-none');
-                                                    }}
-                                                    onLoad={() => {
-                                                        console.log('Image preview loaded successfully:', previewUrl);
                                                     }}
                                                 />
                                             ) : file.type.startsWith('video/') ? (

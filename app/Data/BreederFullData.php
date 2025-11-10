@@ -28,12 +28,22 @@ class BreederFullData extends Data
         public ?string $company_about,
         public ?string $company_email_address,
         public ?string $company_phone,
-        /* public ?CityData $company_city, */
-        /* public ?StateData $company_state, */
+        public ?string $company_city,
+        public ?string $company_state,
+        public ?string $company_short_state,
+        public ?string $company_street,
+        public ?string $company_house_no,
         public ?string $company_zip_code,
         public ?string $company_established_on,
         public ?string $company_established_on_label,
         public ?bool $has_usda_registration,
+
+        // Base user fields for fallback
+        public ?string $street,
+        public ?string $city,
+        public ?string $state,
+        public ?string $short_state,
+        public ?string $zip_code,
 
         public ?string $website,
         public ?string $phone,

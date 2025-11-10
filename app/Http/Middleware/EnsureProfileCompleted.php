@@ -28,7 +28,15 @@ class EnsureProfileCompleted
         }
 
         // Step 2: Check if profile is completed
-        if (!$user->profile_completed) {
+        $profile_completed = false;
+        if ($user->is_breeder) {
+            $profile_completed = $user->breeder_profile_completed ?? false;
+        } elseif ($user->is_seller) {
+            $profile_completed = $user->profile_complete ?? false;
+        } else {
+            $profile_completed = $user->profile_completed ?? false;
+        }
+        if (!$profile_completed) {
             // For breeders, redirect to breeder profile setup
             if ($user->is_breeder) {
                 return redirect()->route('breeders.create')

@@ -27,6 +27,17 @@ class AdminResource extends Resource
     protected static ?string $navigationGroup = 'Authentication';
     protected static ?string $navigationIcon = 'phosphor-users-three';
 
+
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 50 ? 'success' : 'primary';
+    }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->where('is_admin', true)->orWhere('is_superadmin', true);

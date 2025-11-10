@@ -33,9 +33,23 @@ const SellerCard = ({
           <img src="/images/svgs/icon-map-pin.svg" alt="urpuppy-img" width="20" height="20" />
           <p className="mb-0 fs-2">{seller.address}</p>
         </div>
-        <div className="d-flex align-items-center justify-content-center gap-2 mb-4">
-          <img src="/images/svgs/icon-user-dark.svg" alt="urpuppy-img" width="14" height="14" />
-          <p className="mb-0 fs-2">Member since: {seller.member_since}</p>
+        <div className="text-center mb-4">
+          <div className="d-flex align-items-center justify-content-center gap-2 mb-2">
+            <img src="/images/svgs/icon-user-dark.svg" alt="urpuppy-img" width="14" height="14" />
+            <p className="mb-0 fs-2">Member since: {seller.member_since}</p>
+          </div>
+          {((seller as any).is_breeder || (seller as any).is_seller) && (
+            <div className="d-flex align-items-center justify-content-center gap-2">
+              <img src="/images/svgs/icon-paws-dark.svg" alt="paw-icon" width="14" height="14" />
+              <p className="mb-0 fs-2">
+                {(seller as any).is_breeder && (seller as any).is_seller
+                  ? 'Breeder & Seller'
+                  : (seller as any).is_breeder
+                    ? 'Breeder'
+                    : 'Seller'}
+              </p>
+            </div>
+          )}
         </div>
 
 
@@ -68,7 +82,7 @@ const SellerCard = ({
           )}
 
           {/* Chat Button */}
-          {currentUser && currentUser.id !== seller.id && (
+          {currentUser && seller?.id && currentUser.id !== seller.id && (
             <ChatButton
               senderId={currentUser.id}
               receiverId={seller.id}

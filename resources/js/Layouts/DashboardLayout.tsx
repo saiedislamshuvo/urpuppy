@@ -27,8 +27,7 @@ const NavigationSettings = [
     },
     {
         name: 'My Subscription',
-        route: '/profile',
-        routeParam: 'tab=My Subscription',
+        route: '/my-subscription',
         logo: '../images/svgs/icon-card.svg',
         showForRoles: ['seller', 'breeder']
     },
@@ -51,6 +50,12 @@ const NavigationSettings = [
         routeParam: 'tab=My Puppies',
         logo: '../images/svgs/icon-paws-dark.svg',
         showForRoles: ['seller', 'breeder']
+    },
+    {
+        name: 'My Media',
+        route: '/my-media',
+        logo: '../images/svgs/icon-video-display-dark.svg',
+        showForRoles: ['breeder']
     },
     {
         name: 'Chat',

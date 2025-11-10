@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\MustVerifyPhone;
 use App\Observers\UserObserver;
 use Carbon\Carbon;
 use Cog\Contracts\Love\Reacterable\Models\Reacterable as ReacterableInterface;
@@ -34,7 +35,7 @@ use Spatie\Sitemap\Tags\Url;
 #[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements FilamentUser, HasMedia, HasName, HasAvatar, MustVerifyEmail, ReacterableInterface, Sitemapable
 {
-    use Billable, Favoriter, HasFactory, HasRoles, InteractsWithMedia, Notifiable, Reacterable;
+    use Billable, Favoriter, HasFactory, HasRoles, InteractsWithMedia, MustVerifyPhone, Notifiable, Reacterable;
     use Impersonate;
     use SoftDeletes;
 
@@ -62,13 +63,20 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
         'is_seller',
         'stripe_id',
         'phone',
+        'phone_verified_at',
+        'phone_verification_code',
+        'phone_verification_code_expires_at',
         'company_name',
         'company_address',
         'company_established_on',
         'company_phone',
+        'company_phone_verified_at',
+        'company_phone_verification_code',
+        'company_phone_verification_code_expires_at',
         'company_email_address',
         'company_zip_code',
         'profile_completed',
+        'breeder_profile_completed',
         'company_city_id',
         'company_city',
         'city',
@@ -89,6 +97,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
         'short_state',
         'street',
         'company_street',
+        'company_house_no',
         'company_state',
         'company_short_state',
         'gmap_address',
@@ -127,6 +136,10 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'phone_verified_at' => 'datetime',
+        'phone_verification_code_expires_at' => 'datetime',
+        'company_phone_verified_at' => 'datetime',
+        'company_phone_verification_code_expires_at' => 'datetime',
         'password' => 'hashed',
     ];
 
@@ -178,7 +191,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
         // Define an 'images' media collection
         $this->addMediaCollection('gallery');
 
-        /* $this->addMediaCollection('videos'); */
+        $this->addMediaCollection('videos');
     }
 
     public function getGalleryAttribute()

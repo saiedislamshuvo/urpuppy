@@ -22,6 +22,17 @@ class PuppyTraitResource extends Resource
     protected static ?string $navigationLabel = 'Puppy Traits';
 
 
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 50 ? 'success' : 'primary';
+    }
+
+
     public static function getNavigationSort(): ?int
     {
         return 5;

@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Mail\SubscriptionExpired;
+use App\Models\Puppy;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -41,11 +42,33 @@ class HandleSubscriptionDeleted
                 'subscription_id' => $subscription['id'],
             ]);
 
-            // Update user status if needed
-            $user->is_breeder = false;
-            $user->is_seller = false;
+            // Check if user has any other active subscriptions
+            $hasActiveSubscription = $user->getActiveSubscriptions()
+                ->where('stripe_id', '!=', $subscription['id'])
+                ->isNotEmpty();
 
-            $user->save();
+            // Only update user status and pause listings if no other active subscriptions
+            if (!$hasActiveSubscription) {
+                // Update user status if needed
+                $user->is_breeder = false;
+                $user->is_seller = false;
+                $user->save();
+
+                // Pause all published puppy listings
+                $publishedPuppies = Puppy::where('user_id', $user->id)
+                    ->where('status', 'published')
+                    ->whereNull('paused_at')
+                    ->get();
+
+                foreach ($publishedPuppies as $puppy) {
+                    $puppy->markAsPaused();
+                }
+
+                Log::info('Paused listings due to subscription expiration', [
+                    'user_id' => $user->id,
+                    'puppies_paused' => $publishedPuppies->count(),
+                ]);
+            }
 
             // Send expiration email
             Mail::queue(new SubscriptionExpired($user));

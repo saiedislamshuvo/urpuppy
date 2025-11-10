@@ -19,12 +19,13 @@ class PuppyCardData extends Data
         public ?bool $is_favorite,
         public ?bool $is_compared,
         public ?bool $is_new,
+        public ?bool $is_sold,
         public string $age,
         public int $view_count,
         /** @var \App\Data\BreedData[] */
         public DataCollection $breeds,
 
-        public BreederData $seller,
+        public ?BreederData $seller,
         public ?string $state,
     ) {}
 

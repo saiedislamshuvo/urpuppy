@@ -67,8 +67,8 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
                             <h2 className="fs-10 mb-0">{puppy.name}</h2>
                             <div className="d-flex gap-2">
 
-                              <FavoriteButton sellerId={puppy.seller.id} puppyId={puppy.id} isFavorite={puppy.is_favorite} />
-                              <CompareButton sellerId={puppy.seller.id} puppyId={puppy.id} isCompared={puppy.is_compared} />
+                              <FavoriteButton sellerId={puppy.seller?.id} puppyId={puppy.id} isFavorite={puppy.is_favorite} />
+                              <CompareButton sellerId={puppy.seller?.id} puppyId={puppy.id} isCompared={puppy.is_compared} />
 
                               <Tooltip content={
                                 <a
@@ -99,7 +99,7 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
                             <div className="col-6 col-md-4 mb-6 border-end">
                               <div className="d-flex align-items-center gap-2">
                                 <img src="../images/svgs/icon-map-pin.svg" alt="map" width="18" height="18" />
-                                <p className="mb-0 fs-2">{puppy.seller.address}</p>
+                                <p className="mb-0 fs-2">{puppy.seller?.address || 'Location not available'}</p>
                               </div>
                             </div>
                             <div className="col-6 col-md-4 mb-6 border-end">
@@ -197,35 +197,35 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
 
 
                 {
-                  puppy.seller.is_breeder &&
+                  puppy.seller?.is_breeder &&
                   <div className="card position-relative overflow-hidden border">
                     <div className="row">
                       <div className="col-xl-4 d-flex align-items-lg-stretch">
-                        <Link href={`/breeders/${puppy.seller.slug}`} className="trusted-breeders-img position-relative overflow-hidden w-100 text-center p-4">
-                          <img className="object-fit-cover rounded-circle position-relative overflow-hidden" src={puppy.seller.company_logo ?? ""} alt={puppy.seller.kennel_name ?? 'company logo'} width="230" height="230" />
+                        <Link href={`/breeders/${puppy.seller?.slug}`} className="trusted-breeders-img position-relative overflow-hidden w-100 text-center p-4">
+                          <img className="object-fit-cover rounded-circle position-relative overflow-hidden" src={puppy.seller?.company_logo ?? ""} alt={puppy.seller?.kennel_name ?? 'company logo'} width="230" height="230" />
                         </Link>
                       </div>
                       <div className="col-xl-8 d-flex align-items-lg-stretch">
                         <div className="trusted-breeders-details card-body ps-xl-0 pe-4 d-flex align-items-start justify-content-between gap-3">
                           <div>
-                            <Link href={`/breeders/${puppy.seller.slug}`}>
+                            <Link href={`/breeders/${puppy.seller?.slug}`}>
                               <h6 className="btn-link fs-8 font-work-sans mb-6">Offered By</h6>
                             </Link>
                             <div className="company-details mb-3">
                               <div className="hstack gap-6 mb-6">
                                 <p className="mb-0 fw-medium text-dark">Name:</p>
-                                <p className="mb-0">{puppy.seller.kennel_name}</p>
+                                <p className="mb-0">{puppy.seller?.kennel_name || 'N/A'}</p>
                               </div>
                               <div className="hstack gap-6 mb-6">
                                 <p className="mb-0 fw-medium text-dark">Address:</p>
-                                <p className="mb-0">{puppy.seller.company_address}</p>
+                                <p className="mb-0">{puppy.seller?.company_address || 'N/A'}</p>
                               </div>
                               <div className="hstack gap-6">
                                 <p className="mb-0 fw-medium text-dark">Years in Business:</p>
-                                <p className="mb-0">{puppy.seller.company_established_on_label}</p>
+                                <p className="mb-0">{puppy.seller?.company_established_on_label || 'N/A'}</p>
                               </div>
                             </div>
-                            <Link href={`/breeders/${puppy.seller.slug}`} className="btn btn-outline-extralight border btn-white text-dark">View More</Link>
+                            <Link href={`/breeders/${puppy.seller?.slug}`} className="btn btn-outline-extralight border btn-white text-dark">View More</Link>
                           </div>
                         </div>
                       </div>
@@ -237,7 +237,7 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
 
               </div>
               <div className="col-lg-4 col-xl-3">
-                <SellerCard seller={puppy.seller} />
+                {puppy.seller && <SellerCard seller={puppy.seller} />}
 
                 {siblings.length > 0 &&
                   <div className="card border">

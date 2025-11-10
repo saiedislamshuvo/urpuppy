@@ -1,185 +1,223 @@
-# Registration Flow Optimization - Implementation Plan
+# Missing Features Implementation Plan
 
-## Current Status Analysis
+## 📋 Features to Implement
 
-### ✅ Already Working:
-1. Role selection in registration (buyer/seller/breeder)
-2. Email verification display in profile screen
-3. User table has location columns
-4. Google Maps integration exists
+### **Priority 1: Critical Before Launch** 🔴
 
-### ❌ Needs Fixing:
-1. Buyer role logic (both flags should be false) - **FIXED**
-2. Profile completion enforcement before listings
-3. Plan subscription enforcement before listings
-4. Map provider selection (hardcoded Google Maps)
-5. Puppy listing management (needs new controller)
-6. Location in puppy form
+#### 1. Enable reCAPTCHA
+- **What:** Uncomment and activate reCAPTCHA validation in listing forms
+- **Files to modify:**
+  - `app/Http/Controllers/BreederListingController.php`
+  - `app/Http/Requests/PuppyListingRequest.php` (if needed)
+- **Effort:** ~15 minutes
+- **Risk:** Low
 
----
+#### 2. Mark as Sold Feature
+- **What:** Add ability to mark listings as sold
+- **Implementation:**
+  - Add `sold_at` timestamp field to `puppies` table
+  - Update `PuppyStatus` enum to include `SOLD`
+  - Add "Mark as Sold" button in listing management
+  - Filter out sold listings from public search (or show as sold)
+  - Update admin panel to show sold status
+- **Files to create/modify:**
+  - Migration: `add_sold_at_to_puppies_table.php`
+  - `app/Enum/PuppyStatus.php` - Add SOLD case
+  - `app/Models/Puppy.php` - Add sold_at field, scope for sold
+  - `app/Http/Controllers/PuppyListingController.php` - Add markAsSold method
+  - `app/Filament/Resources/PuppyResource.php` - Add sold filter
+  - Frontend: Add sold button in listing management pages
+- **Effort:** ~2-3 hours
+- **Risk:** Low
 
-## Implementation Tasks
-
-### Phase 1: Registration & Role Logic ✅
-- [x] Fix buyer role to set both is_seller and is_breeder to false
-- [ ] Verify role selection flow works correctly
-
-### Phase 2: Profile Completion Enforcement
-- [ ] Add middleware/check to enforce profile completion
-- [ ] Update profile completion logic
-- [ ] Add redirects when trying to list without profile completion
-- [ ] Update profile screen to show completion status
-
-### Phase 3: Plan Subscription Enforcement
-- [ ] Add middleware/check to enforce plan subscription for sellers/breeders
-- [ ] Update plan checks in listing routes
-- [ ] Add redirects to plan pages when needed
-- [ ] Update validation based on plan limits
-
-### Phase 4: Puppy Listing Management
-- [ ] Create PuppyListingController
-- [ ] Create new routes for puppy listing
-- [ ] Move puppy create form to separate page
-- [ ] Create PuppyListingForm component
-- [ ] Update validation based on subscription
-
-### Phase 5: Map Integration
-- [ ] Add MAP_PROVIDER env variable
-- [ ] Create MapProvider service/helper
-- [ ] Update MapInput component to support both Google Maps and OpenStreetMap
-- [ ] Update geocode API endpoints to support both providers
-- [ ] Add location fields to puppy form
-
-### Phase 6: Location in Forms
-- [ ] Keep location in seller/breeder forms (user table has columns)
-- [ ] Add location to puppy create form
-- [ ] Default to user location, allow override
+#### 3. Pause Listing Feature
+- **What:** Add ability to pause listings (temporary hide without deleting)
+- **Implementation:**
+  - Add `paused_at` timestamp field to `puppies` table
+  - Update `PuppyStatus` enum to include `PAUSED`
+  - Add "Pause/Resume" button in listing management
+  - Filter out paused listings from public search
+  - Update admin panel
+- **Files to create/modify:**
+  - Migration: `add_paused_at_to_puppies_table.php`
+  - `app/Enum/PuppyStatus.php` - Add PAUSED case
+  - `app/Models/Puppy.php` - Add paused_at field, scope
+  - `app/Http/Controllers/PuppyListingController.php` - Add pause/resume methods
+  - `app/Filament/Resources/PuppyResource.php` - Add paused filter
+  - Frontend: Add pause/resume buttons
+- **Effort:** ~2-3 hours
+- **Risk:** Low
 
 ---
 
-## Detailed Implementation Steps
+### **Priority 2: Important Enhancements** 🟡
 
-### Step 1: Fix Registration Flow
-**File: `app/Http/Controllers/Auth/RegisteredUserController.php`**
-- ✅ Ensure buyer sets both flags to false
-- Update redirect logic after registration
+#### 4. Enhanced Dashboard Analytics
+- **What:** Add detailed tracking to breeder/seller dashboard
+- **Implementation:**
+  - Show listing view counts per puppy
+  - Show message count/inquiries per listing
+  - Add performance metrics (views, inquiries, conversion)
+  - Add charts/graphs for analytics
+- **Files to create/modify:**
+  - `app/Http/Controllers/DashboardController.php` - Enhance statistics
+  - `app/Models/Puppy.php` - Already has view_count, just need to display
+  - `app/Models/Chat.php` - Count messages per puppy
+  - Frontend: `resources/js/Pages/Dashboard.tsx` - Add analytics section
+- **Effort:** ~3-4 hours
+- **Risk:** Low
 
-### Step 2: Profile Completion Enforcement
-**Files to Update:**
-- `app/Http/Middleware/EnsureProfileCompleted.php` (new)
-- `app/Http/Controllers/SellerController.php`
-- `app/Http/Controllers/ProfileController.php`
-- Routes file
+#### 5. Homepage Banner Management
+- **What:** Allow admins to manage homepage banners
+- **Implementation:**
+  - Create `Banner` model and migration
+  - Create Filament `BannerResource` for admin management
+  - Add banner display logic on homepage
+  - Support image upload, ordering, active/inactive status
+- **Files to create:**
+  - Migration: `create_banners_table.php`
+  - `app/Models/Banner.php`
+  - `app/Filament/Resources/BannerResource.php`
+  - `app/Http/Controllers/HomeController.php` - Load banners
+  - Frontend: Update homepage to display banners
+- **Effort:** ~3-4 hours
+- **Risk:** Low
 
-**Logic:**
-- Check `profile_completed` flag
-- If false, redirect to profile completion
-- Show completion status in profile screen
-
-### Step 3: Plan Enforcement
-**Files to Update:**
-- `app/Http/Middleware/EnsureHasPlan.php` (new)
-- `app/Http/Controllers/SellerController.php`
-- Routes file
-
-**Logic:**
-- For sellers/breeders, check if they have active plan
-- If no plan, redirect to plans page
-- Enforce listing limits based on plan
-
-### Step 4: Create PuppyListingController
-**New Files:**
-- `app/Http/Controllers/PuppyListingController.php`
-- `resources/js/Pages/PuppyListing/Create.tsx`
-- `resources/js/Pages/PuppyListing/Edit.tsx`
-- `resources/js/Components/Forms/PuppyListingForm.tsx`
-
-**Routes:**
-- GET `/puppies/create` - Show create form
-- POST `/puppies` - Store new puppy
-- GET `/puppies/{id}/edit` - Show edit form
-- PUT `/puppies/{id}` - Update puppy
-- DELETE `/puppies/{id}` - Delete puppy
-
-### Step 5: Map Provider Support
-**Files to Update:**
-- `.env.example` - Add MAP_PROVIDER
-- `config/services.php` - Add map provider config
-- `resources/js/Components/MapInput.tsx` - Support both providers
-- `routes/api.php` - Update geocode endpoints
-
-**Map Providers:**
-- Google Maps (existing)
-- OpenStreetMap (new - using Leaflet or similar)
-
-### Step 6: Location in Puppy Form
-**Files to Update:**
-- `resources/js/Components/Forms/PuppyListingForm.tsx`
-- `app/Http/Requests/PuppyListingRequest.php` (new)
-- `app/Models/Puppy.php` - Add location columns if needed
-- Migration for puppy location fields
+#### 6. Support Ticket System
+- **What:** Convert contact form into a proper ticket system
+- **Implementation:**
+  - Add status field (open, in-progress, resolved) to contacts table
+  - Add assigned_to field for admin assignment
+  - Add priority field (low, medium, high)
+  - Add comments/replies system
+  - Update Filament ContactResource with ticket management
+- **Files to create/modify:**
+  - Migration: `add_ticket_fields_to_contacts_table.php`
+  - `app/Models/Contact.php` - Add relationships, scopes
+  - `app/Filament/Resources/ContactResource.php` - Enhance with ticket features
+  - `app/Http/Controllers/ContactController.php` - Add ticket actions
+- **Effort:** ~4-5 hours
+- **Risk:** Medium (affects existing contact form)
 
 ---
 
-## Database Changes Needed
+### **Priority 3: Optional Features** 🟢
 
-### Puppies Table
-- Add location columns (if not exists):
-  - `location_city` (string, nullable)
-  - `location_state` (string, nullable)
-  - `location_zip_code` (string, nullable)
-  - `location_address` (text, nullable)
-  - `location_lat` (decimal, nullable)
-  - `location_lng` (decimal, nullable)
+#### 7. SMS Alerts (Optional)
+- **What:** Add SMS notifications for premium users
+- **Implementation:**
+  - Integrate Twilio or similar SMS service
+  - Add SMS notification preferences in user settings
+  - Create SMS notification classes
+  - Add SMS sending for key events (new message, listing inquiry)
+- **Files to create/modify:**
+  - Add Twilio package: `composer require twilio/sdk`
+  - `config/services.php` - Add Twilio config
+  - `app/Services/SmsService.php` - New service
+  - `app/Notifications/SmsNotification.php` - New notification class
+  - `app/Models/User.php` - Add SMS preferences
+  - Migration: `add_sms_preferences_to_users_table.php`
+- **Effort:** ~4-5 hours
+- **Risk:** Medium (requires external service, costs money)
+- **Note:** Requires Twilio account and API keys
 
----
-
-## Environment Variables
-
-Add to `.env`:
-```
-MAP_PROVIDER=google  # or 'openstreetmap'
-GOOGLE_MAPS_KEY=your_key_here
-```
-
----
-
-## Route Changes
-
-### New Routes:
-```php
-// Puppy Listing Routes
-Route::get('/puppies/create', [PuppyListingController::class, 'create'])
-    ->middleware(['auth', 'verified', 'profile.completed', 'has.plan'])
-    ->name('puppies.create');
-Route::post('/puppies', [PuppyListingController::class, 'store'])
-    ->middleware(['auth', 'verified', 'profile.completed', 'has.plan'])
-    ->name('puppies.store');
-Route::get('/puppies/{id}/edit', [PuppyListingController::class, 'edit'])
-    ->middleware(['auth', 'verified', 'profile.completed', 'has.plan'])
-    ->name('puppies.edit');
-Route::put('/puppies/{id}', [PuppyListingController::class, 'update'])
-    ->middleware(['auth', 'verified', 'profile.completed', 'has.plan'])
-    ->name('puppies.update');
-Route::delete('/puppies/{id}', [PuppyListingController::class, 'destroy'])
-    ->middleware(['auth', 'verified'])
-    ->name('puppies.destroy');
-```
-
-### Middleware:
-- `profile.completed` - Check if profile is completed
-- `has.plan` - Check if user has active plan (for sellers/breeders)
+#### 8. Affiliate/Referral Program (Optional)
+- **What:** Implement referral system for users
+- **Implementation:**
+  - Create referrals table (referrer_id, referred_id, code, commission, status)
+  - Generate unique referral codes for users
+  - Track referrals and commissions
+  - Add referral dashboard
+  - Add referral links/buttons
+- **Files to create:**
+  - Migration: `create_referrals_table.php`
+  - `app/Models/Referral.php`
+  - `app/Http/Controllers/ReferralController.php`
+  - `app/Services/ReferralService.php`
+  - Frontend: Referral dashboard and links
+- **Effort:** ~6-8 hours
+- **Risk:** Medium (complex feature, needs business logic)
 
 ---
 
-## Next Steps
+## 🎯 Recommended Implementation Order
 
-1. Create middleware for profile completion
-2. Create middleware for plan enforcement
-3. Create PuppyListingController
-4. Update map component
-5. Add location to puppy form
-6. Update routes
-7. Test the flow
+### Phase 1: Critical (Before Launch) - ~5-6 hours
+1. ✅ Enable reCAPTCHA
+2. ✅ Mark as Sold Feature
+3. ✅ Pause Listing Feature
 
+### Phase 2: Important (Post-Launch Enhancement) - ~10-13 hours
+4. ✅ Enhanced Dashboard Analytics
+5. ✅ Homepage Banner Management
+6. ✅ Support Ticket System
 
+### Phase 3: Optional (Future) - ~10-13 hours
+7. ⚪ SMS Alerts (if needed)
+8. ⚪ Affiliate/Referral Program (if needed)
+
+---
+
+## ❓ Questions for You
+
+Before I start implementing, please confirm:
+
+1. **Which features do you want me to implement?**
+   - [ ] All Priority 1 (Critical)
+   - [ ] All Priority 1 + Priority 2
+   - [ ] All features
+   - [ ] Custom selection (please specify)
+
+2. **For "Mark as Sold":**
+   - Should sold listings be completely hidden from search?
+   - Or should they show with a "Sold" badge/status?
+   - Should sold listings be visible in seller's dashboard?
+
+3. **For "Pause Listing":**
+   - Should paused listings be completely hidden?
+   - Or show as "Temporarily Unavailable"?
+   - Auto-resume after X days, or manual only?
+
+4. **For Dashboard Analytics:**
+   - What specific metrics are most important?
+   - Do you want charts/graphs or just numbers?
+   - Time range for analytics (last 7 days, 30 days, all time)?
+
+5. **For Homepage Banners:**
+   - How many banners should be displayed?
+   - Should they rotate/cycle?
+   - Any specific banner sizes/requirements?
+
+6. **For Support Tickets:**
+   - Should it replace the existing contact form or be separate?
+   - Do you need email notifications when tickets are created/updated?
+   - Should users be able to view their own tickets?
+
+7. **For SMS Alerts:**
+   - Do you have a Twilio account or prefer another service?
+   - Which events should trigger SMS? (new message, listing inquiry, etc.)
+   - Should it be opt-in only?
+
+8. **For Affiliate Program:**
+   - What should trigger a referral? (registration, subscription purchase, etc.)
+   - What type of commission? (percentage, fixed amount, free month, etc.)
+   - Should it be automatic or require approval?
+
+---
+
+## 📝 Implementation Approach
+
+Once you confirm, I will:
+
+1. Create a TODO list to track progress
+2. Implement features one by one in the order you specify
+3. Test each feature before moving to the next
+4. Update documentation as I go
+5. Provide clear commit messages for each change
+
+**Please review and let me know:**
+- Which features to implement
+- Answers to the questions above
+- Any specific requirements or preferences
+
+Then I'll start implementing! 🚀

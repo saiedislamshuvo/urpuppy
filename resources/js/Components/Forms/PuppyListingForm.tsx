@@ -148,18 +148,27 @@ const PuppyListingForm = ({
                             </div>
                             <div className="col-lg-6">
                                 <div className="mb-4">
+                                    <InputLabel value="Breeds" isRequired={true} />
+                                    <SelectInput value={data.puppy_breeds ?? []} setData={setData} multiple={true} name="puppy_breeds" options={breeds} />
+                                    {errors.puppy_breeds && <InputError message={errors.puppy_breeds} />}
+                                </div>
+                            </div>
+                            <div className="col-lg-6">
+                                <div className="mb-4">
+                                    <InputLabel value="Date of Birth" isRequired={true} />
+                                    <div>
+                                        <DateInput name="puppy_birth_date" setData={setData} value={data.puppy_birth_date ?? ''} />
+                                        {errors.puppy_birth_date && <InputError message={errors.puppy_birth_date} />}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-6">
+                                <div className="mb-4">
                                     <InputLabel value="Gender" isRequired={true} />
                                     <select value={data.puppy_gender ?? 'Male'} onChange={(e) => setData('puppy_gender', e.target.value)} className="form-select shadow-none" aria-label="Default select example">
                                         <option value="Male" >Male</option>
                                         <option value="Female">Female</option>
                                     </select>
-                                </div>
-                            </div>
-                            <div className="col-lg-6">
-                                <div className="mb-4">
-                                    <InputLabel value="Breeds" isRequired={true} />
-                                    <SelectInput value={data.puppy_breeds ?? []} setData={setData} multiple={true} name="puppy_breeds" options={breeds} />
-                                    {errors.puppy_breeds && <InputError message={errors.puppy_breeds} />}
                                 </div>
                             </div>
                             <div className="col-lg-6">
@@ -174,15 +183,6 @@ const PuppyListingForm = ({
                                     <InputLabel value="Color" isRequired={true} />
                                     <SelectInput value={data.puppy_colors ?? []} setData={setData} multiple={true} name="puppy_colors" options={colors} />
                                     {errors.puppy_colors && <InputError message={errors.puppy_colors} />}
-                                </div>
-                            </div>
-                            <div className="col-lg-6">
-                                <div className="mb-4">
-                                    <InputLabel value="Date of Birth" isRequired={true} />
-                                    <div>
-                                        <DateInput name="puppy_birth_date" setData={setData} value={data.puppy_birth_date ?? ''} />
-                                        {errors.puppy_birth_date && <InputError message={errors.puppy_birth_date} />}
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -363,7 +363,9 @@ const PuppyListingForm = ({
                                         provider={mapProvider as any}
                                         onLocationSelect={handleLocationSelect}
                                         initialAddress={initialLocation?.address}
-                                        initialLocation={initialLocation ? { lat: initialLocation.lat, lng: initialLocation.lng } : null}
+                                        initialLocation={initialLocation && initialLocation.lat != null && initialLocation.lng != null
+                                            ? { lat: initialLocation.lat, lng: initialLocation.lng }
+                                            : null}
                                     />
                                     {errors.location_lat && <InputError message={errors.location_lat} />}
                                     {errors.location_lng && <InputError message={errors.location_lng} />}

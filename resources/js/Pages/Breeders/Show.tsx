@@ -23,6 +23,77 @@ const Show = ({ breeder, puppies, url }: {
   const { auth } = usePage().props;
   const currentUser = auth?.user as any;
 
+  // Format address as: Street number street address city, state ZIP Code (5 digits)
+  // Fallback: company fields -> base user fields
+  const formatAddress = () => {
+    const addressParts: string[] = [];
+
+    // Street number (company_house_no)
+    const houseNo = breeder.company_house_no ?? '';
+
+    // Street address (company_street -> street -> company_address -> address)
+    const street = breeder.company_street ?? breeder.street ?? breeder.company_address ?? breeder.address ?? '';
+
+    // Combine street number and street address
+    const streetAddress = [houseNo, street].filter(Boolean).join(' ').trim();
+    if (streetAddress) {
+      addressParts.push(streetAddress);
+    }
+
+    // City (company_city -> city)
+    const city = breeder.company_city ?? breeder.city ?? '';
+    if (city) {
+      addressParts.push(city.trim());
+    }
+
+    // State (company_short_state -> company_state -> short_state -> state)
+    const state = breeder.company_short_state ?? breeder.company_state ?? breeder.short_state ?? breeder.state ?? '';
+    if (state) {
+      // Add comma before state if we have a city
+      if (city) {
+        addressParts.push(', ' + state.trim());
+      } else {
+        addressParts.push(state.trim());
+      }
+    }
+
+    // ZIP Code (company_zip_code -> zip_code, ensure 5 digits only)
+    const zipCode = breeder.company_zip_code ?? breeder.zip_code ?? '';
+    if (zipCode) {
+      const zip = zipCode.replace(/\D/g, '').slice(0, 5);
+      if (zip) {
+        addressParts.push(zip);
+      }
+    }
+
+    // Join all parts with spaces: "Street number street address city, state ZIP Code"
+    return addressParts.join(' ').trim() || '';
+  };
+
+  // Format city and state only for card display
+  // Fallback: company fields -> base user fields
+  const formatCityState = () => {
+    const parts: string[] = [];
+
+    // City (company_city -> city)
+    const city = breeder.company_city ?? breeder.city ?? '';
+    if (city) {
+      parts.push(city.trim());
+    }
+
+    // State (company_short_state -> company_state -> short_state -> state)
+    const state = breeder.company_short_state ?? breeder.company_state ?? breeder.short_state ?? breeder.state ?? '';
+    if (state) {
+      if (city) {
+        parts.push(', ' + state.trim());
+      } else {
+        parts.push(state.trim());
+      }
+    }
+
+    return parts.join('').trim() || '';
+  };
+
   return (
     <Layout>
 
@@ -61,26 +132,26 @@ const Show = ({ breeder, puppies, url }: {
                       </div>
                       <div className="col-xl-5">
                         <div className="top-picks-details">
-                          <div className="about-golden-paws-breeders mb-4 pb-4 border-bottom">
-                            <h3 className="mb-3 fs-8">About {breeder.company_name}</h3>
-                            <p className="mb-6">
-                              {breeder.company_about}
-                            </p>
-                          </div>
-                          <div className="company-details">
+                          <div className="company-details mb-4 pb-4 border-bottom">
                             <h3 className="mb-6 fs-8">Company Details</h3>
                             <div className="hstack gap-6 mb-6">
                               <p className="mb-0 fw-medium text-dark">Name:</p>
-                              <p className="mb-0">{breeder.company_name}</p>
+                              <p className="mb-0">{breeder.company_name ?? breeder.full_name ?? ''}</p>
                             </div>
                             <div className="hstack gap-6 mb-6">
                               <p className="mb-0 fw-medium text-dark">Address:</p>
-                              <p className="mb-0">{breeder.company_address}</p>
+                              <p className="mb-0">{formatAddress() || 'N/A'}</p>
                             </div>
                             <div className="hstack gap-6">
                               <p className="mb-0 fw-medium text-dark">Years in Business:</p>
-                              <p className="mb-0">{breeder.company_established_on_label}</p>
+                              <p className="mb-0">{breeder.company_established_on_label ?? 'N/A'}</p>
                             </div>
+                          </div>
+                          <div className="about-golden-paws-breeders mb-4 pb-4 border-bottom">
+                            <h3 className="mb-3 fs-8">About {breeder.company_name ?? breeder.full_name ?? 'Breeder'}</h3>
+                            <p className="mb-6">
+                              {breeder.company_about ?? breeder.description ?? 'No description available.'}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -99,7 +170,6 @@ const Show = ({ breeder, puppies, url }: {
                         <Button href={`/all-puppies/${breeder.slug}`} variant="white" >See All Listings</Button>
                       </div>
                     </div>
-
                   }
 
                   <div className="row">
@@ -116,7 +186,7 @@ const Show = ({ breeder, puppies, url }: {
                       <h5 className="mb-6 fs-5 mb-3 pb-1">{breeder.first_name}'s reviews</h5>
                       <div className="andrews-reviews-sloder position-relative">
                         <div className="owl-carousel owl-theme">
-                          <ReviewSlider children={
+                          <ReviewSlider slidesPerView={1} children={
                             breeder.comments?.map((comment: App.Data.CommentData, index: number) => (
                               <ReviewCard key={index} comment={comment} />
                             ))
@@ -134,18 +204,28 @@ const Show = ({ breeder, puppies, url }: {
               </div>
               <div className="col-lg-4 col-xl-3">
                 <SellerCard seller={{
+                  id: breeder.id,
                   slug: breeder.slug,
                   full_name: breeder.full_name,
                   is_breeder: breeder.is_breeder,
+                  is_seller: breeder.is_seller,
                   email: breeder.email,
                   avatar: breeder.avatar,
-                  phone: breeder?.phone ?? "",
-                  address: breeder.address,
+                  phone: breeder.company_phone ?? breeder.phone ?? null,
+                  phone_formatted: breeder.company_phone ?? breeder.phone ?? null,
+                  address: formatCityState(),
+                  short_address: formatCityState(),
                   member_since: breeder.member_since,
+                  breeds: breeder.breeds ?? null,
                   social_x: breeder.social_x,
                   social_tiktok: breeder.social_tiktok,
                   social_ig: breeder.social_ig,
                   social_fb: breeder.social_fb,
+                  website: breeder.website,
+                  kennel_name: null,
+                  company_address: null,
+                  company_established_on_label: null,
+                  company_logo: breeder.company_logo,
 
                 } as App.Data.BreederData} />
 
@@ -255,3 +335,4 @@ const Show = ({ breeder, puppies, url }: {
 }
 
 export default Show
+

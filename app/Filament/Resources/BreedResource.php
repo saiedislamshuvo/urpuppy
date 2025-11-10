@@ -32,6 +32,16 @@ class BreedResource extends Resource
     protected static ?string $navigationLabel = 'Puppies Breeds';
     protected static ?string $recordTitleAttribute = 'name';
 
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 50 ? 'success' : 'primary';
+    }
+
     public static function getNavigationSort(): ?int
     {
         return 2;

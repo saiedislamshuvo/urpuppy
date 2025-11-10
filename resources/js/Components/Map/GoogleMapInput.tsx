@@ -33,30 +33,44 @@ interface GoogleMapInputProps {
         zipCode: string;
     }) => void;
     initialAddress?: string;
-    initialLocation?: { lat: number; lng: number } | null;
+    initialLocation?: { lat: number | null; lng: number | null } | null;
+    skipInitialLocationSelect?: boolean;
 }
 
 const mapContainerStyle = { width: "100%", height: "400px" };
-const center: Location = { lat: 37.7749, lng: -122.4194 }; // Default to San Francisco
+const center: Location = { lat: 39.8283, lng: -98.5795 }; // Center of USA
+const usaBounds = {
+    north: 49.38,
+    south: 24.39,
+    west: -124.84,
+    east: -66.94,
+};
 
 const GoogleMapInput: React.FC<GoogleMapInputProps> = ({
     onLocationSelect,
     initialAddress: propInitialAddress,
     initialLocation: propInitialLocation,
+    skipInitialLocationSelect = false,
 }) => {
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: "AIzaSyAouIjqr5Keqg40KQm9LT0uY-wZUAcT7oc",
         libraries: ["places"], // Required for autocomplete
     });
 
-    // Use initialLocation if provided, otherwise use center
-    const defaultCenter = propInitialLocation ? { lat: propInitialLocation.lat, lng: propInitialLocation.lng } : center;
-    const [marker, setMarker] = useState<Location | null>(defaultCenter);
+    // Use initialLocation if provided and valid, otherwise use center
+    const hasInitialLocation = propInitialLocation && propInitialLocation.lat != null && propInitialLocation.lng != null;
+    const defaultCenter = hasInitialLocation && propInitialLocation.lat != null && propInitialLocation.lng != null
+        ? { lat: propInitialLocation.lat, lng: propInitialLocation.lng }
+        : center;
+    const [marker, setMarker] = useState<Location | null>(hasInitialLocation ? defaultCenter : null);
+    const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
     const [address, setAddress] = useState<string>("");
     const [error, setError] = useState<string>("");
     const searchBoxRef = useRef<google.maps.places.SearchBox | null>();
     const inputRef = useRef<HTMLInputElement | null>(null); // Ref for the input field
     const [initialAddress, setInitialAddress] = useState<string | undefined>(propInitialAddress);
+    const lastFetchedLocation = useRef<{ lat: number; lng: number } | null>(null);
+    const hasFetchedInitial = useRef<boolean>(false);
 
     useEffect(() => {
         // Inject CSS to hide Google branding & UI elements
@@ -77,6 +91,16 @@ const GoogleMapInput: React.FC<GoogleMapInputProps> = ({
     }, []);
 
     const fetchAddress = useCallback(async ({ lat, lng }: Location) => {
+        // Check if we've already fetched for this exact location
+        if (lastFetchedLocation.current &&
+            Math.abs(lastFetchedLocation.current.lat - lat) < 0.0001 &&
+            Math.abs(lastFetchedLocation.current.lng - lng) < 0.0001) {
+            return; // Skip if same location
+        }
+
+        // Update last fetched location
+        lastFetchedLocation.current = { lat, lng };
+
         try {
             const response = await fetch(`/api/reverse-geocode?lat=${lat}&lng=${lng}`);
             const data = await response.json();
@@ -122,6 +146,8 @@ const GoogleMapInput: React.FC<GoogleMapInputProps> = ({
                 // Combine street number and route, trim to remove any extra spaces
                 addressDetails.street = `${streetNumber} ${route}`.trim();
 
+                // Always call onLocationSelect - the handler will decide what to update
+                // If skipInitialLocationSelect is true, handler will only update lat/lng
                 onLocationSelect({ address: formattedAddress, lat, lng, ...addressDetails });
             }
         } catch (error) {
@@ -130,16 +156,37 @@ const GoogleMapInput: React.FC<GoogleMapInputProps> = ({
     }, [onLocationSelect]);
 
     useEffect(() => {
-        // If initialLocation is provided, use it directly
-        if (propInitialLocation) {
-            const location: Location = { lat: propInitialLocation.lat, lng: propInitialLocation.lng };
-            setMarker(location);
-            // Fetch address for the initial location
-            fetchAddress(location);
-        } else if (initialAddress) {
-            fetchCoordinates(initialAddress);
+        // Only fetch on initial load, not on every prop change
+        if (!hasFetchedInitial.current) {
+            // If initialLocation is provided and valid, use it directly
+            if (propInitialLocation && propInitialLocation.lat != null && propInitialLocation.lng != null) {
+                const location: Location = { lat: propInitialLocation.lat, lng: propInitialLocation.lng };
+                setMarker(location);
+                // Fetch address for the initial location only once
+                fetchAddress(location);
+                hasFetchedInitial.current = true;
+            } else if (initialAddress) {
+                fetchCoordinates(initialAddress);
+                hasFetchedInitial.current = true;
+            }
         }
-    }, [initialAddress, propInitialLocation, fetchAddress]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Only run once on mount - we intentionally don't want to re-run on prop changes
+
+    // Fit bounds to USA when map loads and there's no marker
+    useEffect(() => {
+        if (mapRef && !marker) {
+            const hasInitialLocation = propInitialLocation && propInitialLocation.lat != null && propInitialLocation.lng != null;
+            if (!hasInitialLocation && !initialAddress) {
+                // Fit bounds to show USA when no location data
+                const bounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng(usaBounds.south, usaBounds.west),
+                    new google.maps.LatLng(usaBounds.north, usaBounds.east)
+                );
+                mapRef.fitBounds(bounds);
+            }
+        }
+    }, [mapRef, marker, propInitialLocation, initialAddress]);
 
     const fetchCoordinates = async (address: string) => {
         try {
@@ -201,16 +248,16 @@ const GoogleMapInput: React.FC<GoogleMapInputProps> = ({
         };
         setMarker(newLocation);
         fetchAddress(newLocation);
-    }, []);
+    }, [fetchAddress]);
 
-    const handleMarkerDragEnd = (event: google.maps.MapMouseEvent) => {
+    const handleMarkerDragEnd = useCallback((event: google.maps.MapMouseEvent) => {
         const newLocation: Location = {
             lat: event?.latLng?.lat() ?? 0,
             lng: event?.latLng?.lng() ?? 0,
         };
         setMarker(newLocation);
         fetchAddress(newLocation);
-    };
+    }, [fetchAddress]);
 
     // Handle when the search box is loaded
     const onSearchBoxLoad = (ref: google.maps.places.SearchBox) => {
@@ -318,7 +365,21 @@ const GoogleMapInput: React.FC<GoogleMapInputProps> = ({
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 center={marker || center}
-                zoom={18}
+                zoom={marker ? 18 : 3}
+                onLoad={(map) => {
+                    setMapRef(map);
+                    // Fit bounds to show USA when no marker
+                    const hasInitialLocation = propInitialLocation && propInitialLocation.lat != null && propInitialLocation.lng != null;
+                    if (!marker && !hasInitialLocation && !initialAddress) {
+                        setTimeout(() => {
+                            const bounds = new google.maps.LatLngBounds(
+                                new google.maps.LatLng(usaBounds.south, usaBounds.west),
+                                new google.maps.LatLng(usaBounds.north, usaBounds.east)
+                            );
+                            map.fitBounds(bounds);
+                        }, 200);
+                    }
+                }}
                 onClick={handleMapClick}
                 options={{
                     disableDefaultUI: true, // Removes all UI elements
@@ -329,12 +390,7 @@ const GoogleMapInput: React.FC<GoogleMapInputProps> = ({
                     keyboardShortcuts: false, // Disables keyboard shortcuts
                     styles: mapStyles, // Apply custom map styles
                     restriction: {
-                        latLngBounds: {
-                            north: 49.38,
-                            south: 24.39,
-                            west: -124.84,
-                            east: -66.94,
-                        },
+                        latLngBounds: usaBounds,
                         strictBounds: true, // Prevents panning outside the bounds
                     },
                 }}

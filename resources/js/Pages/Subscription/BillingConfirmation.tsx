@@ -13,7 +13,7 @@ async function confirmPayment() {
         if (error) {
             alert("Payment failed: " + error.message);
         } else {
-            window.location.href = "/profile?tab=My Subscription";
+            window.location.href = "/my-subscription";
         }
     }
 }

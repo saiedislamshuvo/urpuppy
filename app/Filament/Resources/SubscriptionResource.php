@@ -17,6 +17,17 @@ class SubscriptionResource extends Resource
 
     protected static ?string $navigationIcon = 'phosphor-currency-circle-dollar';
     protected static ?string $navigationLabel = 'Subscriptions List';
+
+
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 50 ? 'success' : 'primary';
+    }
     
 
     protected static ?string $recordTitleAttribute = 'user.first_name';

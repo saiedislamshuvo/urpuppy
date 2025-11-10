@@ -23,6 +23,17 @@ class DiscountResource extends Resource
     protected static ?string $navigationLabel = 'Coupon Card';
 
 
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 50 ? 'success' : 'primary';
+    }
+
+
     public static function getNavigationGroup(): ?string
     {
         return 'Stripe'; // This will group the resource under "Content"

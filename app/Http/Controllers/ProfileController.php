@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\PlanData;
 use App\Data\PuppyCardData;
 use App\Data\SavedSearchData;
+use App\Data\SubscriptionData;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Resources\BreedResource;
 use App\Mail\AccountDeletionMail;
@@ -80,6 +81,53 @@ class ProfileController extends Controller
                 return null;
             }
         });
+    }
+
+    /**
+     * Display the user's subscription page.
+     */
+    public function subscription(Request $request): Response
+    {
+        $user = $request->user();
+
+        // Get active subscriptions and find premium/seller and breeder plans
+        $activeSubscriptions = $user->getActiveSubscriptions()->load('plan');
+        
+        // Find premium/seller subscription (check for 'free', 'premium', or 'seller' types)
+        $premiumSubscription = $activeSubscriptions->first(function ($subscription) {
+            if (in_array($subscription->type, ['free', 'seller'])) {
+                return true;
+            }
+            // Fallback: check plan relationship if type is not set
+            if (!$subscription->type && $subscription->plan) {
+                return in_array($subscription->plan->type, ['free', 'seller']);
+            }
+            return false;
+        });
+
+        // Find breeder subscription
+        $breederSubscription = $activeSubscriptions->first(function ($subscription) {
+            if ($subscription->type === 'breeder') {
+                return true;
+            }
+            // Fallback: check plan relationship if type is not set
+            if (!$subscription->type && $subscription->plan) {
+                return $subscription->plan->type === 'breeder';
+            }
+            return false;
+        });
+
+        return Inertia::render('Profile/MySubscription', [
+            'plan' => PlanData::optional($premiumSubscription?->plan),
+            'breeder_plan' => PlanData::optional($breederSubscription?->plan),
+            'premium_subscription' => $premiumSubscription ? SubscriptionData::from($premiumSubscription) : null,
+            'breeder_subscription' => $breederSubscription ? SubscriptionData::from($breederSubscription) : null,
+            'plan_next_billing' => $this->getStripeDate($premiumSubscription),
+            'plan_cancel_at' => $this->getStripeCancelStatus($premiumSubscription),
+            'breeder_next_billing' => $this->getStripeDate($breederSubscription),
+            'breeder_cancel_at' => $this->getStripeCancelStatus($breederSubscription),
+            'breeder_requests' => $user->breeder_requests()->latest()->first(),
+        ]);
     }
 
     /**

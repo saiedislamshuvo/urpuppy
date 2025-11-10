@@ -37,7 +37,7 @@ class Puppy extends Model implements HasMedia, Sitemapable
     /* use Searchable; */
     use Sluggable;
 
-    protected $appends = ['patterns', 'image', 'images', 'video', 'listed_on', 'age', 'short_description', 'is_favorited_by_current_user', 'thumbnails', 'preview_images', 'formatted_price', 'published_at'];
+    protected $appends = ['patterns', 'image', 'images', 'video', 'listed_on', 'age', 'short_description', 'is_favorited_by_current_user', 'thumbnails', 'preview_images', 'formatted_price', 'published_at', 'is_sold', 'is_paused'];
 
     protected $hidden = ['media'];
 
@@ -83,6 +83,48 @@ class Puppy extends Model implements HasMedia, Sitemapable
             get: fn (string $value) => $value == 'published',
             set: fn (string $value) => $value ? 'published' : 'draft',
         );
+    }
+
+    public function getIsSoldAttribute(): bool
+    {
+        return $this->sold_at !== null;
+    }
+
+    public function getIsPausedAttribute(): bool
+    {
+        return $this->paused_at !== null;
+    }
+
+    public function markAsSold(): void
+    {
+        $this->update([
+            'sold_at' => now(),
+            'status' => 'sold',
+        ]);
+    }
+
+    public function markAsPaused(): void
+    {
+        $this->update([
+            'paused_at' => now(),
+            'status' => 'paused',
+        ]);
+    }
+
+    public function resume(): void
+    {
+        $this->update([
+            'paused_at' => null,
+            'status' => 'published',
+        ]);
+    }
+
+    public function unmarkAsSold(): void
+    {
+        $this->update([
+            'sold_at' => null,
+            'status' => 'published',
+        ]);
     }
 
     public function registerMediaConversions(?Media $media = null): void
@@ -206,7 +248,9 @@ class Puppy extends Model implements HasMedia, Sitemapable
 
     public function scopeHasSubscribedUsers($query)
     {
-        $query->where('status', 'published');
+        $query->where('status', 'published')
+              ->whereNull('sold_at')
+              ->whereNull('paused_at');
 
         /* $query->whereHas('seller', function ($q) { */
 
@@ -446,6 +490,11 @@ class Puppy extends Model implements HasMedia, Sitemapable
     public function breeds()
     {
         return $this->belongsToMany(Breed::class);
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class);
     }
 
     public function reports()

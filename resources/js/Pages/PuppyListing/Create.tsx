@@ -15,7 +15,7 @@ const Create = ({ url }: { url: string }) => {
             </Head>
             <div className="space-y-4">
                 <Breadcrumb links={[
-                    { label: 'My Puppies', link: '/profile/edit?tab=My Puppies' },
+                    { label: 'My Puppies', link: '/profile?tab=My Puppies' },
                     { label: 'Create Listing', link: '#' },
                 ]} />
                 <Heading title="List your puppy" description="Create a new listing for your puppy." />

@@ -52,7 +52,7 @@ class BreederController extends Controller
 
         if ($breed && $breed != 'undefined' && $breed != 'All') {
             $query = $query->whereHas('breeds', function ($q) use ($breed) {
-                $q->where('name', $breed);
+                $q->whereRaw('LOWER(name) = ?', [strtolower($breed)]);
             });
         }
 
@@ -84,40 +84,32 @@ class BreederController extends Controller
 
         $user = $request->user();
         
-        // Get user's default location (company location if available, otherwise personal location)
-        $defaultLocation = null;
-        // Check if user has company location data or personal location
-        $hasCompanyLocation = !empty($user->company_address) || !empty($user->company_city);
-        $hasPersonalLocation = $user->lat && $user->lng;
-        
-        if ($user && ($hasCompanyLocation || $hasPersonalLocation)) {
-            // Prefer company location, fallback to personal location
-            // Note: company_lat/lng may not exist in DB, so we'll use personal lat/lng as fallback
-            $lat = ($hasCompanyLocation && property_exists($user, 'company_lat') && $user->company_lat) 
-                ? $user->company_lat 
-                : ($user->lat ?? null);
-            $lng = ($hasCompanyLocation && property_exists($user, 'company_lng') && $user->company_lng) 
-                ? $user->company_lng 
-                : ($user->lng ?? null);
-            $defaultLocation = [
-                'lat' => $lat,
-                'lng' => $lng,
-                'address' => $user->company_address ?? $user->gmap_address ?? $user->address ?? '',
-                'city' => $user->company_city ?? $user->city ?? '',
-                'street' => $user->company_street ?? $user->street ?? '',
-                'state' => $user->company_state ?? $user->state ?? '',
-                'shortState' => $user->company_short_state ?? $user->short_state ?? '',
-                'zipCode' => $user->company_zip_code ?? $user->zip_code ?? '',
-            ];
-        }
-
         $breeds = Cache::remember('breed_options', now()->addDay(), function() {
             return BreedOptionData::collect(Breed::query()->get());
         });
 
+        // Get media data
+        $gallery = $user->getMedia('gallery')->sortBy('order_column')->map(function ($media) {
+            return $media->getUrl('preview');
+        })->values()->toArray();
+        
+        $videos = $user->getMedia('videos')->map(function ($media) {
+            return $media->getUrl();
+        })->values()->toArray();
+        
+        // Get subscription limits
+        $plan = $user->is_breeder ? $user->breeder_plan?->plan : $user->premium_plan?->plan;
+        $imageLimit = $plan?->image_per_listing ?? 10;
+        $videoLimit = $plan?->video_per_listing ?? 3;
+
         return inertia('Breeders/Registration', [
             'breeds' => $breeds,
-            'defaultLocation' => $defaultLocation,
+            'gallery' => $gallery,
+            'videos' => $videos,
+            'media_limits' => [
+                'images' => $imageLimit,
+                'videos' => $videoLimit,
+            ],
         ]);
     }
 
@@ -143,54 +135,65 @@ class BreederController extends Controller
                 'profile_completed' => true,
             ];
 
-            // Check if location fields are provided (new format)
-            $hasLocationData = isset($data['location_lat']) || isset($data['location_lng']) || 
-                              isset($data['location_address']) || isset($data['location_city']) || 
-                              isset($data['location_state']) || isset($data['location_zip_code']);
+            if(isset($data['gmap_payload']) && is_array($data['gmap_payload'])) {
+                $updateData['lat'] = !empty($data['gmap_payload']['lat']) ? $data['gmap_payload']['lat'] : null;
+                $updateData['lng'] = !empty($data['gmap_payload']['lng']) ? $data['gmap_payload']['lng'] : null;
+                $updateData['company_address'] = !empty($data['gmap_payload']['address']) ? $data['gmap_payload']['address'] : null;
+                $updateData['company_city'] = !empty($data['gmap_payload']['city']) ? $data['gmap_payload']['city'] : null;
+                $updateData['company_street'] = !empty($data['gmap_payload']['street']) ? $data['gmap_payload']['street'] : null;
+                $updateData['company_state'] = !empty($data['gmap_payload']['state']) ? $data['gmap_payload']['state'] : null;
+                $updateData['company_short_state'] = !empty($data['gmap_payload']['shortState']) ? $data['gmap_payload']['shortState'] : null;
+                $updateData['company_zip_code'] = !empty($data['gmap_payload']['zipCode']) ? $data['gmap_payload']['zipCode'] : null;
+                $updateData['gmap_address'] = !empty($data['gmap_payload']['address']) ? $data['gmap_payload']['address'] : null;
+            } else {
+                // Fallback to old gmap_payload format for backward compatibility
+                // Use new location fields format - use lat/lng for coordinates (same as sellers)
+                // Convert empty strings to null, but always update if key exists
+                $updateData['lat'] = $data['location_lat'] ?? '0';
+                $updateData['lng'] = $data['location_lng'] ?? '0';
+                $updateData['company_address'] = $data['location_address'] ?? '';
+                $updateData['company_city'] = $data['location_city'] ?? '';
+                $updateData['company_street'] = $data['location_street'] ?? '';
+                $updateData['company_house_no'] = $data['location_house_no'] ?? '';
+                $updateData['company_state'] = $data['location_state'] ?? '';
+                $updateData['company_short_state'] = $data['location_short_state'] ?? '';
+                $updateData['company_zip_code'] = $data['location_zip_code'] ?? '';
+                $updateData['gmap_address'] = $data['location_address'] ?? '';
+            }
 
-            if ($hasLocationData) {
-                // Use new location fields format
-                $updateData['company_lat'] = $data['location_lat'] ?? null;
-                $updateData['company_lng'] = $data['location_lng'] ?? null;
-                $updateData['company_address'] = $data['location_address'] ?? null;
-                $updateData['company_city'] = $data['location_city'] ?? null;
-                $updateData['company_street'] = $data['location_street'] ?? null;
-                $updateData['company_state'] = $data['location_state'] ?? null;
-                $updateData['company_short_state'] = $data['location_short_state'] ?? null;
-                $updateData['company_zip_code'] = $data['location_zip_code'] ?? null;
-
-                // Look up state_id based on state name or abbreviation
+            // Look up state_id based on state name or abbreviation (only if location fields were processed)
+            if (!empty($updateData['company_state'])) {
                 $stateId = null;
-                if (!empty($data['location_state'])) {
+                $stateName = $updateData['company_state'] ?? null;
+                $stateAbbreviation = $updateData['company_short_state'] ?? null;
+                
+                if (!empty($stateName)) {
                     // First try to find by exact state name
-                    $state = State::where('name', $data['location_state'])->first();
+                    $state = State::where('name', $stateName)->first();
                     
                     // If not found and short_state is provided, try abbreviation
-                    if (!$state && !empty($data['location_short_state'])) {
-                        $state = State::where('abbreviation', strtoupper($data['location_short_state']))->first();
+                    if (!$state && !empty($stateAbbreviation)) {
+                        $state = State::where('abbreviation', strtoupper($stateAbbreviation))->first();
                     }
                     
                     // If still not found, try case-insensitive search by name
                     if (!$state) {
-                        $state = State::whereRaw('LOWER(name) = ?', [strtolower($data['location_state'])])->first();
+                        $state = State::whereRaw('LOWER(name) = ?', [strtolower($stateName)])->first();
                     }
                     
                     if ($state) {
                         $stateId = $state->id;
                     }
+                } elseif (!empty($stateAbbreviation)) {
+                    // If only abbreviation is provided, try to find by abbreviation
+                    $state = State::where('abbreviation', strtoupper($stateAbbreviation))->first();
+                    if ($state) {
+                        $stateId = $state->id;
+                    }
                 }
-                
+
                 $updateData['company_state_id'] = $stateId;
-            } elseif (isset($data['gmap_payload']) && is_array($data['gmap_payload'])) {
-                // Fallback to old gmap_payload format for backward compatibility
-                $updateData['company_address'] = $data['gmap_payload']['address'] ?? null;
-                $updateData['company_city'] = $data['gmap_payload']['city'] ?? null;
-                $updateData['company_street'] = $data['gmap_payload']['street'] ?? null;
-                $updateData['company_state'] = $data['gmap_payload']['state'] ?? null;
-                $updateData['company_short_state'] = $data['gmap_payload']['shortState'] ?? null;
-                $updateData['company_zip_code'] = $data['gmap_payload']['zipCode'] ?? null;
-                $updateData['company_lat'] = $data['gmap_payload']['lat'] ?? null;
-                $updateData['company_lng'] = $data['gmap_payload']['lng'] ?? null;
+                $updateData['state_id'] = $stateId;
             }
 
             $user->update($updateData);
@@ -212,8 +215,36 @@ class BreederController extends Controller
 
             if (isset($data['gallery'])) {
                 $mediaProcessing[] = function() use ($user, $data) {
-                    $user->clearMediaCollection('gallery');
-                    collect($data['gallery'])->each(function ($image) use ($user) {
+                    // Separate files and URLs from the submitted data
+                    $files = collect($data['gallery'])->filter(fn($item) => $item instanceof \Illuminate\Http\UploadedFile);
+                    $submittedUrls = collect($data['gallery'])->filter(fn($item) => is_string($item))->toArray();
+                    
+                    // Get existing media URLs
+                    $existingMedia = $user->getMedia('gallery');
+                    $existingUrls = $existingMedia->map(fn($media) => $media->getUrl('preview'))->toArray();
+                    
+                    // Find URLs that should be deleted (existing but not in submitted)
+                    // Normalize URLs for comparison
+                    $normalizeUrl = function($url) {
+                        $parsed = parse_url($url);
+                        $path = $parsed['path'] ?? $url;
+                        return trim($path, '/');
+                    };
+                    
+                    $normalizedSubmitted = array_map($normalizeUrl, $submittedUrls);
+                    $normalizedExisting = array_map($normalizeUrl, $existingUrls);
+                    $urlsToDelete = array_diff($normalizedExisting, $normalizedSubmitted);
+                    
+                    // Delete media that are no longer in the submitted list
+                    foreach ($existingMedia as $media) {
+                        $mediaUrl = $normalizeUrl($media->getUrl('preview'));
+                        if (in_array($mediaUrl, $urlsToDelete)) {
+                            $media->delete();
+                        }
+                    }
+                    
+                    // Add new files only (skip URL strings)
+                    $files->each(function ($image) use ($user) {
                         $user->addMedia($image)->toMediaCollection('gallery');
                     });
                 };
@@ -221,8 +252,29 @@ class BreederController extends Controller
 
             if (isset($data['videos'])) {
                 $mediaProcessing[] = function() use ($user, $data) {
-                    $user->clearMediaCollection('videos');
-                    collect($data['videos'])->each(function ($video) use ($user) {
+                    // Separate files and URLs from the submitted data
+                    $files = collect($data['videos'])->filter(fn($item) => $item instanceof \Illuminate\Http\UploadedFile);
+                    $submittedUrls = collect($data['videos'])->filter(fn($item) => is_string($item))->toArray();
+                    
+                    // Get existing media URLs
+                    $existingMedia = $user->getMedia('videos');
+                    $existingUrls = $existingMedia->map(fn($media) => $media->getUrl())->toArray();
+                    
+                    // Find URLs that should be deleted (existing but not in submitted)
+                    $urlsToDelete = array_diff($existingUrls, $submittedUrls);
+                    
+                    // Delete media that are no longer in the submitted list
+                    foreach ($urlsToDelete as $urlToDelete) {
+                        $media = $existingMedia->first(function ($media) use ($urlToDelete) {
+                            return $media->getUrl() === $urlToDelete;
+                        });
+                        if ($media) {
+                            $media->delete();
+                        }
+                    }
+                    
+                    // Add new files only (skip URL strings)
+                    $files->each(function ($video) use ($user) {
                         try {
                             $media = $user->addMedia($video)->toMediaCollection('videos');
                             GenerateVideoThumbnail::dispatch($media);
@@ -246,10 +298,10 @@ class BreederController extends Controller
                 $mediaProcessing[0]();
             }
 
-            Mail::queue(new AdminNotifyMail([
-                'subject' => 'New Breeder Application',
-                'message' => 'You have a new breeder application. Please go to admin page to review',
-            ]));
+            // Mail::queue(new AdminNotifyMail([
+            //     'subject' => 'New Breeder Application',
+            //     'message' => 'You have a new breeder application. Please go to admin page to review',
+            // ]));
 
             inertia()->clearHistory();
             return success('home', 'Your application has been submitted for review');

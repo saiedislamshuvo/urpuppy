@@ -25,7 +25,7 @@ class BreederRegistrationRequest extends FormRequest
             'fullname' => ['required', 'string', 'max:100', 'blasp_check'],
             'kennel_name' => ['required', 'string', 'max:100', 'blasp_check'],
             'gmap_payload' => ['nullable'],
-            'company_phone' => ['required', 'string', 'max:20'], // Phone number validation
+            'company_phone' => ['required', 'string', 'max:20', 'regex:/^\+?[1-9]\d{1,14}$/'], // Phone number validation
             /* 'company_address' => ['required', 'string', 'max:255'], */
             'company_email_address' => ['required', 'email', 'string', 'max:100'],
             /* 'city' => ['required', 'string', 'max:100'], */
@@ -40,7 +40,7 @@ class BreederRegistrationRequest extends FormRequest
             'company_logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:12048'],
             'gallery' => ['required', 'array', 'max:10'], // Limit gallery to a maximum of 10 images
             'gallery.*' => [
-                'required',
+                'nullable',
                 'image',
                 'mimes:jpeg,png,jpg',
                 'max:12048', // 2MB max per image
@@ -48,7 +48,7 @@ class BreederRegistrationRequest extends FormRequest
 
             'videos' => ['nullable', 'array', 'max:3'], // Limit videos to a maximum of 3
             'videos.*' => [
-                'mimes:mpeg,mp4,ogg,webm',
+                'mimes:mpeg,mp4,ogg,webm,mov,avi',
                 'max:51200', // 50MB max per video
             ],
             
@@ -58,6 +58,7 @@ class BreederRegistrationRequest extends FormRequest
             'location_address' => ['nullable', 'string', 'max:255'],
             'location_city' => ['nullable', 'string', 'max:100'],
             'location_street' => ['nullable', 'string', 'max:255'],
+            'location_house_no' => ['nullable', 'string', 'max:50'],
             'location_state' => ['nullable', 'string', 'max:100'],
             'location_short_state' => ['nullable', 'string', 'max:2'],
             'location_zip_code' => ['nullable', 'string', 'max:20'],
@@ -74,8 +75,6 @@ class BreederRegistrationRequest extends FormRequest
     {
         return [
             'company_phone.required' => 'Phone number is required',
-            /* 'city.required' => 'City field is required', */
-            /* 'state_id.required' => 'State field is required', */
             'gmap_payload.required' => 'Location field is required',
         ];
     }

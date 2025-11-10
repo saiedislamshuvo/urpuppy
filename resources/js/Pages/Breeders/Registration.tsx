@@ -6,7 +6,17 @@ import Layout from '@/Layouts/Layout'
 import { Head } from '@inertiajs/react'
 import React from 'react'
 
-const Registration = ({ breeds }: { breeds: App.Data.BreedOptionData[] }) => {
+interface RegistrationProps {
+    breeds: App.Data.BreedOptionData[];
+    gallery?: string[];
+    videos?: string[];
+    media_limits?: {
+        images: number;
+        videos: number;
+    };
+}
+
+const Registration = ({ breeds, gallery = [], videos = [], media_limits }: RegistrationProps) => {
     return (
         <Layout navType="secondary">
             <MetaTags title="Registration" />
@@ -29,7 +39,7 @@ const Registration = ({ breeds }: { breeds: App.Data.BreedOptionData[] }) => {
 
                             <Heading title="Breeder Registration" description="Create your Breeder profile to connect" />
 
-                            <BreederRegistrationForm breeds={breeds} />
+                            <BreederRegistrationForm breeds={breeds} gallery={gallery} videos={videos} media_limits={media_limits} />
                         </div>
 
                     </div>

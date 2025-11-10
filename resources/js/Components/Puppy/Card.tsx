@@ -31,16 +31,23 @@ const PuppyCard = ({ puppy, className = "col-md-6 col-lg-4 col-xl-3 mb-4", heigh
             <img loading="lazy" src={puppy.image} alt="urpuppy-img" className="w-100 object-fit-cover product-card-responsive-height" style={{ minHeight: "210px" }} />
             <div
               className="d-flex align-items-baseline justify-content-between position-absolute top-0 start-0 w-100 p-3 pb-0">
-              {
-                puppy.is_new ?
-                  <span className="puppy-spotlight-img position-relative overflow-hidden d-block">
-                    <span className="badge text-bg-success">NEW</span>
-                  </span> : <div></div>
-
-              }
+              <div className="d-flex align-items-center gap-2">
+                {
+                  puppy.is_new ?
+                    <span className="puppy-spotlight-img position-relative overflow-hidden d-block">
+                      <span className="badge text-bg-success">NEW</span>
+                    </span> : null
+                }
+                {
+                  (puppy.state || (puppy.seller as any)?.short_state || (puppy.seller as any)?.company_short_state) ?
+                    <span className="badge text-bg-success">
+                      {puppy.state || (puppy.seller as any)?.short_state || (puppy.seller as any)?.company_short_state}
+                    </span> : null
+                }
+              </div>
               <div className="d-flex flex-column gap-2">
-                <FavoriteButton uniqueId={location + puppy.id} sellerId={puppy.seller.id} puppyId={puppy.id} isFavorite={puppy.is_favorite} />
-                <CompareButton uniqueId={location + puppy.id} sellerId={puppy.seller.id} puppyId={puppy.id} isCompared={puppy.is_compared} />
+                <FavoriteButton uniqueId={location + puppy.id} sellerId={puppy.seller?.id} puppyId={puppy.id} isFavorite={puppy.is_favorite} />
+                <CompareButton uniqueId={location + puppy.id} sellerId={puppy.seller?.id} puppyId={puppy.id} isCompared={puppy.is_compared} />
               </div>
 
             </div>

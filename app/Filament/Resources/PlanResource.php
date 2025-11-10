@@ -7,6 +7,7 @@ use App\Filament\Resources\PlanResource\Pages\EditPlan;
 use App\Filament\Resources\PlanResource\Pages\ListPlans;
 use App\Models\Plan;
 use App\Services\StripePlanSyncService;
+use Stripe\Product as StripeProduct;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Components\Checkbox;
@@ -38,6 +39,16 @@ class PlanResource extends Resource
 
     protected static ?string $navigationIcon = 'phosphor-calendar-heart';
     protected static ?string $navigationLabel = 'Subscription Plans';
+
+     public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 50 ? 'success' : 'primary';
+    }
 
     public static function getNavigationGroup(): ?string
     {
@@ -79,13 +90,14 @@ class PlanResource extends Resource
                                                 ->color('primary')
                                                 ->requiresConfirmation()
                                                 ->modalHeading('Sync Plan to Stripe')
-                                                ->modalDescription('This will sync this plan to Stripe. Continue?')
+                                                ->modalDescription('This will sync this plan (including images and features) to Stripe. Continue?')
                                                 ->action(function (Plan $record, StripePlanSyncService $syncService) {
                                                     $success = $syncService->syncToStripe($record);
                                                     
                                                     if ($success) {
                                                         Notification::make()
                                                             ->title('Plan synced successfully')
+                                                            ->body('Plan, images, and features have been synced to Stripe.')
                                                             ->success()
                                                             ->send();
                                                         
@@ -99,6 +111,86 @@ class PlanResource extends Resource
                                                     }
                                                 })
                                                 ->visible(fn($livewire) => $livewire instanceof EditPlan),
+                                            
+                                            FormAction::make('sync_from_stripe')
+                                                ->label('Sync from Stripe')
+                                                ->icon('heroicon-o-arrow-down-tray')
+                                                ->color('success')
+                                                ->requiresConfirmation()
+                                                ->modalHeading('Sync Plan from Stripe')
+                                                ->modalDescription('This will pull images and features from Stripe and update this plan. Continue?')
+                                                ->action(function (Plan $record, StripePlanSyncService $syncService) {
+                                                    if (!$record->stripe_product_id) {
+                                                        Notification::make()
+                                                            ->title('No Stripe Product ID')
+                                                            ->body('This plan is not linked to a Stripe product yet. Please sync to Stripe first.')
+                                                            ->warning()
+                                                            ->send();
+                                                        return;
+                                                    }
+                                                    
+                                                    try {
+                                                        $product = StripeProduct::retrieve($record->stripe_product_id);
+                                                        
+                                                        // Sync images
+                                                        $syncService->syncImagesFromStripe($record, $product);
+                                                        
+                                                        // Sync features from metadata
+                                                        $updateData = [];
+                                                        if (isset($product->metadata['features']) && !empty($product->metadata['features'])) {
+                                                            try {
+                                                                $featuresJson = $product->metadata['features'];
+                                                                $featuresArray = json_decode($featuresJson, true);
+                                                                if (is_array($featuresArray) && !empty($featuresArray)) {
+                                                                    // Convert to the format expected by the form (array of objects with 'name' key)
+                                                                    $updateData['features'] = array_map(function($feature) {
+                                                                        // Handle both string and array formats
+                                                                        if (is_array($feature)) {
+                                                                            return ['name' => $feature['name'] ?? $feature[0] ?? ''];
+                                                                        }
+                                                                        return ['name' => (string)$feature];
+                                                                    }, array_filter($featuresArray, function($f) {
+                                                                        // Filter out empty features
+                                                                        if (is_array($f)) {
+                                                                            return !empty($f['name'] ?? $f[0] ?? '');
+                                                                        }
+                                                                        return !empty(trim((string)$f));
+                                                                    }));
+                                                                } else {
+                                                                    // If features array is empty, set to empty array
+                                                                    $updateData['features'] = [];
+                                                                }
+                                                            } catch (\Exception $e) {
+                                                                \Illuminate\Support\Facades\Log::warning('Failed to parse features from Stripe', [
+                                                                    'product_id' => $product->id,
+                                                                    'features_json' => $product->metadata['features'] ?? null,
+                                                                    'error' => $e->getMessage(),
+                                                                ]);
+                                                            }
+                                                        } else {
+                                                            // If no features in Stripe, set to empty array to clear local features
+                                                            $updateData['features'] = [];
+                                                        }
+                                                        
+                                                        // Always update, even if features array is empty
+                                                        $record->update($updateData);
+                                                        
+                                                        Notification::make()
+                                                            ->title('Synced from Stripe successfully')
+                                                            ->body('Images and features have been pulled from Stripe.')
+                                                            ->success()
+                                                            ->send();
+                                                        
+                                                        return redirect()->route('filament.admin.resources.plans.edit', $record);
+                                                    } catch (\Exception $e) {
+                                                        Notification::make()
+                                                            ->title('Sync from Stripe failed')
+                                                            ->body($e->getMessage())
+                                                            ->danger()
+                                                            ->send();
+                                                    }
+                                                })
+                                                ->visible(fn($livewire, ?Plan $record) => $livewire instanceof EditPlan && !empty($record?->stripe_product_id)),
                                         ])
                                             ->alignEnd(),
                                     ]),
@@ -288,7 +380,6 @@ class PlanResource extends Resource
                                         '3' => '3 Images',
                                         '5' => '5 Images',
                                         '10' => '10 Images',
-                                        '15' => '15 Images',
                                         '20' => '20 Images',
                                         'unlimited' => 'Unlimited',
                                     ])

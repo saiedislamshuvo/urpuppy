@@ -121,9 +121,9 @@ class CheckoutController extends Controller
         $planId = (int) $request->route('plan_id');
 
         $user = $request->user();
-        if ($user->isSubscribed()) {
-            return error('profile.edit', 'You are already subscribed to a plan.');
-        }
+        // if ($user->isSubscribed()) {
+        //     return error('profile.edit', 'You are already subscribed to a plan.');
+        // }
 
         // Sanitize query parameters
         $setupIntentId = $request->query('setup_intent');
