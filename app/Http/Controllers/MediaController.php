@@ -72,13 +72,23 @@ class MediaController extends Controller
         }
         
         $validator = Validator::make($request->all(), [
-            'gallery' => ['nullable', 'array'],
-            'gallery.*' => ['nullable', 'file'],
-            'videos' => ['nullable', 'array'],
-            'videos.*' => ['nullable', 'file'],
+            'gallery' => ['nullable', 'array', 'max:10'],
+            'gallery.*' => [
+                'nullable',
+                'file',
+                'image',
+                'mimes:jpeg,png,jpg,gif,svg,webp',
+                'max:12048', // Max 12MB per image
+            ],
+            'videos' => ['nullable', 'array', 'max:3'],
+            'videos.*' => [
+                'file',
+                'mimes:mp4,mov,avi,webm',
+                'max:51200', // Max 50MB per video
+            ],
         ]);
-
         if ($validator->fails()) {
+            dd($validator->errors());
             return Redirect::back()->withErrors($validator)->withInput();
         }
 
@@ -86,19 +96,13 @@ class MediaController extends Controller
         if (isset($request->gallery) && is_array($request->gallery)) {
             // Only get File objects (new uploads), ignore strings (existing URLs)
             $files = collect($request->gallery)->filter(fn($item) => $item instanceof \Illuminate\Http\UploadedFile);
-            
             // Add new files only
             $files->each(function ($image) use ($user) {
                 $user->addMedia($image)->toMediaCollection('gallery');
             });
         }
-
-        // Handle videos - only process new File uploads
         if (isset($request->videos) && is_array($request->videos)) {
-            // Only get File objects (new uploads), ignore strings (existing URLs)
             $files = collect($request->videos)->filter(fn($item) => $item instanceof \Illuminate\Http\UploadedFile);
-            
-            // Add new files only
             $files->each(function ($video) use ($user) {
                 $user->addMedia($video)->toMediaCollection('videos');
             });

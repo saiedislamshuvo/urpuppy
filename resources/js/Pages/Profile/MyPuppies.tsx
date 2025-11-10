@@ -85,7 +85,7 @@ const MyPuppies = ({ puppies }: {
                     Start listing your puppies to reach potential buyers!
                   </p>
                   <Link
-                    href="/seller/create"
+                      href="/puppies-listing/create"
                     className="btn btn-primary"
                     aria-label="Create new puppy listing"
                   >

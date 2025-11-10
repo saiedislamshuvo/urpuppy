@@ -3,7 +3,7 @@ import { PageProps } from '@/types';
 import MediaUploadSection from '@/Components/MediaUploadSection';
 import { useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 export default function MediaIndex({
     gallery = [],
@@ -34,6 +34,10 @@ export default function MediaIndex({
         videos: [], // Only new files, not existing URLs
     });
 
+    // Reset keys for clearing upload boxes after successful upload
+    const [galleryResetKey, setGalleryResetKey] = useState(0);
+    const [videosResetKey, setVideosResetKey] = useState(0);
+
     // Use the original gallery/videos from props for displaying existing media
     // Form data only contains new File objects
 
@@ -53,6 +57,9 @@ export default function MediaIndex({
                     // Clear the form data after successful submission
                     setData('gallery', []);
                     setData('videos', []);
+                    // Increment reset keys to clear upload boxes
+                    setGalleryResetKey(prev => prev + 1);
+                    setVideosResetKey(prev => prev + 1);
                 }
             });
         }
@@ -74,10 +81,8 @@ export default function MediaIndex({
                                 label="Upload Images"
                                 description="Upload images to showcase your business (JPG, PNG, GIF, WebP)"
                                 name="gallery"
-                                setData={(name, files: any) => {
-                                    // Only accept File objects, filter out any strings
-                                    const fileObjects = files.filter((f: any) => f instanceof File);
-                                    setData('gallery', fileObjects);
+                                setData={(name, files) => {
+                                    setData('gallery', files);
                                 }}
                                 errors={errors}
                                 defaultUrls={sanitizedGallery}
@@ -94,6 +99,7 @@ export default function MediaIndex({
                                 maxFiles={media_limits?.images}
                                 currentCount={sanitizedGallery.length}
                                 deleteEndpoint="/api/media/delete"
+                                resetKey={galleryResetKey}
                             />
                             {errors.gallery && <InputError message={errors.gallery} />}
                         </div>
@@ -104,10 +110,8 @@ export default function MediaIndex({
                                 label="Upload Videos"
                                 description="Upload videos to showcase your business (MP4, MOV, AVI, WebM)"
                                 name="videos"
-                                setData={(name, files: any) => {
-                                    // Only accept File objects, filter out any strings
-                                    const fileObjects = files.filter((f: any) => f instanceof File);
-                                    setData('videos', fileObjects);
+                                setData={(name, files) => {
+                                    setData('videos', files);
                                 }}
                                 errors={errors}
                                 defaultUrls={sanitizedVideos}
@@ -118,6 +122,7 @@ export default function MediaIndex({
                                 maxFiles={media_limits?.videos}
                                 currentCount={sanitizedVideos.length}
                                 deleteEndpoint="/api/media/delete"
+                                resetKey={videosResetKey}
                             />
                             {errors.videos && <InputError message={errors.videos} />}
                         </div>

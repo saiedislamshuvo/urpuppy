@@ -6,11 +6,11 @@
     <meta name="author" content="UrPuppy.com">
     <meta name="robots" content="index, follow">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Security-Policy" content="default-src *;
-    img-src * 'self' data: https: http:;
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src *;
+    img-src * 'self' data: https: http: blob:;
     script-src 'self' 'unsafe-inline' 'unsafe-eval' *;
     style-src  'self' 'unsafe-inline' *;
-    connect-src 'self' https://nominatim.openstreetmap.org;">
+    connect-src 'self' https://nominatim.openstreetmap.org;"> -->
 
     <link fetchpriority="high" rel="preload" as="image" href="{{ asset('banner-bg.webp') }}">
     <link rel="icon" type="image/png" href="{{ asset('images/logos/favicon.png') }}">

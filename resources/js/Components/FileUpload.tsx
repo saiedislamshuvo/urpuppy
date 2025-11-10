@@ -210,7 +210,7 @@ function FileUpload({
 
       <style>{`
         .dropzone {
-          border: 2px dashed #0087F7;
+          border: 2px dashed #FF8C00;
           border-radius: 5px;
           background: white;
           min-height: 150px;

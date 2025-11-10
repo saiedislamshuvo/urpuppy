@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import GenericFileUpload from './GenericFileUpload';
 import InputLabel from './InputLabel';
 import InputError from './InputError';
-import { router } from '@inertiajs/react';
 
 interface MediaUploadSectionProps {
     label: string;
     description?: string;
     name: string;
-    setData: (key: string, value: (File | string)[]) => void;
+    setData: (key: string, value: File[]) => void;
     errors?: any;
     defaultUrls?: string[];
     fileType: 'images' | 'videos';
@@ -23,10 +22,11 @@ interface MediaUploadSectionProps {
         position?: 'tile' | 'center' | 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
     };
     required?: boolean;
-    maxFiles?: number; // Subscription limit
-    currentCount?: number; // Current number of files
-    onDelete?: (url: string) => void; // Callback for delete
-    deleteEndpoint?: string; // API endpoint for deleting media
+    maxFiles?: number;
+    currentCount?: number;
+    onDelete?: (url: string) => void;
+    deleteEndpoint?: string;
+    resetKey?: number | string; // When this changes, reset the upload box
 }
 
 const MediaUploadSection: React.FC<MediaUploadSectionProps> = ({
@@ -45,27 +45,20 @@ const MediaUploadSection: React.FC<MediaUploadSectionProps> = ({
     currentCount = 0,
     onDelete,
     deleteEndpoint,
+    resetKey,
 }) => {
-    // Filter out File objects and ensure we only have strings
+    // Filter and sanitize default URLs
     const sanitizedDefaultUrls = useMemo(() => {
         return defaultUrls.filter((url): url is string => typeof url === 'string' && url.trim() !== '');
     }, [defaultUrls]);
 
     const [existingMedia, setExistingMedia] = useState<string[]>(sanitizedDefaultUrls);
-    const [newFiles, setNewFiles] = useState<File[]>([]);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
-    const [uploadKey, setUploadKey] = useState(0); // Key to reset GenericFileUpload
 
-    // Update existing media only when defaultUrls actually changes
-    const defaultUrlsKey = useMemo(() => sanitizedDefaultUrls.join(','), [sanitizedDefaultUrls]);
-
+    // Update existing media when defaultUrls changes
     useEffect(() => {
-        const currentKey = existingMedia.join(',');
-        if (defaultUrlsKey !== currentKey) {
-            setExistingMedia(sanitizedDefaultUrls);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [defaultUrlsKey]);
+        setExistingMedia(sanitizedDefaultUrls);
+    }, [sanitizedDefaultUrls.join(',')]);
 
     const handleDelete = async (url: string, e: React.MouseEvent) => {
         e.preventDefault();
@@ -73,10 +66,7 @@ const MediaUploadSection: React.FC<MediaUploadSectionProps> = ({
 
         if (!deleteEndpoint) {
             // If no delete endpoint, just remove from local state
-            const updated = existingMedia.filter(u => u !== url);
-            setExistingMedia(updated);
-            // Update parent - only send new files, not existing URLs
-            setData(name, newFiles);
+            setExistingMedia(prev => prev.filter(u => u !== url));
             if (onDelete) {
                 onDelete(url);
             }
@@ -85,7 +75,6 @@ const MediaUploadSection: React.FC<MediaUploadSectionProps> = ({
 
         setIsDeleting(url);
         try {
-            // Determine the media type based on the name prop
             const mediaType = name === 'gallery' ? 'gallery' : 'videos';
 
             const response = await fetch(deleteEndpoint, {
@@ -98,15 +87,13 @@ const MediaUploadSection: React.FC<MediaUploadSectionProps> = ({
             });
 
             if (response.ok) {
-                const updated = existingMedia.filter(u => u !== url);
-                setExistingMedia(updated);
-                // Update parent - only send new files, not existing URLs
-                setData(name, newFiles);
+                setExistingMedia(prev => prev.filter(u => u !== url));
                 if (onDelete) {
                     onDelete(url);
                 }
             } else {
-                alert('Failed to delete media. Please try again.');
+                const data = await response.json();
+                alert(data.message || 'Failed to delete media. Please try again.');
             }
         } catch (error) {
             console.error('Error deleting media:', error);
@@ -138,12 +125,11 @@ const MediaUploadSection: React.FC<MediaUploadSectionProps> = ({
                 </div>
             )}
 
-            {/* Display existing media above upload box */}
+            {/* Display existing media */}
             {existingMedia.length > 0 && (
                 <div className="existing-media-grid mb-4">
                     <div className="row g-3">
                         {existingMedia.map((url, index) => {
-                            // Ensure url is a string before checking
                             const urlString = typeof url === 'string' ? url : String(url);
                             const isImageFile = /\.(jpg|jpeg|png|gif|webp)$/i.test(urlString) || urlString.includes('preview');
                             const isVideoFile = /\.(mp4|mov|avi|webm)$/i.test(urlString) || urlString.includes('videos');
@@ -223,34 +209,11 @@ const MediaUploadSection: React.FC<MediaUploadSectionProps> = ({
                 </div>
             )}
 
-            {/* Upload box - don't pass defaultUrls since we show existing media above */}
+            {/* Upload box for new files */}
             <GenericFileUpload
-                key={uploadKey} // Reset component when key changes
                 name={name}
-                setData={useCallback((name, files) => {
-                    // GenericFileUpload returns new files only (File objects, not URLs)
-                    // Filter to ensure we only get File objects - never send existing URLs
-                    const uploadedFiles = files.filter((f: any) => f instanceof File) as File[];
-
-                    if (uploadedFiles.length > 0) {
-                        // Update newFiles state and form data
-                        setNewFiles(prev => {
-                            const allNewFiles = [...prev, ...uploadedFiles];
-                            // Only send new File objects to parent - existing URLs are never included
-                            // The parent form should only contain File objects, not strings
-                            setData(name, allNewFiles);
-                            return allNewFiles;
-                        });
-                        // Clear the upload box after files are added by resetting the key
-                        // This will unmount and remount GenericFileUpload with empty state
-                        setTimeout(() => {
-                            setUploadKey(prev => prev + 1);
-                        }, 100);
-                    }
-                    // If uploadedFiles.length is 0, don't update - this happens when component resets
-                }, [name, setData])}
+                setData={setData}
                 errors={errors}
-                defaultUrls={[]}
                 fileType={fileType}
                 accept={accept}
                 maxSize={maxSize}
@@ -259,6 +222,7 @@ const MediaUploadSection: React.FC<MediaUploadSectionProps> = ({
                 label=""
                 description=""
                 innerText={`Drag and drop ${isImage ? 'images' : 'videos'} here, or click to upload`}
+                resetKey={resetKey}
             />
 
             {errors?.[name] && <InputError message={errors[name]} />}
@@ -306,4 +270,3 @@ const MediaUploadSection: React.FC<MediaUploadSectionProps> = ({
 };
 
 export default MediaUploadSection;
-

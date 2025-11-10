@@ -1,6 +1,5 @@
-import React, { useRef, useCallback, useState, useEffect, useMemo } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import Button from './ui/Button';
 
 export type FileType = 'images' | 'videos' | 'documents' | 'all' | string[];
 
@@ -16,13 +15,12 @@ export interface WatermarkConfig {
 interface GenericFileUploadProps {
     required?: boolean;
     name: string;
-    setData: (key: string, value: (File | string)[]) => void;
+    setData: (key: string, value: File[]) => void;
     errors?: any;
-    defaultFiles?: string[];
-    defaultUrls?: string[];
+    defaultUrls?: string[]; // For displaying existing files
     fileType?: FileType;
-    accept?: string; // MIME types like "image/*,video/*" or specific like ".jpg,.png,.mp4"
-    maxSize?: number; // in bytes, default 50MB
+    accept?: string;
+    maxSize?: number;
     watermark?: WatermarkConfig;
     multiple?: boolean;
     label?: string;
@@ -31,134 +29,35 @@ interface GenericFileUploadProps {
     borderColor?: string;
     hoverBorderColor?: string;
     backgroundColor?: string;
+    resetKey?: number | string; // When this changes, reset the component
 }
 
-// Helper function to get accepted file types
-const getAcceptedFileTypes = (fileType: FileType): string[] => {
-    if (Array.isArray(fileType)) {
-        return fileType;
-    }
+// Helper to get accept config for dropzone
+const getAcceptConfig = (accept?: string): Record<string, string[]> | undefined => {
+    if (!accept) return undefined;
 
-    const typeMap: Record<string, string[]> = {
-        images: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'],
-        videos: ['video/mp4', 'video/mov', 'video/quicktime', 'video/avi', 'video/webm'],
-        documents: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-        all: [],
-    };
-
-    return typeMap[fileType] || [];
-};
-
-// Helper function to get file extensions from MIME type
-const getExtensionsFromMimeType = (mimeType: string): string[] => {
-    const extensionMap: Record<string, string[]> = {
-        'image/jpeg': ['.jpg', '.jpeg'],
-        'image/jpg': ['.jpg', '.jpeg'],
-        'image/png': ['.png'],
-        'image/gif': ['.gif'],
-        'image/webp': ['.webp'],
-        'video/mp4': ['.mp4'],
-        'video/quicktime': ['.mov'],
-        'video/mov': ['.mov'],
-        'video/avi': ['.avi'],
-        'video/webm': ['.webm'],
-        'application/pdf': ['.pdf'],
-        'application/msword': ['.doc'],
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
-    };
-    return extensionMap[mimeType] || [];
-};
-
-// Helper function to get accept string for dropzone
-// react-dropzone expects: { 'image/*': ['.jpg', '.png'], 'application/pdf': ['.pdf'] }
-const getAcceptString = (fileType: FileType, customAccept?: string): Record<string, string[]> | undefined => {
-    if (customAccept) {
-        // Parse custom accept string like ".jpg,.png,.mp4" or "image/*,video/*"
-        const types: Record<string, string[]> = {};
-        customAccept.split(',').forEach(type => {
-            type = type.trim();
-            if (type.startsWith('.')) {
-                // Extension like .jpg
-                const ext = type;
-                const mimeType = getMimeTypeFromExtension(ext.substring(1));
-                if (mimeType) {
-                    // Group by MIME category with wildcard
-                    const category = mimeType.split('/')[0];
-                    const mimeKey = `${category}/*`;
-                    if (!types[mimeKey]) types[mimeKey] = [];
-                    if (!types[mimeKey].includes(ext)) {
-                        types[mimeKey].push(ext);
-                    }
-                }
-            } else if (type.includes('/*')) {
-                // MIME type like image/* - this is already in the correct format
-                // We need to provide extensions for it
-                const category = type.split('/')[0];
-                if (category === 'image') {
-                    types[type] = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-                } else if (category === 'video') {
-                    types[type] = ['.mp4', '.mov', '.avi', '.webm'];
-                } else if (category === 'application') {
-                    types[type] = ['.pdf', '.doc', '.docx'];
-                }
-            } else if (type.includes('/')) {
-                // Full MIME type like image/jpeg
-                const exts = getExtensionsFromMimeType(type);
-                if (exts.length > 0) {
-                    if (!types[type]) types[type] = [];
-                    exts.forEach(ext => {
-                        if (!types[type].includes(ext)) {
-                            types[type].push(ext);
-                        }
-                    });
-                }
+    const types: Record<string, string[]> = {};
+    accept.split(',').forEach(type => {
+        type = type.trim();
+        if (type.startsWith('.')) {
+            const ext = type;
+            const category = ext === '.jpg' || ext === '.jpeg' || ext === '.png' || ext === '.gif' || ext === '.webp'
+                ? 'image'
+                : ext === '.mp4' || ext === '.mov' || ext === '.avi' || ext === '.webm'
+                    ? 'video'
+                    : 'application';
+            const mimeKey = `${category}/*`;
+            if (!types[mimeKey]) types[mimeKey] = [];
+            if (!types[mimeKey].includes(ext)) {
+                types[mimeKey].push(ext);
             }
-        });
-        return Object.keys(types).length > 0 ? types : undefined;
-    }
-
-    const acceptedTypes = getAcceptedFileTypes(fileType);
-    if (acceptedTypes.length === 0) return undefined;
-
-    // Group by MIME category (image/*, video/*, etc.) with extensions
-    const grouped: Record<string, string[]> = {};
-    acceptedTypes.forEach(mimeType => {
-        const category = mimeType.split('/')[0];
-        const mimeKey = `${category}/*`;
-        const exts = getExtensionsFromMimeType(mimeType);
-
-        if (exts.length > 0) {
-            if (!grouped[mimeKey]) grouped[mimeKey] = [];
-            exts.forEach(ext => {
-                if (!grouped[mimeKey].includes(ext)) {
-                    grouped[mimeKey].push(ext);
-                }
-            });
         }
     });
 
-    return grouped;
+    return Object.keys(types).length > 0 ? types : undefined;
 };
 
-const getMimeTypeFromExtension = (ext: string): string | null => {
-    const mimeTypes: Record<string, string> = {
-        jpg: 'image/jpeg',
-        jpeg: 'image/jpeg',
-        png: 'image/png',
-        gif: 'image/gif',
-        webp: 'image/webp',
-        mp4: 'video/mp4',
-        mov: 'video/quicktime',
-        avi: 'video/avi',
-        webm: 'video/webm',
-        pdf: 'application/pdf',
-        doc: 'application/msword',
-        docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    };
-    return mimeTypes[ext.toLowerCase()] || null;
-};
-
-// Watermark function for images
+// Simple watermark function for images
 const addWatermarkToImage = async (
     file: File,
     watermark: WatermarkConfig
@@ -173,11 +72,9 @@ const addWatermarkToImage = async (
             return;
         }
 
-        img.onload = async () => {
+        img.onload = () => {
             canvas.width = img.width;
             canvas.height = img.height;
-
-            // Draw original image
             ctx.drawImage(img, 0, 0);
 
             const opacity = watermark.opacity ?? 0.3;
@@ -185,7 +82,6 @@ const addWatermarkToImage = async (
             const color = watermark.color ?? '#ffffff';
             const position = watermark.position ?? 'tile';
 
-            // Apply watermark
             if (watermark.text) {
                 ctx.save();
                 ctx.globalAlpha = opacity;
@@ -194,11 +90,9 @@ const addWatermarkToImage = async (
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                // Calculate text width for both tile and single position modes
                 const textWidth = ctx.measureText(watermark.text).width;
 
                 if (position === 'tile') {
-                    // Tile watermark across the image
                     const spacing = textWidth * 1.5;
                     const rows = Math.ceil(img.height / spacing);
                     const cols = Math.ceil(img.width / spacing);
@@ -211,7 +105,6 @@ const addWatermarkToImage = async (
                         }
                     }
                 } else {
-                    // Single watermark at specified position
                     let x = img.width / 2;
                     let y = img.height / 2;
 
@@ -223,88 +116,8 @@ const addWatermarkToImage = async (
                     ctx.fillText(watermark.text, x, y);
                 }
                 ctx.restore();
-            } else if (watermark.imageUrl) {
-                // Image watermark
-                const watermarkImg = new Image();
-                watermarkImg.crossOrigin = 'anonymous';
-                watermarkImg.onload = () => {
-                    ctx.save();
-                    ctx.globalAlpha = opacity;
-
-                    const watermarkSize = Math.min(img.width, img.height) * 0.2;
-                    const watermarkAspect = watermarkImg.width / watermarkImg.height;
-                    const wmWidth = watermarkSize;
-                    const wmHeight = watermarkSize / watermarkAspect;
-
-                    if (position === 'tile') {
-                        // Tile watermark image across the image
-                        const spacing = watermarkSize * 1.5;
-                        const rows = Math.ceil(img.height / spacing);
-                        const cols = Math.ceil(img.width / spacing);
-
-                        for (let row = 0; row < rows; row++) {
-                            for (let col = 0; col < cols; col++) {
-                                const x = col * spacing;
-                                const y = row * spacing;
-                                ctx.drawImage(watermarkImg, x, y, wmWidth, wmHeight);
-                            }
-                        }
-                    } else {
-                        // Single watermark at specified position
-                        let x = (img.width - wmWidth) / 2;
-                        let y = (img.height - wmHeight) / 2;
-
-                        if (position.includes('top')) y = 20;
-                        if (position.includes('bottom')) y = img.height - wmHeight - 20;
-                        if (position.includes('left')) x = 20;
-                        if (position.includes('right')) x = img.width - wmWidth - 20;
-
-                        ctx.drawImage(watermarkImg, x, y, wmWidth, wmHeight);
-                    }
-
-                    ctx.restore();
-
-                    // Convert canvas to blob and then to File
-                    canvas.toBlob(
-                        (blob) => {
-                            if (blob) {
-                                const watermarkedFile = new File([blob], file.name, {
-                                    type: file.type,
-                                    lastModified: Date.now(),
-                                });
-                                resolve(watermarkedFile);
-                            } else {
-                                reject(new Error('Failed to create watermarked image'));
-                            }
-                        },
-                        file.type,
-                        0.92
-                    );
-                };
-                watermarkImg.onerror = () => reject(new Error('Failed to load watermark image'));
-                watermarkImg.src = watermark.imageUrl;
-                return;
-            } else {
-                // No watermark, return original
-                canvas.toBlob(
-                    (blob) => {
-                        if (blob) {
-                            const watermarkedFile = new File([blob], file.name, {
-                                type: file.type,
-                                lastModified: Date.now(),
-                            });
-                            resolve(watermarkedFile);
-                        } else {
-                            reject(new Error('Failed to create image'));
-                        }
-                    },
-                    file.type,
-                    0.92
-                );
-                return;
             }
 
-            // Convert canvas to blob and then to File (for text watermark)
             canvas.toBlob(
                 (blob) => {
                     if (blob) {
@@ -332,11 +145,10 @@ function GenericFileUpload({
     name,
     setData,
     errors,
-    defaultFiles = [],
     defaultUrls = [],
     fileType = 'all',
     accept,
-    maxSize = 50 * 1024 * 1024, // 50MB default
+    maxSize = 50 * 1024 * 1024,
     watermark,
     multiple = true,
     label,
@@ -345,254 +157,107 @@ function GenericFileUpload({
     borderColor = '#FF8C00',
     hoverBorderColor = '#00a65a',
     backgroundColor = '#f0f9ff',
+    resetKey,
 }: GenericFileUploadProps) {
-    const hiddenInputRef = useRef<HTMLInputElement>(null);
     const [files, setFiles] = useState<File[]>([]);
-    const [urlItems, setUrlItems] = useState<Array<{ url: string; id: string }>>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [initializedUrls, setInitializedUrls] = useState<string[]>([]);
     const [previews, setPreviews] = useState<Record<string, string>>({});
+    const [isProcessing, setIsProcessing] = useState(false);
 
-    // Function to check if a file is within the size limit
-    const isFileSizeValid = (file: File): boolean => {
-        return file.size <= maxSize;
-    };
+    // Filter and sanitize default URLs
+    const existingUrls = defaultUrls.filter((url): url is string => typeof url === 'string' && url.trim() !== '');
 
-    // Function to check if file type is accepted
-    const isFileTypeAccepted = (file: File): boolean => {
-        if (fileType === 'all' && !accept) return true;
-
-        const acceptedTypes = getAcceptedFileTypes(fileType);
-        if (acceptedTypes.length === 0 && !accept) return true;
-
-        if (accept) {
-            // Parse custom accept string
-            const acceptList = accept.split(',').map(t => t.trim());
-            const fileExt = file.name.split('.').pop()?.toLowerCase() || '';
-            const fileMime = file.type;
-
-            return acceptList.some(accepted => {
-                if (accepted.startsWith('.')) {
-                    return accepted.substring(1).toLowerCase() === fileExt;
-                } else if (accepted.includes('/*')) {
-                    const category = accepted.split('/')[0];
-                    return fileMime.startsWith(category + '/');
-                } else {
-                    return fileMime === accepted;
-                }
-            });
-        }
-
-        return acceptedTypes.includes(file.type);
-    };
-
-    // Function to convert a URL to a File object
-    const urlToFile = async (url: string): Promise<File> => {
-        if (typeof url !== 'string' || url.trim() === '') {
-            throw new Error('Invalid URL: URL must be a non-empty string.');
-        }
-
-        try {
-            const response = await fetch(url);
-            const blob = await response.blob();
-            const filename = url.split('/').pop() || 'file';
-            const fileExtension = filename.split('.').pop() || blob.type.split('/')[1] || 'jpg';
-            return new File([blob], filename, { type: blob.type });
-        } catch (error) {
-            console.error(`Error converting URL to File:`, error);
-            throw error;
-        }
-    };
-
-    // Create preview URL for file
-    const createPreview = (file: File): string => {
-        if (file.type.startsWith('image/')) {
-            return URL.createObjectURL(file);
-        } else if (file.type.startsWith('video/')) {
-            return URL.createObjectURL(file);
-        }
-        return '';
-    };
-
-    // Ensure previews are created for all files that need them
+    // Reset files when resetKey changes
     useEffect(() => {
-        setPreviews(prev => {
-            const missingPreviews: Record<string, string> = {};
-            files.forEach(file => {
-                if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
-                    const previewKey = (file as any).__previewKey || `${file.name}-${file.size}-${file.lastModified}`;
-                    if (!prev[previewKey]) {
-                        const preview = createPreview(file);
-                        if (preview) {
-                            missingPreviews[previewKey] = preview;
-                            (file as any).__previewKey = previewKey;
-                        }
+        if (resetKey !== undefined) {
+            // Cleanup preview URLs before resetting
+            setPreviews(prev => {
+                Object.values(prev).forEach(url => {
+                    if (url && url.startsWith('blob:')) {
+                        URL.revokeObjectURL(url);
                     }
-                }
+                });
+                return {};
             });
-            // Only update if there are actually new previews
-            if (Object.keys(missingPreviews).length > 0) {
-                return { ...prev, ...missingPreviews };
+            setFiles([]);
+            setData(name, []);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resetKey]);
+
+    // Create preview URLs
+    useEffect(() => {
+        const newPreviews: Record<string, string> = {};
+        files.forEach(file => {
+            const key = `${file.name}-${file.size}-${file.lastModified}`;
+            if (!previews[key] && (file.type.startsWith('image/') || file.type.startsWith('video/'))) {
+                newPreviews[key] = URL.createObjectURL(file);
             }
-            return prev;
         });
+
+        if (Object.keys(newPreviews).length > 0) {
+            setPreviews(prev => ({ ...prev, ...newPreviews }));
+        }
     }, [files]);
 
-    // Clean up blob URLs when files are removed or component unmounts
+    // Cleanup preview URLs
     useEffect(() => {
         return () => {
-            // Cleanup all preview URLs on unmount
             Object.values(previews).forEach(url => {
                 if (url && url.startsWith('blob:')) {
                     URL.revokeObjectURL(url);
                 }
             });
         };
-    }, [previews]);
-
-    // Initialize URLs - display them directly without converting to Files
-    useEffect(() => {
-        const validDefaultUrls = defaultUrls.filter(url => typeof url === 'string' && url.trim() !== '');
-        const newUrls = validDefaultUrls.filter(url => !initializedUrls.includes(url));
-        if (newUrls.length === 0) return;
-
-        // Store URLs directly for display
-        const urlItemsToAdd = newUrls.map(url => ({
-            url,
-            id: `url-${url}-${Date.now()}-${Math.random()}`
-        }));
-
-        setUrlItems(prev => [...prev, ...urlItemsToAdd]);
-        setInitializedUrls(prev => [...prev, ...newUrls]);
-    }, [defaultUrls.join(',')]);
-
-    // Sync form data whenever files or urlItems change
-    // Only sync if we have defaultUrls or urlItems (for backward compatibility)
-    // When defaultUrls is empty and urlItems is empty, the parent component handles the data directly
-    useEffect(() => {
-        if (defaultUrls.length > 0 || urlItems.length > 0) {
-            const remainingUrls = urlItems.map(item => item.url);
-            setData(name, [...files, ...remainingUrls]);
-        } else if (files.length > 0) {
-            // If no defaultUrls and no urlItems, only sync files (parent will handle merging)
-            // This allows the parent to track new files without interfering with existing media
-            setData(name, files);
-        }
-        // Note: We don't sync when files.length is 0 and defaultUrls/urlItems are empty
-        // to prevent clearing form data when the component resets
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [files, urlItems, name]);
+    }, []);
 
     const onDrop = useCallback(
-        async (incomingFiles: File[]) => {
-            // Filter valid files
-            const validFiles = incomingFiles.filter(file => {
-                if (!isFileSizeValid(file)) {
-                    return false;
-                }
-                if (!isFileTypeAccepted(file)) {
-                    return false;
-                }
-                return true;
-            });
-
-            // Notify the user if any files were rejected
-            if (validFiles.length !== incomingFiles.length) {
-                alert('Some files were rejected due to size limit or invalid file type.');
-            }
-
-            if (validFiles.length === 0) return;
+        async (acceptedFiles: File[]) => {
+            if (acceptedFiles.length === 0) return;
 
             setIsProcessing(true);
 
             try {
-                // Process images with watermark if needed
-                const processedFiles: File[] = [];
-                const newPreviews: Record<string, string> = {};
+                let processedFiles: File[] = [];
 
-                for (const file of validFiles) {
-                    // Create a stable preview key based on file properties
-                    const previewKey = `${file.name}-${file.size}-${file.lastModified}`;
-
-                    // Create preview immediately from original file for instant display
-                    const preview = createPreview(file);
-                    if (!preview) {
-                        console.warn('Failed to create preview for file:', file.name);
+                for (const file of acceptedFiles) {
+                    // Check file size
+                    if (file.size > maxSize) {
+                        alert(`File ${file.name} exceeds maximum size of ${formatFileSize(maxSize)}`);
+                        continue;
                     }
 
-                    let processedFile = file;
-
-                    // Apply watermark to images if watermark config is provided
+                    // Apply watermark if needed
                     if (watermark && file.type.startsWith('image/')) {
                         try {
-                            processedFile = await addWatermarkToImage(file, watermark);
-                            // Update preview with watermarked version
-                            const watermarkedPreview = createPreview(processedFile);
-                            if (watermarkedPreview) {
-                                // Revoke old preview URL
-                                if (preview) {
-                                    URL.revokeObjectURL(preview);
-                                }
-                                newPreviews[previewKey] = watermarkedPreview;
-                            } else if (preview) {
-                                // Keep original preview if watermark preview fails
-                                newPreviews[previewKey] = preview;
-                            }
+                            const watermarkedFile = await addWatermarkToImage(file, watermark);
+                            processedFiles.push(watermarkedFile);
                         } catch (error) {
                             console.error('Error applying watermark:', error);
-                            // Continue with original file if watermark fails
-                            processedFile = file;
-                            if (preview) {
-                                newPreviews[previewKey] = preview;
-                            }
+                            processedFiles.push(file); // Use original if watermark fails
                         }
                     } else {
-                        // No watermark, use original preview
-                        if (preview) {
-                            newPreviews[previewKey] = preview;
-                        }
+                        processedFiles.push(file);
                     }
-
-                    // Store the preview key with the file for lookup
-                    (processedFile as any).__previewKey = previewKey;
-                    processedFiles.push(processedFile);
                 }
 
-                // Update previews first to ensure they're available when rendering
-                setPreviews(prev => ({ ...prev, ...newPreviews }));
-
-                // Use functional updates to avoid dependency on files
-                setFiles(prevFiles => {
-                    const newFiles = [...prevFiles, ...processedFiles];
-
-                    // Update form data with functional updates
-                    setUrlItems(prevUrlItems => {
-                        const remainingUrls = prevUrlItems.map(item => item.url);
-                        setData(name, [...newFiles, ...remainingUrls]);
-                        return prevUrlItems;
+                if (processedFiles.length > 0) {
+                    setFiles(prev => {
+                        const updated = multiple ? [...prev, ...processedFiles] : processedFiles;
+                        setData(name, updated);
+                        return updated;
                     });
-
-                    if (hiddenInputRef.current) {
-                        const dataTransfer = new DataTransfer();
-                        newFiles.forEach((v) => {
-                            dataTransfer.items.add(v);
-                        });
-                        hiddenInputRef.current.files = dataTransfer.files;
-                    }
-
-                    return newFiles;
-                });
+                }
             } catch (error) {
                 console.error('Error processing files:', error);
+                alert('Error processing files. Please try again.');
             } finally {
                 setIsProcessing(false);
             }
         },
-        [name, setData, watermark, maxSize, fileType, accept]
+        [name, setData, watermark, maxSize, multiple]
     );
 
-    const acceptConfig = getAcceptString(fileType, accept);
+    const acceptConfig = getAcceptConfig(accept);
 
     const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
         onDrop,
@@ -607,89 +272,25 @@ function GenericFileUpload({
         },
     });
 
-    // Get input props and add name attribute, capture ref
-    const inputProps = getInputProps();
-    const mergedInputProps = {
-        ...inputProps,
-        name,
-        // @ts-ignore - getInputProps may have internal ref handling, but we need to capture it
-        ref: (node: HTMLInputElement | null) => {
-            // Store ref for form submission
-            (hiddenInputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
-        },
-    };
-
-    const handleRemove = useCallback(
-        (itemToRemove: File | { url: string; id: string }, e: React.MouseEvent) => {
-            e.stopPropagation();
-
-            // Check if it's a File or URL item
-            if (itemToRemove instanceof File) {
-                // Clean up blob URL for this file
-                const previewKey = (itemToRemove as any).__previewKey || `${itemToRemove.name}-${itemToRemove.size}-${itemToRemove.lastModified}`;
-                setPreviews(prev => {
-                    const url = prev[previewKey];
-                    if (url && url.startsWith('blob:')) {
-                        URL.revokeObjectURL(url);
-                    }
-                    const newPreviews = { ...prev };
-                    delete newPreviews[previewKey];
-                    return newPreviews;
-                });
-
-                setFiles(prevFiles => {
-                    const newFiles = prevFiles.filter((f) => f !== itemToRemove);
-
-                    // Update form data with remaining files and URLs
-                    setUrlItems(prevUrlItems => {
-                        const remainingUrls = prevUrlItems.map(item => item.url);
-                        setData(name, [...newFiles, ...remainingUrls]);
-                        return prevUrlItems;
-                    });
-
-                    if (hiddenInputRef.current) {
-                        const dataTransfer = new DataTransfer();
-                        newFiles.forEach((v) => {
-                            dataTransfer.items.add(v);
-                        });
-                        hiddenInputRef.current.files = dataTransfer.files;
-                    }
-
-                    return newFiles;
-                });
-            } else {
-                // Remove URL item
-                setUrlItems(prevUrlItems => {
-                    const newUrlItems = prevUrlItems.filter((item) => item.id !== itemToRemove.id);
-                    // Remove from initialized URLs so it can be re-added if needed
-                    setInitializedUrls(prev => prev.filter(url => url !== itemToRemove.url));
-
-                    // Update form data with remaining URLs
-                    setFiles(prevFiles => {
-                        const remainingUrls = newUrlItems.map(item => item.url);
-                        setData(name, [...prevFiles, ...remainingUrls]);
-                        return prevFiles;
-                    });
-
-                    return newUrlItems;
-                });
-            }
-        },
-        [name, setData]
-    );
-
-    const handleAddMoreClick = (e: React.MouseEvent) => {
-        e.preventDefault();
+    const handleRemove = (fileToRemove: File, e: React.MouseEvent) => {
         e.stopPropagation();
-        open();
-    };
 
-    const getFileIcon = (file: File): string => {
-        if (file.type.startsWith('image/')) return '🖼️';
-        if (file.type.startsWith('video/')) return '🎥';
-        if (file.type === 'application/pdf') return '📄';
-        if (file.type.includes('word') || file.type.includes('document')) return '📝';
-        return '📎';
+        // Cleanup preview URL
+        const key = `${fileToRemove.name}-${fileToRemove.size}-${fileToRemove.lastModified}`;
+        if (previews[key]) {
+            URL.revokeObjectURL(previews[key]);
+            setPreviews(prev => {
+                const newPreviews = { ...prev };
+                delete newPreviews[key];
+                return newPreviews;
+            });
+        }
+
+        setFiles(prev => {
+            const updated = prev.filter(f => f !== fileToRemove);
+            setData(name, updated);
+            return updated;
+        });
     };
 
     const formatFileSize = (bytes: number): string => {
@@ -698,6 +299,13 @@ function GenericFileUpload({
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    };
+
+    const getFileIcon = (file: File): string => {
+        if (file.type.startsWith('image/')) return '🖼️';
+        if (file.type.startsWith('video/')) return '🎥';
+        if (file.type === 'application/pdf') return '📄';
+        return '📎';
     };
 
     return (
@@ -718,111 +326,88 @@ function GenericFileUpload({
                     '--background-color': backgroundColor,
                 } as React.CSSProperties}
             >
-                <input {...mergedInputProps} />
-                {isLoading || isProcessing ? (
+                <input {...getInputProps()} name={name} />
+                {isProcessing ? (
                     <div className="dz-message">
                         <div className="dz-message-text">
                             <div className="spinner-border spinner-border-sm me-2" role="status">
                                 <span className="visually-hidden">Loading...</span>
                             </div>
-                            <p>{isLoading ? 'Loading files...' : 'Processing files...'}</p>
+                            <p>Processing files...</p>
                         </div>
                     </div>
-                ) : files.length === 0 && urlItems.length === 0 ? (
+                ) : files.length === 0 && existingUrls.length === 0 ? (
                     <div className="dz-message">
                         <div className="dz-message-text">
                             <p className="mb-1">{innerText || 'Drop files here or click to upload'}</p>
                             <p className="text-muted small">
-                                {acceptConfig && Object.keys(acceptConfig).length > 0
-                                    ? `Accepted: ${Object.keys(acceptConfig).map(key => {
-                                        const category = key.replace('/*', '');
-                                        const extensions = acceptConfig[key]?.join(', ') || '';
-                                        return category.charAt(0).toUpperCase() + category.slice(1) + (extensions ? ` (${extensions})` : '');
-                                    }).join(', ')}`
-                                    : 'All file types accepted'}
+                                {accept && `Accepted: ${accept}`}
                                 {maxSize && ` • Max size: ${formatFileSize(maxSize)}`}
                             </p>
                         </div>
                     </div>
                 ) : (
                     <div className="dz-preview-container mt-0">
-                        {/* Render URL items (existing images) */}
-                        {urlItems.map((urlItem, index) => {
-                            const errorKey = `${name}.${index}`;
-                            const fileError = errors?.[errorKey] ?? null;
-                            const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(urlItem.url);
-                            const isVideo = /\.(mp4|mov|avi|webm)$/i.test(urlItem.url);
+                        {/* Render existing URLs */}
+                        {existingUrls.map((url, index) => {
+                            const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(url) || url.includes('preview') || url.includes('image');
+                            const isVideo = /\.(mp4|mov|avi|webm)$/i.test(url) || url.includes('video');
+                            const isDocument = /\.(pdf|doc|docx)$/i.test(url);
 
                             return (
-                                <div key={urlItem.id} className="dz-preview dz-file-preview">
+                                <div key={`existing-${url}-${index}`} className="dz-preview dz-file-preview">
                                     <div className="dz-image">
                                         {isImage ? (
-                                            <img src={urlItem.url} alt="Preview" onError={(e) => {
-                                                (e.target as HTMLImageElement).style.display = 'none';
-                                                (e.target as HTMLImageElement).nextElementSibling?.classList.remove('d-none');
-                                            }} />
+                                            <img
+                                                src={url}
+                                                alt={`Existing file ${index + 1}`}
+                                                style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).style.display = 'none';
+                                                }}
+                                            />
                                         ) : isVideo ? (
-                                            <video src={urlItem.url} controls={false} muted>
-                                                <source src={urlItem.url} />
+                                            <video src={url} controls={false} muted style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
+                                                <source src={url} />
                                             </video>
                                         ) : (
-                                            <div className="dz-file-representation">📄</div>
+                                            <div className="dz-file-representation">
+                                                {isDocument ? '📄' : '📎'}
+                                            </div>
                                         )}
                                         {isVideo && (
                                             <div className="dz-video-overlay">
                                                 <span className="dz-video-icon">▶</span>
                                             </div>
                                         )}
-                                        {isImage && (
-                                            <div className="dz-file-representation d-none">🖼️</div>
-                                        )}
                                     </div>
                                     <div className="dz-details">
-                                        <div className="dz-filename" title={urlItem.url}>
-                                            {urlItem.url.split('/').pop() || 'File'}
+                                        <div className="dz-filename" title={url}>
+                                            {url.split('/').pop() || 'Existing file'}
                                         </div>
                                         <div className="dz-size">Existing file</div>
-                                        {fileError && (
-                                            <div className="text-danger small mt-1">{fileError}</div>
-                                        )}
-                                    </div>
-                                    <div
-                                        className="dz-remove"
-                                        onClick={(e) => handleRemove(urlItem, e)}
-                                        role="button"
-                                        tabIndex={0}
-                                        aria-label="Remove file"
-                                    >
-                                        ✕
                                     </div>
                                 </div>
                             );
                         })}
-                        {/* Render File items (newly uploaded) */}
+                        {/* Render new files */}
                         {files.map((file, index) => {
-                            const errorKey = `${name}.${urlItems.length + index}`;
-                            const fileError = errors?.[errorKey] ?? null;
-
-                            // Get preview URL from state using preview key
-                            const previewKey = (file as any).__previewKey || `${file.name}-${file.size}-${file.lastModified}`;
-                            const previewUrl = previews[previewKey] || null;
+                            const key = `${file.name}-${file.size}-${file.lastModified}`;
+                            const previewUrl = previews[key];
+                            const isImage = file.type.startsWith('image/');
+                            const isVideo = file.type.startsWith('video/');
 
                             return (
-                                <div key={`${file.name}-${file.size}-${file.lastModified}-${index}`} className="dz-preview dz-file-preview">
+                                <div key={`${key}-${index}`} className="dz-preview dz-file-preview">
                                     <div className="dz-image">
                                         {previewUrl ? (
-                                            file.type.startsWith('image/') ? (
+                                            isImage ? (
                                                 <img
                                                     src={previewUrl}
                                                     alt={file.name}
                                                     style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
-                                                    onError={(e) => {
-                                                        (e.target as HTMLImageElement).style.display = 'none';
-                                                        const fallback = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
-                                                        if (fallback) fallback.classList.remove('d-none');
-                                                    }}
                                                 />
-                                            ) : file.type.startsWith('video/') ? (
+                                            ) : isVideo ? (
                                                 <video src={previewUrl} controls={false} muted style={{ width: '100%', height: '100%', objectFit: 'cover' }}>
                                                     <source src={previewUrl} type={file.type} />
                                                 </video>
@@ -832,9 +417,7 @@ function GenericFileUpload({
                                         ) : (
                                             <div className="dz-file-representation">{getFileIcon(file)}</div>
                                         )}
-                                        {/* Fallback icon (hidden by default) */}
-                                        <div className="dz-file-representation d-none">{getFileIcon(file)}</div>
-                                        {file.type.startsWith('video/') && (
+                                        {isVideo && (
                                             <div className="dz-video-overlay">
                                                 <span className="dz-video-icon">▶</span>
                                             </div>
@@ -845,9 +428,6 @@ function GenericFileUpload({
                                             {file.name}
                                         </div>
                                         <div className="dz-size">{formatFileSize(file.size)}</div>
-                                        {fileError && (
-                                            <div className="text-danger small mt-1">{fileError}</div>
-                                        )}
                                     </div>
                                     <div
                                         className="dz-remove"
@@ -865,10 +445,14 @@ function GenericFileUpload({
                 )}
             </div>
 
-            {(files.length > 0 || urlItems.length > 0) && multiple && (
+            {(files.length > 0 || existingUrls.length > 0) && multiple && files.length > 0 && (
                 <button
                     type="button"
-                    onClick={handleAddMoreClick}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        open();
+                    }}
                     className="btn btn-outline-primary btn-sm mt-3"
                     disabled={isProcessing}
                 >
@@ -1040,4 +624,3 @@ function GenericFileUpload({
 }
 
 export default GenericFileUpload;
-
