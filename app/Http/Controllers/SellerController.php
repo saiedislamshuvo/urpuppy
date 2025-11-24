@@ -69,7 +69,7 @@ class SellerController extends Controller
         }
 
         return inertia('Seller/Registration', [
-            'puppy_count' => $user->puppies()->count(),
+            'puppy_count' => 0, //$user->puppies()->count(),
             'puppy_edit' => null,
             'defaultLocation' => $defaultLocation,
         ]);

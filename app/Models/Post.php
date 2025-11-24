@@ -33,4 +33,9 @@ class Post extends ModelsPost implements ReactableInterface
             ->getReactionCounterOfType('Unlike')
             ?->getCount() ?? 0;
     }
+
+    public function getBannerUrlAttribute()
+    {
+        return url("/media/".$this->banner);
+    }
 }

@@ -35,7 +35,7 @@ class PuppyFactory extends Factory
             'view_count' => 1,
             'birth_date' => $this->faker->dateTimeBetween('-2 years', 'now'),
             'user_id' => User::factory()->create()->id,
-            'price' => (int) $this->faker->numberBetween(10, 50000),
+            'price' => (int) $this->faker->numberBetween(100, 4000),
             'description' => $this->faker->paragraph(5, true),
         ];
     }

@@ -101,7 +101,7 @@ class BreedResource extends Resource
                 TextColumn::make('name')->searchable()->sortable()->url(function ($record) {
                     return route('breeds.show', $record->slug);
                 })->color('primary')->openUrlInNewTab(),
-                TextColumn::make('description')->limit(50)->searchable(),
+                TextColumn::make('history_description')->limit(50)->html()->searchable(),
             ])
             ->defaultSort('name', 'asc')
             ->filters([

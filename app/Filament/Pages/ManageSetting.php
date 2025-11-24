@@ -430,7 +430,7 @@ class ManageSetting extends SettingsPage
                                                                             ->label('Link Title')
                                                                             
                                                                             ->maxLength(255)
-                                                                            ->placeholder('e.g., Find A Puppy')
+                                                                            ->placeholder('e.g., Find Ur Puppy')
                                                                             ->columnSpan(1),
 
                                                                         TextInput::make('link')

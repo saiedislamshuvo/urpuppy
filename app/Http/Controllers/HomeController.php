@@ -69,11 +69,20 @@ class HomeController extends Controller
                         ->get();
                     
                     return $breeds->map(function ($breed) {
+                        // Get a random breeder for this breed
+                        $randomBreeder = User::breeders()
+                            ->whereHas('breeds', function ($q) use ($breed) {
+                                $q->where('breeds.id', $breed->id);
+                            })
+                            ->inRandomOrder()
+                            ->first();
+                        
                         // Create BreedData with random_breeder_slug
                         return BreedData::from([
                             'name' => $breed->name,
                             'slug' => $breed->slug,
                             'image' => $breed->image,
+                            'random_breeder_slug' => $randomBreeder?->slug,
                         ]);
                     });
                 });
@@ -126,7 +135,7 @@ class HomeController extends Controller
             'puppy_spotlights' => $spotlights,
             'videos' => get_videos(),
             'trusted_breeders' => BreederFullData::collect($results['trusted_breeders']),
-            'price_filter_range' => [@$request->query('filter')['price'][0] ?? 1,  @$request->query('filter')['price'][1] ?? 50000],
+            'price_filter_range' => [@$request->query('filter')['price'][0] ?? 100,  @$request->query('filter')['price'][1] ?? 4000],
             'new_arrivals' => $newArrivals,
             'featured_breeds' => BreedData::collect($results['featured_breeds']),
             'post_data' => PostData::collect($results['posts']),

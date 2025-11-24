@@ -287,8 +287,8 @@ class PuppyResource extends Resource
                         Grid::make(3)
                             ->schema([
                                 TextInput::make('address')
-                                    ->label('Address')
-                                    ->placeholder('e.g., 123 Main Street')
+                                    ->label('House No')
+                                    ->placeholder('e.g., 123 House Number')
                                     ->maxLength(255)
                                     ->columnSpan(1),
                                 

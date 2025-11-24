@@ -44,7 +44,7 @@ const TopPicks = ({ puppy }: { puppy: App.Data.PuppyData }) => {
                 <div className="col-12">
                   <div className="d-flex align-items-center gap-2 mb-2">
                     <img src="/images/svgs/icon-map-pin.svg" alt="urpuppy-img" width="20" height="20" />
-                    <p className="mb-0">{puppy.state || puppy.seller?.address || 'Location not available'}</p>
+                    <p className="mb-0">{`${puppy?.city || ''}${(puppy?.city || '').length > 0 ? ', ' : ''}${puppy?.state || ''}`}</p>
                   </div>
                 </div>
                 <div className="col-12">
@@ -53,17 +53,20 @@ const TopPicks = ({ puppy }: { puppy: App.Data.PuppyData }) => {
                     <p className="mb-0">{puppy.breeds[0]?.name}</p>
                   </div>
                 </div>
+                <div className="col-12">
+                  <div className="d-flex align-items-center gap-2 mb-2"> 
+                    <img src="/images/svgs/icon-female.svg" alt="urpuppy-img" width="20" height="20" />
+                    <p className="mb-0">{puppy.gender}</p>
+                  </div>
+                </div>
                 <div className="col-6">
-                  <div className="d-flex align-items-center gap-2">
+                  <div className="d-flex align-items-center gap-2 mb-2">
                     <img src="/images/svgs/icon-calendar.svg" alt="urpuppy-img" width="20" height="20" />
                     <p className="mb-0">{puppy.age}</p>
                   </div>
                 </div>
                 <div className="col-6">
-                  <Gender gender={puppy.gender} />
-                </div>
-                <div className="col-12">
-                  <div className="d-flex align-items-center gap-2">
+                  <div className="d-flex align-items-center gap-2 mb-2">
                     <img src="/images/svgs/icon-eye.svg" alt="urpuppy-img" width="20" height="20" />
                     <p className="mb-0">{puppy.view_count} Views</p>
                   </div>
@@ -82,16 +85,16 @@ const TopPicks = ({ puppy }: { puppy: App.Data.PuppyData }) => {
               </div>
               <h3 className="mb-3 fs-8">About {puppy.name}</h3>
               <p className="mb-3">{puppy.description}</p>
-              {puppy.features && puppy.features.length > 0 &&
-                <div className="rounded-pill px-3 py-6 d-flex align-items-center align-items-start gap-6 bg-extralight mb-3">
-                  <img src="/images/svgs/icon-heart-plus.svg" alt="urpuppy-img" />
-                  <div className="d-flex flex-column gap-2">
-                    {puppy.features.map((feature: string, index: number) => (
-                      <List label={feature} key={index} />
-                    ))}
-                  </div>
-                </div>
-              }
+              {puppy.features && puppy.features?.length > 0 &&
+                        <div className="charlies-features mt-3 pt-1">
+                          <h5 className="mb-3 pb-1 fs-5">{puppy.name}’s Features</h5>
+                          <div className="d-flex align-items-center flex-wrap gap-4">
+                            {puppy.features && puppy.features.map((feature: string, index: number) => (
+                              <List label={feature} key={index} />
+                            ))}
+                          </div>
+                        </div>
+                }
             </div>
           </div>
         </div>

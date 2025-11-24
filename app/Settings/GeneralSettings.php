@@ -54,7 +54,7 @@ class GeneralSettings extends Settings
 
     // Footer section
     public ?string $footer_logo = '';
-    public ?string $footer_coloum1_title = 'Find A Puppy';
+    public ?string $footer_coloum1_title = 'Find Ur Puppy';
     public ?array $footer_coloum1 = [
         ['title' => 'View All Puppies', 'link' => '/puppies'],
         ['title' => 'View All Breeds', 'link' => '/breeds'],

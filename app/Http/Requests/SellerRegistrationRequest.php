@@ -32,7 +32,7 @@ class SellerRegistrationRequest extends FormRequest
             'social_ig' => ['nullable', 'string', 'max:100', 'url'],
             'social_tiktok' => ['nullable', 'string', 'max:100', 'url'],
             'social_x' => ['nullable', 'string', 'max:100', 'url'],
-            'zip_code' => ['nullable', 'string', 'max:20'],
+            'zip_code' => ['required', 'string', 'max:20'],
         ];
         
         // Location fields (optional)

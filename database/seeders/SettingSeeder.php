@@ -63,7 +63,7 @@ class SettingSeeder extends Seeder
 
         // Footer section demo
         $settings->footer_logo = '';
-        $settings->footer_coloum1_title = 'Find A Puppy';
+        $settings->footer_coloum1_title = 'Find Ur Puppy';
         $settings->footer_coloum1 = [
             ['title' => 'View All Puppies', 'link' => '/puppies'],
             ['title' => 'View All Breeds', 'link' => '/breeds'],

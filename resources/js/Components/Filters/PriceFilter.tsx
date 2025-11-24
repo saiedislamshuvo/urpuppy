@@ -13,9 +13,10 @@ interface FilterBoxProps {
 interface PriceFilterProps {
   setPrice: React.Dispatch<React.SetStateAction<FilterBoxProps>>;
   range?: [number, number];
+  mobile?: boolean;
 }
 
-const PriceFilter: React.FC<PriceFilterProps> = ({ setPrice, range = [1, 10000] }) => {
+const PriceFilter: React.FC<PriceFilterProps> = ({ setPrice, range = [1, 10000], mobile = false }) => {
   const { props } = usePage();
   const price_filter_range = props.price_filter_range as [number, number] | undefined;
 
@@ -50,26 +51,26 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ setPrice, range = [1, 10000] 
     }));
   }, [setPrice]);
 
-    const renderThumb = useCallback(({ props }: { props: any }) => {
-  const { key, ...restProps } = props; // Extract key and keep the rest
-  return (
-    <div
-      key={key}  // Pass key directly
-      {...restProps} // Spread the rest
-      style={{
-        ...restProps.style,
-        height: '17px',
-        width: '17px',
-        borderRadius: '90px',
-        boxShadow: '0px 0px 0px 5px rgba(232, 131, 37, 0.2)',
-        backgroundColor: 'var(--bs-primary)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    />
-  );
-}, []);
+  const renderThumb = useCallback(({ props }: { props: any }) => {
+    const { key, ...restProps } = props; // Extract key and keep the rest
+    return (
+      <div
+        key={key}  // Pass key directly
+        {...restProps} // Spread the rest
+        style={{
+          ...restProps.style,
+          height: '17px',
+          width: '17px',
+          borderRadius: '90px',
+          boxShadow: '0px 0px 0px 5px rgba(232, 131, 37, 0.2)',
+          backgroundColor: 'var(--bs-primary)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      />
+    );
+  }, []);
 
   // Memoized track render
   const renderTrack = useCallback(({ props, children }: { props: any; children: React.ReactNode }) => (
@@ -78,7 +79,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ setPrice, range = [1, 10000] 
       onTouchStart={props.onTouchStart}
       style={{
         ...props.style,
-        height: '36px',
+        height: '50px',
         display: 'flex',
         width: '100%',
       }}
@@ -86,7 +87,7 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ setPrice, range = [1, 10000] 
       <div
         ref={props.ref}
         style={{
-          height: '5px',
+          height: '8px',
           width: '100%',
           borderRadius: '4px',
           background: trackBackground,
@@ -103,77 +104,88 @@ const PriceFilter: React.FC<PriceFilterProps> = ({ setPrice, range = [1, 10000] 
     `$${priceRange[0].toLocaleString()} - $${priceRange[1].toLocaleString()}`
   ), [priceRange]);
 
+  // Render price range slider directly (mobile)
+  const renderDirectRange = () => (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        position: 'relative',
+        width: '100%',
+        paddingTop: '0px',
+        paddingBottom: '0px',
+      }}
+    >
+      <Range
+        values={priceRange}
+        step={1}
+        min={min}
+        max={max}
+        onChange={handlePriceChange}
+        renderTrack={renderTrack}
+        renderThumb={renderThumb}
+      />
+
+      {/* Price labels */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-15px',
+          left: '0',
+          color: 'var(--bs-secondary)',
+          fontSize: '12px',
+          fontFamily: 'Arial, Helvetica Neue, Helvetica, sans-serif',
+          padding: '4px',
+          borderRadius: '4px',
+          backgroundColor: 'var(--secondary-color)',
+        }}
+      >
+        ${priceRange[0].toLocaleString()}
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          top: '-15px',
+          right: '0',
+          color: 'var(--bs-secondary)',
+          fontSize: '12px',
+          fontFamily: 'Arial, Helvetica Neue, Helvetica, sans-serif',
+          padding: '4px',
+          borderRadius: '4px',
+          backgroundColor: 'var(--secondary-color)',
+        }}
+      >
+        ${priceRange[1].toLocaleString()}
+      </div>
+    </div>
+  );
+
   return (
     <>
       <span className="flex-shrink-0">
         <img src="/images/svgs/icon-dollar.svg" alt="Price filter" />
       </span>
-      <div>
-        <h6 className="font-work-sans mb-0">Price range</h6>
-        <div className="dropdown">
-          <button
-            type="button"
-            className="btn btn-primary p-0 bg-white border-0 text-dark fs-2 fw-normal shadow-none"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            data-bs-auto-close="outside"
-          >
-            <span>e.g. ({priceDisplay})</span>
-          </button>
-          <div className="dropdown-menu p-3">
-            <div
-              className="mx-2"
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-                position: 'relative',
-              }}
+      <div className={`${mobile ? 'w-100' : ''}`}>
+        <h6 className={`font-work-sans ${mobile ? 'mb-3' : 'mb-0'}`}>Price Range</h6>
+        {mobile ? (
+          renderDirectRange()
+        ) : (
+          <div className="dropdown">
+            <button
+              type="button"
+              className="btn btn-primary p-0 bg-white border-0 text-dark fs-2 fw-normal shadow-none"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              data-bs-auto-close="outside"
             >
-              <Range
-                values={priceRange}
-                step={0.1}
-                min={min}
-                max={max}
-                onChange={handlePriceChange}
-                renderTrack={renderTrack}
-                renderThumb={renderThumb}
-              />
-
-              {/* Price labels */}
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '-15px',
-                  left: '0',
-                  color: 'var(--bs-secondary)',
-                  fontSize: '12px',
-                  fontFamily: 'Arial, Helvetica Neue, Helvetica, sans-serif',
-                  padding: '4px',
-                  borderRadius: '4px',
-                  backgroundColor: 'var(--secondary-color)',
-                }}
-              >
-                ${priceRange[0].toLocaleString()}
-              </div>
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '-15px',
-                  right: '0',
-                  color: 'var(--bs-secondary)',
-                  fontSize: '12px',
-                  fontFamily: 'Arial, Helvetica Neue, Helvetica, sans-serif',
-                  padding: '4px',
-                  borderRadius: '4px',
-                  backgroundColor: 'var(--secondary-color)',
-                }}
-              >
-                ${priceRange[1].toLocaleString()}
-              </div>
+              <span>e.g. ({priceDisplay})</span>
+            </button>
+            <div className="dropdown-menu p-3">
+              {renderDirectRange()}
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

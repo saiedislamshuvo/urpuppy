@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <div class="w-1/2 md:w-1/3 lg:w-1/6 px-4 mb-12 lg:mb-0 lg:pl-12">
-                    <span class="font-semibold font-work-sans mb-4 text-white block">Find A Puppy</span>
+                    <span class="font-semibold font-work-sans mb-4 text-white block">Find Ur Puppy</span>
                     <ul class="list-none mt-4">
                         <li class="mb-4">
                             <a aria-label="View All Puppies" href="/puppies"

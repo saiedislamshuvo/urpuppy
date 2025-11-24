@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Watermark Generator - {{ config('app.name', 'Laravel') }}</title>
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            @livewire('watermark-generator')
+        </div>
+    </div>
+    
+    @livewireScripts
+    <script>
+        // Ensure Livewire is loaded
+        if (typeof Livewire === 'undefined') {
+            console.warn('Livewire is not loaded. Make sure Livewire scripts are included.');
+        }
+    </script>
+</body>
+</html>
+

@@ -45,7 +45,6 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
           <div className="container">
             <div className="mb-2">
               <Link href="/puppies" className="text-primary">Back</Link>
-
             </div>
             <div className="row">
               <div className="col-lg-8 col-xl-9">
@@ -89,38 +88,50 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
 
                             </div>
                           </div>
-                          <div className="row mb-2">
-                            <div className="col-6 col-md-4 mb-6 border-end">
-                              <div className="d-flex align-items-center gap-2">
-                                <img src="../images/svgs/icon-time.svg" alt="time" width="18" height="18" />
-                                <p className="mb-0 fs-2">{puppy.published_at}</p>
+
+                          <div className="col-12">
+                              <div className="d-flex align-items-center gap-2 mb-2">
+                                <img src="../images/svgs/icon-map-pin.svg" alt="map" width="20" height="20" />
+                                <p className="mb-0 ">{`${puppy?.city || ''}${(puppy?.city || '').length > 0 ? ', ' : ''}${puppy?.state || ''}`}</p>
                               </div>
                             </div>
-                            <div className="col-6 col-md-4 mb-6 border-end">
-                              <div className="d-flex align-items-center gap-2">
-                                <img src="../images/svgs/icon-map-pin.svg" alt="map" width="18" height="18" />
-                                <p className="mb-0 fs-2">{puppy.seller?.address || 'Location not available'}</p>
-                              </div>
-                            </div>
-                            <div className="col-6 col-md-4 mb-6 border-end">
-                              <div className="d-flex align-items-center gap-2">
-                                <img src="../images/svgs/icon-calendar.svg" alt="calendar" width="18" height="18" />
-                                <p className="mb-0 fs-2">{puppy.age}</p>
-                              </div>
-                            </div>
-                            <div className="col-6 col-md-4 mb-6 border-end">
-                              <div className="d-flex align-items-center gap-2">
-                                <img src="../images/svgs/icon-female.svg" alt="female" width="18" height="18" />
-                                <p className="mb-0 fs-2">{puppy.gender}</p>
-                              </div>
-                            </div>
-                            <div className="col-6 col-md-4 mb-6">
-                              <div className="d-flex align-items-center gap-2">
-                                <img src="../images/svgs/icon-eye.svg" alt="eye" width="18" height="18" />
-                                <p className="mb-0 fs-2">{puppy.view_count} Views</p>
-                              </div>
+                            <div className="col-12">
+                              <div className="d-flex align-items-center gap-2 mb-2">
+                               <img loading="lazy" src="/images/svgs/icon-paws-dark.svg" alt="urpuppy-img" width="20" height="20" />
+                                <p className="mb-0">{puppy.breeds?.[0]?.name ?? ""}</p>
                             </div>
                           </div>
+                          <div className="row mb-2">
+                          <div className="col-6">
+                              <div className="d-flex align-items-center gap-2 mb-2">
+                                <img src="../images/svgs/icon-female.svg" alt="Female" width="18" height="18" />
+                                <p className="mb-0 text-capitalize">{puppy.gender}</p>
+                              </div>
+                            </div>
+
+                            <div className="col-6">
+                              <div className="d-flex align-items-center gap-2 mb-2">
+                                <img src="../images/svgs/icon-calendar.svg" alt="calendar" width="18" height="18" />
+                                <p className="mb-0 ">{puppy.age}</p>
+                              </div>
+                            </div>
+                            </div>
+
+                            <div className="row mb-2">
+                            <div className="col-6">
+                              <div className="d-flex align-items-center gap-2 mb-2">
+                                <img src="../images/svgs/icon-time.svg" alt="time" width="18" height="18" />
+                                <p className="mb-0 ">{puppy.published_at}</p>
+                              </div>
+                            </div>
+                            
+                            <div className="col-6">
+                              <div className="d-flex align-items-center gap-2 mb-2">
+                                <img src="../images/svgs/icon-eye.svg" alt="eye" width="18" height="18" />
+                                <p className="mb-0 ">{puppy.view_count} Views</p>
+                              </div>
+                            </div>
+                          </div> 
 
                           <p className="mb-1 fs-2 fw-medium">Our price</p>
                           <h2 className="mb-4">{puppy.formatted_price}</h2>
@@ -194,8 +205,7 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
                   </div>
 
                 }
-
-
+                
                 {
                   puppy.seller?.is_breeder &&
                   <div className="card position-relative overflow-hidden border">

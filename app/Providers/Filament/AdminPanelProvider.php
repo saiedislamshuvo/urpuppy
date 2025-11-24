@@ -92,7 +92,7 @@ class AdminPanelProvider extends PanelProvider
             ])->plugins([
                 PhosphorIcons::make(),
                 BlogPlugin::make(),
-                FilamentClearCachePlugin::make(),
+                // FilamentClearCachePlugin::make(),
                 \Phpsa\FilamentAuthentication\FilamentAuthentication::make(),
                 FilamentMailsPlugin::make(),
                 FilamentShieldPlugin::make()

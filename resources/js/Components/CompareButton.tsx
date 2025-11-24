@@ -9,7 +9,7 @@ const CompareButton = ({ puppyId, sellerId, isCompared, uniqueId = null }: {
 }) => {
     return <> <Tooltip content={(
 
-        <Link method="patch" preserveState={false} preserveScroll={false} href={`/compares/${puppyId}`} data-bs-toggle="tooltip" data-bs-title="Add To Compare"
+        <Link method="get" preserveState={false} preserveScroll={false} href={`/compares/${puppyId}`} data-bs-toggle="tooltip" data-bs-title="Add To Compare"
             className="bg-white border d-flex align-items-center justify-content-center round-40 rounded-circle">
             {isCompared ? (
                 <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">

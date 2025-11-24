@@ -35,6 +35,7 @@ class BreederController extends Controller
 
 
         return inertia()->render('Breeders/Index', [
+            'breed' => $breed,
             'breeders' => BreederFullData::collect($breeders),
             'seo_title' => 'Searched for ' . $breed ?? 'A breed',
             'seo_description' => 'Searching for ' . $breed ?? 'A breed',

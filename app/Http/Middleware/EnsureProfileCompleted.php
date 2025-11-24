@@ -32,10 +32,11 @@ class EnsureProfileCompleted
         if ($user->is_breeder) {
             $profile_completed = $user->breeder_profile_completed ?? false;
         } elseif ($user->is_seller) {
-            $profile_completed = $user->profile_complete ?? false;
+            $profile_completed = $user->profile_completed ?? false;
         } else {
             $profile_completed = $user->profile_completed ?? false;
         }
+        
         if (!$profile_completed) {
             // For breeders, redirect to breeder profile setup
             if ($user->is_breeder) {

@@ -3,16 +3,18 @@ import React from 'react'
 import Banner from '../Home/Sections/Banner'
 import { PaginatedCollection } from '@/types/global'
 import PuppyCard from '@/Components/Puppy/Card'
+import ListCard from '@/Components/Puppy/ListCard'
 import Pagination from '@/Components/Pagination'
 import Layout from '@/Layouts/Layout'
 import MetaTags from '@/Components/MetaTags'
 import { Link, usePage } from '@inertiajs/react'
 import SavedSearchModal from '@/Components/Modals/SavedSearchModal'
 
-const Index = ({ puppies, states, breeds, has_search, seo_title, seo_description, url }: {
+const Index = ({ puppies, states, breeds, breed, has_search, seo_title, seo_description, url }: {
   puppies: PaginatedCollection<App.Data.PuppyData>
   states: App.Data.StateData[],
   breeds: App.Data.BreedData[],
+  breed: string,
   has_search: boolean,
   seo_title: string,
   seo_description: string,
@@ -29,18 +31,26 @@ const Index = ({ puppies, states, breeds, has_search, seo_title, seo_description
 
       {!has_search ?
         <Banner size="md" header={defaultHeader} subheader={defaultSubheader} backgroundImage={defaultBackground} /> :
-        <Banner size="md" header={`${puppies.total} Results`} subheader="Below the search bar, you can filter your preferred breeds." />}
+        <Banner size="md" header={`${puppies.total} Results`} subheader={`Available ${breed || ''} Puppies Based on Your Search`} />}
 
       <section className="puppy-spotlight py-7 py-md-5 py-xl-9" id="scroll-target">
         <div className="container" >
           <SavedSearchModal has_search={has_search} />
-          <div className="row mb-4 mb-lg-8">
+          {/* Desktop Card View */}
+          <div className="row mb-4 mb-lg-8 d-none d-md-flex">
             {
-              puppies?.data && puppies?.data.map((puppy: App.Data.PuppyData) => (
+              puppies?.data && puppies?.data.map((puppy: App.Data.PuppyCardData) => (
                 <PuppyCard key={puppy.id} puppy={puppy} />
               ))
             }
-
+          </div>
+          {/* Mobile List View */}
+          <div className="d-block d-md-none mb-4 mb-lg-8">
+            {
+              puppies?.data && puppies?.data.map((puppy: App.Data.PuppyCardData) => (
+                <ListCard key={puppy.id} puppy={puppy} />
+              ))
+            }
           </div>
         </div>
 

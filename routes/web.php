@@ -109,11 +109,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/api/media/delete', [\App\Http\Controllers\MediaController::class, 'delete'])->name('media.delete');
     Route::get('/api/media/limits', [\App\Http\Controllers\MediaController::class, 'limits'])->name('media.limits');
     
+    // Watermark generator route
+    Route::get('/watermark-generator', function () {
+        return view('livewire.watermark-generator-page');
+    })->name('watermark.generator');
+    
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
-    Route::patch('/favorites/{puppy}', FavoriteController::class)->name('favorite.toggle');
+    Route::get('/favorites/{puppy}', FavoriteController::class)->name('favorite.toggle');
 
     Route::get('/compares', [CompareController::class, 'index'])->name('compares.index');
-    Route::patch('/compares/{puppy}', CompareController::class)->name('compare.toggle');
+    Route::get('/compares/{puppy}', CompareController::class)->name('compare.toggle');
 
     Route::get('/breeder-listings/create', [BreederListingController::class, 'create'])->name('breeder_listings.create');
     Route::post('/breeder-listings', [BreederListingController::class, 'store'])->name('breeder_listings.store');

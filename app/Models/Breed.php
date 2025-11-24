@@ -67,8 +67,18 @@ class Breed extends Model implements HasMedia, Sitemapable
         $mediaItem = $this->getFirstMedia('media');
 
         $bag = $mediaItem ? $mediaItem->getUrl('thumbnail') : $mediaItem ?? asset('paw.svg');
+        if ($mediaItem) {
+            $bag = $mediaItem->getUrl('thumbnail');
+        } else {
+            $bag = $mediaItem ?? asset('paw.svg');
+        }
 
-        return $bag;
+        // If the $bag already has http or https, return as-is, else prefix with url('/storage')
+        if (is_string($bag) && (str_starts_with($bag, 'http://') || str_starts_with($bag, 'https://'))) {
+            return $bag;
+        }
+
+        return url('/storage'.$bag);
     }
 
     public function media(): MorphMany

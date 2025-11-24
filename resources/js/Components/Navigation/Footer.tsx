@@ -10,7 +10,7 @@ const Footer = () => {
 
   // Footer columns - use settings or fallback to default static content
   const column1 = {
-    title: settings?.footer_coloum1_title || 'Find A Puppy',
+    title: settings?.footer_coloum1_title || 'Find Ur Puppy',
     links: settings?.footer_coloum1?.length > 0 ? settings.footer_coloum1 : [
       { title: 'View All Puppies', link: '/puppies' },
       { title: 'View All Breeds', link: '/breeds' }

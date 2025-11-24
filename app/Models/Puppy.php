@@ -418,17 +418,55 @@ class Puppy extends Model implements HasMedia, Sitemapable
         $now = Carbon::now();
 
         $days = (int) $birthDate->diffInDays($now);
+        $weeks = (int) floor($days / 7);
 
-        if ($days < 7) {
-            $dayWord = $days === 1 ? 'day' : 'days';
+        // Old logic - commented out
+        // if ($days < 7) {
+        //     $dayWord = $days === 1 ? 'day' : 'days';
+        //     return "{$days} {$dayWord}";
+        // }
+        // $weeks = (int) floor($days / 7);
+        // $weekWord = $weeks === 1 ? 'week' : 'weeks';
+        // return "{$weeks} {$weekWord}";
 
-            return "{$days} {$dayWord}";
+        // Previous logic - commented out
+        // New logic: show weeks until 52, then years
+        // if ($weeks < 52) {
+        //     $weekWord = $weeks === 1 ? 'week' : 'weeks';
+        //     return "{$weeks} {$weekWord}";
+        // }
+        // // 52 weeks or more: show in years
+        // // 52-103 weeks = 1 year, 104+ weeks = calculate years
+        // $years = (int) floor($weeks / 52);
+        // $yearWord = $years === 1 ? 'year' : 'years';
+        // return "{$years} {$yearWord}";
+
+        // New logic: show only the max unit (weeks < 4, then months, then years)
+        if ($weeks < 4) {
+            $weekWord = $weeks === 1 ? 'week' : 'weeks';
+            return "{$weeks} {$weekWord}";
         }
 
-        $weeks = (int) floor($days / 7);
-        $weekWord = $weeks === 1 ? 'week' : 'weeks';
+        // 4 weeks or more but less than 1 year (52 weeks): show months
+        if ($weeks < 52) {
+            $months = (int) floor($weeks / 4);
+            $monthWord = $months === 1 ? 'month' : 'months';
+            return "{$months} {$monthWord}";
+        }
 
-        return "{$weeks} {$weekWord}";
+        // 52 weeks (1 year) or more: show years and remaining months
+        $years = (int) floor($weeks / 52);
+        $remainingWeeks = $weeks % 52;
+        $remainingMonths = (int) floor($remainingWeeks / 4);
+        
+        $yearWord = $years === 1 ? 'year' : 'years';
+        
+        if ($remainingMonths > 0) {
+            $monthWord = $remainingMonths === 1 ? 'month' : 'months';
+            return "{$years} {$yearWord} {$remainingMonths} {$monthWord}";
+        }
+        
+        return "{$years} {$yearWord}";
     }
 
     public function getShortDescriptionAttribute()

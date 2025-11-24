@@ -38,12 +38,6 @@ const PuppyCard = ({ puppy, className = "col-md-6 col-lg-4 col-xl-3 mb-4", heigh
                       <span className="badge text-bg-success">NEW</span>
                     </span> : null
                 }
-                {
-                  (puppy.state || (puppy.seller as any)?.short_state || (puppy.seller as any)?.company_short_state) ?
-                    <span className="badge text-bg-success">
-                      {puppy.state || (puppy.seller as any)?.short_state || (puppy.seller as any)?.company_short_state}
-                    </span> : null
-                }
               </div>
               <div className="d-flex flex-column gap-2">
                 <FavoriteButton uniqueId={location + puppy.id} sellerId={puppy.seller?.id} puppyId={puppy.id} isFavorite={puppy.is_favorite} />
@@ -60,30 +54,33 @@ const PuppyCard = ({ puppy, className = "col-md-6 col-lg-4 col-xl-3 mb-4", heigh
                 <div className="col-12">
                   <div className="d-flex align-items-center gap-2 mb-2">
                     <img loading="lazy" src="/images/svgs/icon-map-pin.svg" alt="urpuppy-img" width="20" height="20" />
-                    <p className="mb-0 text-truncate">{puppy?.state || puppy.seller?.address}</p>
+                    <p className="mb-0 text-truncate">{`${puppy?.city || ''}${(puppy?.city || '').length > 0 ? ', ' : ''}${puppy?.state || ''}`}</p>
                   </div>
                 </div>
-                <div className="col-6">
-                  <div className="d-flex align-items-center gap-2">
+                <div className="col-12">
+                  <div className="d-flex align-items-center gap-2 mb-2">
                     <img loading="lazy" src="/images/svgs/icon-paws-dark.svg" alt="urpuppy-img" width="20" height="20" />
                     <p className="mb-0">{puppy.breeds[0]?.name ?? null}</p>
                   </div>
                 </div>
-                <div className="col-6">
+                <div className="col-4">
                   <div className="d-flex align-items-center gap-2 mb-2">
+                    <img src="/images/svgs/icon-female.svg" alt="urpuppy-img" width="20" height="20" />
+                    <p className="mb-0 text-capitalize">{(puppy.gender || '')}</p>
+                  </div>
+                </div>
+                <div className="col-8">
+                  <div className="d-flex align-items-center justify-content-end gap-2 mb-2">
                     <img loading="lazy" src="/images/svgs/icon-calendar.svg" alt="urpuppy-img" width="20" height="20" />
                     <p className="mb-0">{puppy.age}</p>
                   </div>
                 </div>
-                <div className="col-6">
-                  <Gender gender={puppy.gender} />
-                </div>
-                <div className="col-6">
+                {/* <div className="col-6">
                   <div className="d-flex align-items-center gap-2">
                     <img loading="lazy" src="/images/svgs/icon-eye.svg" alt="urpuppy-img" width="20" height="20" />
                     <p className="mb-0">{puppy.view_count} Views</p>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="p-3 border-top d-flex align-items-center justify-content-between">

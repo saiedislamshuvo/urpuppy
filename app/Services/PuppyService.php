@@ -20,7 +20,7 @@ class PuppyService
         $puppiesQuery = QueryBuilder::for(Puppy::class)
             ->select([
                 'id', 'user_id', 'name', 'price', 'birth_date', 'slug',
-                'gender', 'created_at',
+                'gender', 'created_at', 'city', 'state',
                 'view_count', 'is_featured', 'description',
             ])
             ->with([

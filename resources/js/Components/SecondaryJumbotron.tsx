@@ -32,17 +32,17 @@ const SecondaryJumbotron = () => {
   };
 
   return (
-    <div className="row">
+    <div className="row mt-4">
       <div className="col-lg-4">
         <h2 className="fs-10 mb-5 mb-lg-0">{sectionTitle}</h2>
         {buttonSubtitle && (
-          <Link href={buttonLink} className="btn btn-primary mt-4">
+          <Link href={buttonLink} className="btn btn-primary my-2 my-lg-4">
             {buttonSubtitle}
           </Link>
         )}
       </div>
       <div className="col-lg-8">
-        <div className="row">
+        <div className="row mt-4">
           {features.map((feature: any, index: number) => {
             // Check if icon is a Font Awesome class or an image path
             const iconSrc = feature.icon?.startsWith('/') || feature.icon?.startsWith('http')

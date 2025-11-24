@@ -26,7 +26,9 @@ class PuppyCardData extends Data
         public DataCollection $breeds,
 
         public ?BreederData $seller,
+        public ?string $city,
         public ?string $state,
+
     ) {}
 
     public function setIsFavorite(bool $isFavorite): self

@@ -10,7 +10,7 @@ const FavoriteButton = ({ puppyId, sellerId, isFavorite, uniqueId = null }: {
     return <> <Tooltip content={(
 
 
-        <Link method="patch" preserveState preserveScroll href={`/favorites/${puppyId}`} data-bs-toggle="tooltip" data-bs-title="Add To Favourite"
+        <Link method="get" preserveState preserveScroll href={`/favorites/${puppyId}`} data-bs-toggle="tooltip" data-bs-title="Add To Favourite"
             className="bg-white border d-flex align-items-center justify-content-center round-40 rounded-circle">
             {
                 isFavorite ? (

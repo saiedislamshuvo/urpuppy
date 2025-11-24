@@ -9,9 +9,9 @@ const BreedCard = ({ breed }: { breed: App.Data.BreedData }) => {
           <img src={breed.image} alt="urpuppy-img" />
         </Link>
         <div className="text-center">
-          <Link aria-label="View Details" prefetch cacheFor="3m" href={`/puppies?filter[breed]=${breed.name}`} className="btn btn-outline-extralight text-dark d-inline-flex align-items-center gap-2"
+          <Link aria-label="View Details" prefetch cacheFor="3m" href={`/breeds/${breed.slug}`} className="btn btn-outline-extralight text-dark d-inline-flex align-items-center gap-2"
           >
-            {breed.name} for Sale
+            {breed.name}
             <img src="/images/svgs/icon-chev-right.svg" alt="urpuppy-img" className="w-auto" width="6" height="12" />
           </Link>
         </div>

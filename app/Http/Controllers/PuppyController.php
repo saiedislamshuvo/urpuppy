@@ -38,17 +38,20 @@ class PuppyController extends Controller
         $seo_description = implode(', ', $seo_parts);
 
         $puppies = $puppyService->getPuppies($request, paginate: true);
+
         $puppiesData = app(CompareService::class)->applyCompares(
-            app(FavoriteService::class)->applyFavorites(PuppyData::collect($puppies))
+            app(FavoriteService::class)->applyFavorites(PuppyCardData::collect($puppies))
         );
 
         return inertia()->render('Puppy/Index', [
-            'price_filter_range' => [@$request->query('filter')['price'][0] ?? 1,  @$request->query('filter')['price'][1] ?? 50000],
+            'price_filter_range' => [@$request->query('filter')['price'][0] ?? 100,  @$request->query('filter')['price'][1] ?? 4000],
+            'age_filter_range' => [@$request->query('filter')['age'][0] ?? 0,  @$request->query('filter')['age'][1] ?? 18],
             'puppies' => $puppiesData,
             'has_search' => count($filters),
             'payload' => $filters,
             'seo_title' => 'Puppy: ' . $seo_title,
             'seo_description' => 'Puppy: ' . $seo_description,
+            'breed' =>  @$request->query('filter')['breed'] ?? '',
         ]);
     }
 

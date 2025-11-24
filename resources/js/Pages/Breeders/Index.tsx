@@ -10,17 +10,19 @@ import { PaginatedCollection } from '@/types/global'
 import { Link, router, usePage } from '@inertiajs/react'
 import React, { useState } from 'react'
 
-const Index = ({ breeders, seo_title, seo_description, url }: {
+const Index = ({ breeders, breed, seo_title, seo_description, url }: {
   breeders: PaginatedCollection<App.Data.BreederFullData>,
+  breed: string,
   seo_title: string,
   seo_description: string,
   url: string
 
 }) => {
   const { settings } = usePage().props as any;
-  const heroTitle = settings?.breeders_hero_title || "Register as a breeder";
+  const heroTitle = settings?.breeders_hero_title || "Featured breeders";
   const heroBackground = settings?.breeders_hero_background || '/images/breeds-slider/hero-inner-slider-2.jpg';
   const sectionTitle = settings?.breeders_section_title || "Choose your Breeder";
+  const headertitle = breed ? `Trusted ${breed} Breeders – Verified, Reviewed & Available Near You` : heroTitle;
 
   const [filter, setFilter] = useState<any>({
     breed: {
@@ -34,7 +36,7 @@ const Index = ({ breeders, seo_title, seo_description, url }: {
     <Layout>
       <MetaTags title={seo_title} description={seo_description} url={url} />
       <BannerSlider slidesPerView={1} children={[
-        <SmallBannerWithContent title={heroTitle} pill="Feature" key={1} background_image={heroBackground} />,
+        <SmallBannerWithContent title={headertitle} pill="Feature" key={1} background_image={heroBackground} />,
       ]} />
 
       <section className="find-ur-breeds bg-extralight position-relative z-1 py-7 py-md-5 py-xl-9">

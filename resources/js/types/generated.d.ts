@@ -201,6 +201,7 @@ age: string;
 view_count: number;
 breeds: Array<App.Data.BreedData>;
 seller: App.Data.BreederData | null;
+city: string | null;
 state: string | null;
 };
 export type PuppyColorData = {
@@ -243,6 +244,7 @@ has_delivery_included: boolean | null;
 has_certificate: boolean | null;
 certificate_type: string | null;
 certificate_document_url: string | null;
+city: string | null;
 state: string | null;
 };
 export type PuppyEditData = {
@@ -404,6 +406,6 @@ video_thumbnail: string | null;
 };
 }
 declare namespace App.Enum {
-export type Gender = 'male' | 'female';
+export type Gender = 'Male' | 'Female';
 export type PuppyStatus = 'draft' | 'published' | 'sold' | 'paused';
 }

@@ -22,7 +22,7 @@ const MyPuppies = ({ puppies }: {
 
               <PuppyCard className="" puppy={puppy} />
 
-              <Link aria-label='Edit' className="btn btn-primary mt-2 btn-sm" style={{ marginRight: "4px" }} href={`/seller/create/${puppy.id}`}>Edit </Link>
+              <Link aria-label='Edit' className="btn btn-primary mt-2 btn-sm" style={{ marginRight: "4px" }} href={`/puppies-listing/${puppy.id}/edit`}>Edit </Link>
               <button
                 aria-label={puppy.is_sold === true ? 'Unmark as Sold' : 'Mark as Sold'}
                 onClick={(e) => {
