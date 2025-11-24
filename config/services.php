@@ -60,4 +60,8 @@ return [
         'from' => env('TWILIO_FROM_NUMBER'),
     ],
 
+    'phone' => [
+        'verification_required' => env('PHONE_VERIFICATION_REQUIRED', true),
+    ],
+
 ];

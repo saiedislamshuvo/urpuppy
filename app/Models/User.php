@@ -350,10 +350,10 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, H
     /*     return $this->belongsTo(City::class); */
     /* } */
 
-    public function company_state()
-    {
-        return $this->belongsTo(State::class, 'company_state_id');
-    }
+    // public function company_state()
+    // {
+    //     return $this->belongsTo(State::class, 'company_state_id');
+    // }
 
     /* public function company_city() */
     /* { */

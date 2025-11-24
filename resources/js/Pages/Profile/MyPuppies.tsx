@@ -43,7 +43,7 @@ const MyPuppies = ({ puppies }: {
                     });
                   }
                 }}
-                className={`btn btn-sm mt-2 ${puppy.is_sold === true ? 'btn-secondary' : 'bg-secondary'}`}
+                className={`btn btn-sm mt-2 ${puppy.is_sold === true ? 'btn-outline-secondary' : 'btn-secondary'}`}
                 style={{ marginRight: "4px" }}
               >
                 {puppy.is_sold === true ? 'Unmark as Sold' : 'Mark as Sold'}

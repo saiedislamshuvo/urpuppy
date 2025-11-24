@@ -32,6 +32,12 @@ const NavigationSettings = [
         showForRoles: ['seller', 'breeder']
     },
     {
+        name: 'Refund Request',
+        route: '/refund-request',
+        logo: '../images/svgs/icon-card.svg',
+        showForRoles: ['seller', 'breeder']
+    },
+    {
         name: 'Saved Search',
         route: '/profile',
         routeParam: 'tab=Saved Search',

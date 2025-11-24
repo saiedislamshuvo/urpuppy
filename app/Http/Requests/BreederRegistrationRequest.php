@@ -38,7 +38,7 @@ class BreederRegistrationRequest extends FormRequest
 
             'has_usda_registration' => ['nullable'], // Optional boolean field
             'company_logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:12048'],
-            'gallery' => ['required', 'array', 'max:10'], // Limit gallery to a maximum of 10 images
+            'gallery' => ['nullable', 'array', 'max:10'], // Limit gallery to a maximum of 10 images (optional)
             'gallery.*' => [
                 'nullable',
                 'image',

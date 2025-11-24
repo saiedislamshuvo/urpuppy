@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import TextInput from '../TextInput'
 import InputLabel from '../InputLabel'
 import SemiHeading from '../SemiHeading'
@@ -10,6 +10,7 @@ import SelectInput from '../SelectInput'
 import InputError from '../InputError'
 import MapInput, { LocationData } from '../Map/MapInput'
 import { parseInt } from 'lodash'
+import { AsyncPaginate } from 'react-select-async-paginate'
 
 const PuppyListingForm = ({
     puppy_edit
@@ -70,6 +71,35 @@ const PuppyListingForm = ({
 
     const initialLocation = getInitialLocation();
 
+    // Helper function to extract state code from "US-TX" format
+    const extractStateCode = (shortState: string): string => {
+        if (!shortState) return '';
+        // If format is "US-TX", extract "TX" (take last part after dash)
+        if (shortState.includes('-')) {
+            return shortState.split('-').pop() || shortState;
+        }
+        return shortState;
+    };
+
+    // State for the state select dropdown
+    const [selectedState, setSelectedState] = useState<any>(() => {
+        const stateName = initialLocation?.state ?? null;
+        if (stateName) {
+            return { label: stateName, value: stateName };
+        }
+        return null;
+    });
+
+    // State for state codes dropdown options
+    const [stateCodeOptions, setStateCodeOptions] = useState<any[]>([]);
+    const [selectedStateCode, setSelectedStateCode] = useState<any>(() => {
+        const stateCode = extractStateCode(initialLocation?.shortState ?? '');
+        if (stateCode) {
+            return { label: stateCode, value: stateCode };
+        }
+        return null;
+    });
+
     // Initialize form data
     const initialFormData: FormData = {
         images: puppy_edit?.preview_images ?? [],
@@ -101,7 +131,199 @@ const PuppyListingForm = ({
 
     const { post, put, data, setData, errors, processing } = useForm<FormData>(initialFormData)
 
+    // Fetch states function for AsyncPaginate
+    const fetchStates = async (search: any, loadedOptions: any, { page }: any) => {
+        try {
+            const response = await fetch(
+                `/api/puppy/states?page=${page}&search=${search}&all=false`,
+            );
+            const data = await response.json();
+
+            // Transform to use state name as value instead of ID
+            const transformedOptions = data.data.map((state: any) => ({
+                label: state.label, // State name
+                value: state.label, // Use name as value instead of ID
+                abbreviation: state.abbreviation, // Include abbreviation for auto-fill
+            }));
+
+            // Update state code options when states are loaded
+            if (page === 1 && !search) {
+                const codes = transformedOptions
+                    .filter((state: any) => state.abbreviation)
+                    .map((state: any) => ({
+                        label: state.abbreviation,
+                        value: state.abbreviation,
+                        stateName: state.label,
+                    }));
+                setStateCodeOptions(codes);
+            }
+
+            return {
+                options: transformedOptions,
+                hasMore: data.current_page !== data.last_page,
+                additional: { page: data.current_page + 1 },
+            };
+        } catch (error) {
+            return {
+                options: [],
+                hasMore: false,
+                additional: { page: 1 },
+            };
+        }
+    };
+
+    // Fetch all states to populate state code dropdown
+    React.useEffect(() => {
+        const loadStateCodes = async () => {
+            try {
+                const response = await fetch('/api/puppy/states?all=true');
+                const data = await response.json();
+                const codes = data.data
+                    .filter((state: any) => state.abbreviation)
+                    .map((state: any) => ({
+                        label: state.abbreviation,
+                        value: state.abbreviation,
+                        stateName: state.label,
+                    }));
+                setStateCodeOptions(codes);
+            } catch (error) {
+                console.error('Error loading state codes:', error);
+            }
+        };
+        loadStateCodes();
+    }, []);
+
+    // Handle state selection change
+    const handleStateChange = (selectedOption: any) => {
+        setSelectedState(selectedOption);
+        if (selectedOption) {
+            const stateCode = selectedOption.abbreviation || '';
+            const stateCodeOption = stateCode ? { label: stateCode, value: stateCode } : null;
+            setSelectedStateCode(stateCodeOption);
+
+            setData({
+                ...data,
+                location_state: selectedOption.value, // Use the name as value
+                location_short_state: stateCode, // Auto-fill state code
+            });
+        } else {
+            setSelectedStateCode(null);
+            setData({
+                ...data,
+                location_state: null,
+                location_short_state: null,
+            });
+        }
+    };
+
+    // Handle state code selection change
+    const handleStateCodeChange = (selectedOption: any) => {
+        setSelectedStateCode(selectedOption);
+        if (selectedOption) {
+            // Find corresponding state name from stateCodeOptions
+            const correspondingCode = stateCodeOptions.find(
+                (code: any) => code.value === selectedOption.value
+            );
+
+            if (correspondingCode && correspondingCode.stateName) {
+                // Update state select to match the state code
+                const stateOption = { label: correspondingCode.stateName, value: correspondingCode.stateName };
+                setSelectedState(stateOption);
+
+                setData({
+                    ...data,
+                    location_state: correspondingCode.stateName,
+                    location_short_state: selectedOption.value,
+                });
+            } else {
+                // Just update state code if we can't find the state name
+                setData({
+                    ...data,
+                    location_short_state: selectedOption.value,
+                });
+            }
+        } else {
+            setSelectedState(null);
+            setData({
+                ...data,
+                location_state: null,
+                location_short_state: null,
+            });
+        }
+    };
+
+    // Handle zip code lookup
+    const handleZipCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const zipCode = e.target.value;
+        setData('location_zip_code', zipCode);
+
+        // Only lookup if zip code is 5 digits and map provider is configured
+        if (zipCode && /^\d{5}$/.test(zipCode) && mapProvider) {
+            try {
+                const response = await fetch(`/api/geocode?address=${encodeURIComponent(zipCode)}`);
+                const geocodeData = await response.json();
+
+                if (geocodeData.results && geocodeData.results.length > 0) {
+                    const addressComponents = geocodeData.results[0].address_components;
+                    let city = '';
+                    let state = '';
+                    let stateCode = '';
+
+                    addressComponents.forEach((component: any) => {
+                        if (component.types.includes('locality')) {
+                            city = component.long_name;
+                        }
+                        if (component.types.includes('administrative_area_level_1')) {
+                            state = component.long_name;
+                            // Extract state code, handling "US-TX" format if needed
+                            stateCode = extractStateCode(component.short_name);
+                        }
+                    });
+
+                    // Update city
+                    if (city) {
+                        setData('location_city', city);
+                    }
+
+                    // Update state and state code
+                    if (state && stateCode) {
+                        const stateOption = { label: state, value: state };
+                        setSelectedState(stateOption);
+
+                        const stateCodeOption = { label: stateCode, value: stateCode };
+                        setSelectedStateCode(stateCodeOption);
+
+                        setData({
+                            ...data,
+                            location_city: city || data.location_city,
+                            location_state: state,
+                            location_short_state: stateCode,
+                            location_zip_code: zipCode,
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error looking up zip code:', error);
+            }
+        }
+    };
+
     const handleLocationSelect = (location: LocationData) => {
+        // Extract state code from "US-TX" format if needed (take last part after dash)
+        const stateCode = extractStateCode(location.shortState);
+
+        // Update state select when map location changes
+        if (location.state) {
+            const stateOption = { label: location.state, value: location.state };
+            setSelectedState(stateOption);
+        }
+
+        // Update state code select
+        if (stateCode) {
+            const stateCodeOption = { label: stateCode, value: stateCode };
+            setSelectedStateCode(stateCodeOption);
+        }
+
         setData({
             ...data,
             location_lat: location.lat,
@@ -109,8 +331,8 @@ const PuppyListingForm = ({
             location_address: location.address,
             location_city: location.city,
             location_street: location.street,
-            location_state: location.state,
-            location_short_state: location.shortState,
+            location_state: location.state, // This will be the state name
+            location_short_state: stateCode, // Use extracted state code
             location_zip_code: location.zipCode,
         });
     };
@@ -362,10 +584,18 @@ const PuppyListingForm = ({
                                     <MapInput
                                         provider={mapProvider as any}
                                         onLocationSelect={handleLocationSelect}
-                                        initialAddress={initialLocation?.address}
-                                        initialLocation={initialLocation && initialLocation.lat != null && initialLocation.lng != null
-                                            ? { lat: initialLocation.lat, lng: initialLocation.lng }
-                                            : null}
+                                        initialAddress={initialLocation?.address ?? data.location_address ?? undefined}
+                                        initialLocation={
+                                            initialLocation && initialLocation.lat != null && initialLocation.lng != null &&
+                                                !isNaN(Number(initialLocation.lat)) && !isNaN(Number(initialLocation.lng)) &&
+                                                (Number(initialLocation.lat) !== 0 || Number(initialLocation.lng) !== 0)
+                                                ? { lat: Number(initialLocation.lat), lng: Number(initialLocation.lng) }
+                                                : (data.location_lat != null && data.location_lng != null &&
+                                                    !isNaN(Number(data.location_lat)) && !isNaN(Number(data.location_lng)) &&
+                                                    (Number(data.location_lat) !== 0 || Number(data.location_lng) !== 0)
+                                                    ? { lat: Number(data.location_lat), lng: Number(data.location_lng) }
+                                                    : null) // null will show USA region in map
+                                        }
                                     />
                                     {errors.location_lat && <InputError message={errors.location_lat} />}
                                     {errors.location_lng && <InputError message={errors.location_lng} />}
@@ -373,20 +603,20 @@ const PuppyListingForm = ({
                             </div>
                         </div>
                         <div className="row mt-4">
-                            <div className="col-12">
+                            <div className="col-lg-4">
                                 <div className="mb-4">
-                                    <InputLabel value="Full Address" isRequired={true} />
+                                    <InputLabel value="House No" />
                                     <TextInput
                                         value={data.location_address ?? ''}
                                         onChange={(e) => setData('location_address', e.target.value)}
-                                        placeholder="Enter full address"
+                                        placeholder="House/Apt number"
                                     />
                                     {errors.location_address && <InputError message={errors.location_address} />}
                                 </div>
                             </div>
-                            <div className="col-lg-6">
+                            <div className="col-lg-4">
                                 <div className="mb-4">
-                                    <InputLabel value="House & Street No" isRequired={true} />
+                                    <InputLabel value="Street" />
                                     <TextInput
                                         value={data.location_street ?? ''}
                                         onChange={(e) => setData('location_street', e.target.value)}
@@ -395,7 +625,7 @@ const PuppyListingForm = ({
                                     {errors.location_street && <InputError message={errors.location_street} />}
                                 </div>
                             </div>
-                            <div className="col-lg-6">
+                            <div className="col-lg-4">
                                 <div className="mb-4">
                                     <InputLabel value="City" isRequired={true} />
                                     <TextInput
@@ -409,10 +639,29 @@ const PuppyListingForm = ({
                             <div className="col-lg-4">
                                 <div className="mb-4">
                                     <InputLabel value="State" isRequired={true} />
-                                    <TextInput
-                                        value={data.location_state ?? ''}
-                                        onChange={(e) => setData('location_state', e.target.value)}
-                                        placeholder="State name"
+                                    <AsyncPaginate
+                                        loadOptions={fetchStates}
+                                        onChange={handleStateChange}
+                                        value={selectedState}
+                                        placeholder="Select state"
+                                        styles={{
+                                            option: (baseStyles, state) => ({
+                                                backgroundColor: state.isSelected ? 'var(--bs-primary)' : state.isFocused ? '#f0f0f0' : 'white',
+                                                padding: '6px 10px',
+                                            }),
+                                            control: (baseStyles, state) => ({
+                                                ...baseStyles,
+                                                border: state.isFocused ? '1px solid var(--bs-primary)' : '1px solid rgba(8, 49, 78, 0.2)',
+                                                borderRadius: '100px',
+                                                outlineColor: 'red',
+                                                boxShadow: 'none',
+                                                '&:hover': {
+                                                    border: 'auto',
+                                                },
+                                                padding: '3px 4px'
+                                            }),
+                                        }}
+                                        additional={{ page: 1 }}
                                     />
                                     {errors.location_state && <InputError message={errors.location_state} />}
                                 </div>
@@ -420,11 +669,40 @@ const PuppyListingForm = ({
                             <div className="col-lg-4">
                                 <div className="mb-4">
                                     <InputLabel value="State Code" isRequired={true} />
-                                    <TextInput
-                                        value={data.location_short_state ?? ''}
-                                        onChange={(e) => setData('location_short_state', e.target.value.toUpperCase())}
-                                        placeholder="e.g., CA, NY, TX"
-                                        maxLength={2}
+                                    <AsyncPaginate
+                                        loadOptions={async (search: any, loadedOptions: any, { page }: any) => {
+                                            // Filter state codes based on search
+                                            const filtered = stateCodeOptions.filter((code: any) =>
+                                                code.label.toLowerCase().includes(search.toLowerCase())
+                                            );
+                                            return {
+                                                options: filtered,
+                                                hasMore: false,
+                                                additional: { page: 1 },
+                                            };
+                                        }}
+                                        onChange={handleStateCodeChange}
+                                        value={selectedStateCode}
+                                        placeholder="Select state code"
+                                        options={stateCodeOptions}
+                                        styles={{
+                                            option: (baseStyles, state) => ({
+                                                backgroundColor: state.isSelected ? 'var(--bs-primary)' : state.isFocused ? '#f0f0f0' : 'white',
+                                                padding: '6px 10px',
+                                            }),
+                                            control: (baseStyles, state) => ({
+                                                ...baseStyles,
+                                                border: state.isFocused ? '1px solid var(--bs-primary)' : '1px solid rgba(8, 49, 78, 0.2)',
+                                                borderRadius: '100px',
+                                                outlineColor: 'red',
+                                                boxShadow: 'none',
+                                                '&:hover': {
+                                                    border: 'auto',
+                                                },
+                                                padding: '3px 4px'
+                                            }),
+                                        }}
+                                        additional={{ page: 1 }}
                                     />
                                     {errors.location_short_state && <InputError message={errors.location_short_state} />}
                                 </div>
@@ -434,7 +712,7 @@ const PuppyListingForm = ({
                                     <InputLabel value="Zip Code" isRequired={true} />
                                     <TextInput
                                         value={data.location_zip_code ?? ''}
-                                        onChange={(e) => setData('location_zip_code', e.target.value)}
+                                        onChange={handleZipCodeChange}
                                         placeholder="Zip code"
                                     />
                                     {errors.location_zip_code && <InputError message={errors.location_zip_code} />}

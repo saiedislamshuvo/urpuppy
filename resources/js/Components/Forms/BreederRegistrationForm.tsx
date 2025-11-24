@@ -4,7 +4,7 @@ import InputLabel from '../InputLabel'
 import IconInput from '../IconInput'
 import SemiHeading from '../SemiHeading'
 import YesOrNoRadioInput from '../YesOrNoRadioInput'
-import { useForm, usePage } from '@inertiajs/react'
+import { useForm, usePage, router } from '@inertiajs/react'
 import GenericFileUpload from '../GenericFileUpload'
 import MediaUploadSection from '../MediaUploadSection'
 import SelectInput from '../SelectInput'
@@ -30,6 +30,7 @@ const BreederRegistrationForm = ({ breeds, gallery = [], videos = [], media_limi
 
   const user = usePage().props.auth.user as App.Data.UserData;
   const mapProvider = usePage().props.mapProvider as string;
+  const phoneVerificationRequired = usePage().props.phoneVerificationRequired as boolean ?? true;
 
   // Get initial location from user company location data (inline only, no controller default)
   const getInitialLocation = (): LocationData | null => {
@@ -111,9 +112,9 @@ const BreederRegistrationForm = ({ breeds, gallery = [], videos = [], media_limi
     state_id: null,
     zip_code: '',
     are_you_a_breeder: 'yes',
-    gallery: gallery.length > 0 ? gallery : (user?.gallery ?? []),
+    gallery: [], // Only new files, existing URLs are passed separately to MediaUploadSection
     company_logo: null,
-    videos: videos.length > 0 ? videos : (user?.video != null ? [user?.video] : []),
+    videos: [], // Only new files, existing URLs are passed separately to MediaUploadSection
     gmap_payload: null,
     // Location fields - pre-fill from user data if exists, otherwise empty
     location_lat: initialLocation?.lat ?? null,
@@ -359,19 +360,35 @@ const BreederRegistrationForm = ({ breeds, gallery = [], videos = [], media_limi
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // const formData = new FormData(e.currentTarget);
+    // Get existing URLs to send to backend (so it knows what to keep)
+    const existingGalleryUrls = gallery.length > 0 ? gallery : (user?.gallery ?? []);
+    const existingVideoUrls = videos.length > 0 ? videos : (user?.video != null ? [user?.video] : []);
 
-    // const updatedData = {
-    //     ...Object.fromEntries(formData.entries()),
-    //     image_upload: formData.getAll('files')
-    // };
+    // Prepare gallery and videos: existing URLs (strings) + new files only
+    const existingGalleryUrlsFiltered = existingGalleryUrls.filter((url: any) => typeof url === 'string');
+    const newGalleryFiles = Array.isArray(data.gallery) ? data.gallery.filter((item: any) => item instanceof File) : [];
+    const galleryToSubmit: any[] = [
+      ...existingGalleryUrlsFiltered, // Existing URLs
+      ...newGalleryFiles // New files only
+    ];
 
-    // setData((previous) => ({
-    //     ...previous,
-    //     ...updatedData,
-    // }));
+    const existingVideoUrlsFiltered = existingVideoUrls.filter((url: any) => typeof url === 'string');
+    const newVideoFiles = Array.isArray(data.videos) ? data.videos.filter((item: any) => item instanceof File) : [];
+    const videosToSubmit: any[] = [
+      ...existingVideoUrlsFiltered, // Existing URLs
+      ...newVideoFiles // New files only
+    ];
 
-    post('/breeders');
+    // Prepare submission data with transformed gallery and videos
+    // Send null if empty, otherwise send the array
+    const submitData = {
+      ...data,
+      gallery: galleryToSubmit.length > 0 ? galleryToSubmit : null,
+      videos: videosToSubmit.length > 0 ? videosToSubmit : null,
+    };
+
+    // Submit using router.post directly
+    router.post('/breeders', submitData as any);
   };
 
 
@@ -442,6 +459,7 @@ const BreederRegistrationForm = ({ breeds, gallery = [], videos = [], media_limi
                     onPhoneChange={(phone) => setData('company_phone', phone)}
                     label="Phone"
                     required={true}
+                    skipVerification={!phoneVerificationRequired}
                   />
                 )}
                 {errors.company_phone && <InputError message={errors.company_phone} />}
@@ -682,7 +700,7 @@ const BreederRegistrationForm = ({ breeds, gallery = [], videos = [], media_limi
                   name="gallery"
                   setData={(name, files: any) => setData('gallery', files)}
                   errors={errors}
-                  defaultUrls={data.gallery ?? []}
+                  defaultUrls={gallery.length > 0 ? gallery : (user?.gallery ?? [])}
                   fileType="images"
                   accept=".jpg,.jpeg,.png,.gif,.webp"
                   maxSize={12 * 1024 * 1024} // 12MB
@@ -692,9 +710,9 @@ const BreederRegistrationForm = ({ breeds, gallery = [], videos = [], media_limi
                     position: 'tile',
                     color: '#ffffff'
                   }}
-                  required={true}
+                  required={false}
                   maxFiles={media_limits?.images}
-                  currentCount={(data.gallery ?? []).length}
+                  currentCount={(gallery.length > 0 ? gallery : (user?.gallery ?? [])).length + (Array.isArray(data.gallery) ? data.gallery.filter((item: any) => item instanceof File).length : 0)}
                   deleteEndpoint="/api/media/delete"
                 />
                 {errors.gallery && <InputError message={errors.gallery} />}
@@ -706,13 +724,13 @@ const BreederRegistrationForm = ({ breeds, gallery = [], videos = [], media_limi
                   name="videos"
                   setData={(name, files: any) => setData('videos', files)}
                   errors={errors}
-                  defaultUrls={data.videos ?? []}
+                  defaultUrls={videos.length > 0 ? videos : (user?.video != null ? [user?.video] : [])}
                   fileType="videos"
                   accept=".mp4,.mov,.avi,.webm"
                   maxSize={50 * 1024 * 1024} // 50MB
                   required={false}
                   maxFiles={media_limits?.videos}
-                  currentCount={(data.videos ?? []).length}
+                  currentCount={(videos.length > 0 ? videos : (user?.video != null ? [user?.video] : [])).length + (Array.isArray(data.videos) ? data.videos.filter((item: any) => item instanceof File).length : 0)}
                   deleteEndpoint="/api/media/delete"
                 />
                 {errors.videos && <InputError message={errors.videos} />}

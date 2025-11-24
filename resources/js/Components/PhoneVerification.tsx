@@ -17,6 +17,7 @@ interface PhoneVerificationProps {
     className?: string
     label?: string
     required?: boolean
+    skipVerification?: boolean // If true, show simple phone input without OTP
 }
 
 const PhoneVerification: React.FC<PhoneVerificationProps> = ({
@@ -28,6 +29,7 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({
     className = '',
     label,
     required = false,
+    skipVerification = false,
 }) => {
     const [phone, setPhone] = useState<string>(phoneNumber || '')
     const [code, setCode] = useState('')
@@ -150,6 +152,20 @@ const PhoneVerification: React.FC<PhoneVerificationProps> = ({
         } finally {
             setIsVerifying(false)
         }
+    }
+
+    // If verification is skipped, show simple phone input
+    if (skipVerification) {
+        return (
+            <div className={`mb-4 ${className}`}>
+                <InputLabel value={label || `Phone Number`} isRequired={required} />
+                <PhoneNumberInput
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    className="phone-input form-control"
+                />
+            </div>
+        )
     }
 
     // If verified, show verified status

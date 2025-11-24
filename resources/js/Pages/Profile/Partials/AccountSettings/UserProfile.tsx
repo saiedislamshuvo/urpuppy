@@ -17,6 +17,7 @@ import PhoneVerification from '@/Components/PhoneVerification'
 const UserProfile = () => {
 
   const user = usePage().props.auth.user
+  const phoneVerificationRequired = usePage().props.phoneVerificationRequired as boolean ?? true;
 
   const [selectedGMap, setSelectedGMap] = useState<google.maps.LatLngLiteral | null>(null);
   const { post, data, setData, errors } = useForm<{
@@ -135,6 +136,8 @@ const UserProfile = () => {
                     phoneNumber={data.phone || (user as any)?.phone}
                     phoneType="phone"
                     isVerified={(user as any)?.phone_verified_at ? true : false}
+                    onPhoneChange={(phone) => setData('phone', phone)}
+                    skipVerification={!phoneVerificationRequired}
                   />
                   {errors.phone &&
                     <InputError message={errors.phone} />

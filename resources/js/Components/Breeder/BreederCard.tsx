@@ -31,7 +31,7 @@ const BreederCard = ({ breeder, hasBorder = false }: { breeder: App.Data.Breeder
                 }
                 <div className="d-flex align-items-center gap-6 mb-6">
                   <img loading="lazy" src="/images/svgs/icon-map-pin.svg" alt="urpuppy-img" width="24" height="24" />
-                  <p className="mb-0 flex-xl-shrink-1">{breeder.company_address}</p>
+                  <p className="mb-0 flex-xl-shrink-1">{breeder.company_city || ''}{(breeder.company_city?.length || 0) > 0 ? ', ' : ''}{breeder.company_state || ''}</p>
                 </div>
                 <div className="d-flex align-items-center gap-6">
                   <img loading="lazy" src="/images/svgs/icon-user-dark.svg" alt="urpuppy-img" width="24" height="24" />

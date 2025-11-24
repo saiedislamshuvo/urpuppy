@@ -2266,7 +2266,7 @@ function requireReactJsxRuntime_development() {
   hasRequiredReactJsxRuntime_development = 1;
   if (process.env.NODE_ENV !== "production") {
     (function() {
-      var React = requireReact();
+      var React2 = requireReact();
       var REACT_ELEMENT_TYPE = Symbol.for("react.element");
       var REACT_PORTAL_TYPE = Symbol.for("react.portal");
       var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
@@ -2292,7 +2292,7 @@ function requireReactJsxRuntime_development() {
         }
         return null;
       }
-      var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+      var ReactSharedInternals = React2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
       function error(format) {
         {
           {
@@ -22528,7 +22528,7 @@ var Qe = new C(), O = class r2 {
     return this.requestParams.all().errorBag ? e[this.requestParams.all().errorBag || ""] || {} : e;
   }
 };
-var U$1 = class r3 {
+var U = class r3 {
   constructor(e, t2) {
     this.page = t2;
     this.requestHasFinished = false;
@@ -22643,7 +22643,7 @@ var j = class {
     let o = i.async ? this.asyncRequestStream : this.syncRequestStream;
     o.interruptInFlight(), !s$1.isCleared() && !i.preserveUrl && v.save();
     let u = { ...i, ...n }, p = T.get(u);
-    p ? (W(p.inFlight), T.use(p, u)) : (W(true), o.send(U$1.create(u, s$1.get())));
+    p ? (W(p.inFlight), T.use(p, u)) : (W(true), o.send(U.create(u, s$1.get())));
   }
   getCached(e, t2 = {}) {
     return T.findCached(this.getPrefetchParams(e, t2));
@@ -22672,7 +22672,7 @@ var j = class {
       f();
     }).then(() => {
       T.add(d, (l2) => {
-        this.asyncRequestStream.send(U$1.create(l2, s$1.get()));
+        this.asyncRequestStream.send(U.create(l2, s$1.get()));
       }, { cacheFor: i });
     });
   }
@@ -22943,10 +22943,10 @@ var Wr = new j();
 /* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
 * @license MIT */
 var reactExports = requireReact();
-const U = /* @__PURE__ */ getDefaultExportFromCjs(reactExports);
+const React = /* @__PURE__ */ getDefaultExportFromCjs(reactExports);
 const t = /* @__PURE__ */ _mergeNamespaces({
   __proto__: null,
-  default: U
+  default: React
 }, [reactExports]);
 function isDeepKey(key) {
   switch (typeof key) {
@@ -23227,13 +23227,13 @@ var Ne = function({ children: p, title: n }) {
     return e.props.children && (d += u(e)), e.props.dangerouslySetInnerHTML && (d += e.props.dangerouslySetInnerHTML.__html), a2(e) || (d += `</${e.type}>`), d;
   }
   function c2(e) {
-    return U.cloneElement(e, { inertia: e.props["head-key"] !== void 0 ? e.props["head-key"] : "" });
+    return React.cloneElement(e, { inertia: e.props["head-key"] !== void 0 ? e.props["head-key"] : "" });
   }
   function m2(e) {
     return f(c2(e));
   }
   function l2(e) {
-    let d = U.Children.toArray(e).filter((t2) => t2).map((t2) => m2(t2));
+    let d = React.Children.toArray(e).filter((t2) => t2).map((t2) => m2(t2));
     return n && !d.find((t2) => t2.startsWith("<title")) && d.push(`<title inertia>${n}</title>`), d;
   }
   return i.update(l2(p)), null;
@@ -26501,10 +26501,10 @@ function requireReactDomServerLegacy_node_development() {
   hasRequiredReactDomServerLegacy_node_development = 1;
   if (process.env.NODE_ENV !== "production") {
     (function() {
-      var React = requireReact();
+      var React2 = requireReact();
       var stream$1 = stream;
       var ReactVersion = "18.3.1";
-      var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+      var ReactSharedInternals = React2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
       function warn(format) {
         {
           {
@@ -28369,7 +28369,7 @@ function requireReactDomServerLegacy_node_development() {
       }
       function flattenOptionChildren(children) {
         var content = "";
-        React.Children.forEach(children, function(child) {
+        React2.Children.forEach(children, function(child) {
           if (child == null) {
             return;
           }
@@ -31883,10 +31883,10 @@ function requireReactDomServer_node_development() {
   hasRequiredReactDomServer_node_development = 1;
   if (process.env.NODE_ENV !== "production") {
     (function() {
-      var React = requireReact();
+      var React2 = requireReact();
       var util2 = require$$1;
       var ReactVersion = "18.3.1";
-      var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+      var ReactSharedInternals = React2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
       function warn(format) {
         {
           {
@@ -33875,7 +33875,7 @@ function requireReactDomServer_node_development() {
       }
       function flattenOptionChildren(children) {
         var content = "";
-        React.Children.forEach(children, function(child) {
+        React2.Children.forEach(children, function(child) {
           if (child == null) {
             return;
           }
@@ -37282,7 +37282,7 @@ P(
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(
       `./Pages/${name}.tsx`,
-      /* @__PURE__ */ Object.assign({ "./Pages/AboutUs.tsx": () => import("./assets/AboutUs-jPFxJFBO.js"), "./Pages/Auth/ConfirmPassword.tsx": () => import("./assets/ConfirmPassword-CJicVJyc.js"), "./Pages/Auth/ForgotPassword.tsx": () => import("./assets/ForgotPassword-C--3W9fP.js"), "./Pages/Auth/Login.tsx": () => import("./assets/Login-CoJO-REm.js"), "./Pages/Auth/Register.tsx": () => import("./assets/Register-BFOlvFWb.js"), "./Pages/Auth/RegisterBreeder.tsx": () => import("./assets/RegisterBreeder-DEU0B3kV.js"), "./Pages/Auth/RegisterSeller.tsx": () => import("./assets/RegisterSeller-BoWmM3rh.js"), "./Pages/Auth/ResetPassword.tsx": () => import("./assets/ResetPassword-BUuPOi8b.js"), "./Pages/Auth/VerifyEmail.tsx": () => import("./assets/VerifyEmail-CtY63khQ.js"), "./Pages/Breed/Index.tsx": () => import("./assets/Index-D2A4Ng1f.js"), "./Pages/Breed/Registration.tsx": () => import("./assets/Registration-l0sNRNKZ.js"), "./Pages/Breed/Show.tsx": () => import("./assets/Show-DGtx04cZ.js"), "./Pages/BreederListing/Create.tsx": () => import("./assets/Create-BcHS_jfn.js"), "./Pages/BreederListing/Index.tsx": () => import("./assets/Index-Ccmhrz8L.js"), "./Pages/Breeders/Index.tsx": () => import("./assets/Index-CdEioQz4.js"), "./Pages/Breeders/Registration.tsx": () => import("./assets/Registration-CfW33uEh.js"), "./Pages/Breeders/Show.tsx": () => import("./assets/Show-DmCoR7rH.js"), "./Pages/Chat/Index.tsx": () => import("./assets/Index-B72Rv-js.js"), "./Pages/Checkout/Success.tsx": () => import("./assets/Success-DMWoOZRR.js"), "./Pages/Compare/Index.tsx": () => import("./assets/Index-Bde2PIqJ.js"), "./Pages/ContactUs.tsx": () => import("./assets/ContactUs-TMDVNwSZ.js"), "./Pages/Dashboard.tsx": () => import("./assets/Dashboard-k7G7yYtb.js"), "./Pages/Error.tsx": () => import("./assets/Error-uuZXUQ-o.js"), "./Pages/Favorite/Index.tsx": () => import("./assets/Index-dyFmFMUp.js"), "./Pages/Home/Index.tsx": () => import("./assets/Index-ChtC1Lmk.js"), "./Pages/Home/Sections/Banner.tsx": () => import("./assets/Banner-DcN4hzU1.js"), "./Pages/Media/Index.tsx": () => import("./assets/Index-BRXMTBYX.js"), "./Pages/Plan/Breeder.tsx": () => import("./assets/Breeder-COT0JP0n.js"), "./Pages/Plan/Index.tsx": () => import("./assets/Index-BS78mrmc.js"), "./Pages/Plan/Upgrade.tsx": () => import("./assets/Upgrade-DvYVgVRs.js"), "./Pages/Post/Index.tsx": () => import("./assets/Index-DV3YNrrR.js"), "./Pages/Post/Partials/PostCommentCard.tsx": () => import("./assets/PostCommentCard-C5LyY61Z.js"), "./Pages/Post/Partials/PostCommentForm.tsx": () => import("./assets/PostCommentForm-CPCOToLD.js"), "./Pages/Post/Show.tsx": () => import("./assets/Show-C8NWbYvW.js"), "./Pages/PrivacyPolicy.tsx": () => import("./assets/PrivacyPolicy-CNnTwyQA.js"), "./Pages/Profile/Edit.tsx": () => import("./assets/Edit-gb54haQ2.js"), "./Pages/Profile/MyPuppies.tsx": () => import("./assets/MyPuppies-ZlnGIg4P.js"), "./Pages/Profile/MySubscription.tsx": () => import("./assets/MySubscription-C7g-P76e.js"), "./Pages/Profile/Partials/AccountSettings/UserAvatar.tsx": () => import("./assets/UserAvatar-CaV01o4d.js"), "./Pages/Profile/Partials/AccountSettings/UserProfile.tsx": () => import("./assets/UserProfile-Y1MDd8QC.js"), "./Pages/Profile/Partials/DeleteUserForm.tsx": () => import("./assets/DeleteUserForm-d8D-1YWL.js"), "./Pages/Profile/Partials/SubscriptionCard.tsx": () => import("./assets/SubscriptionCard-BCstsyTB.js"), "./Pages/Profile/Partials/UpdatePasswordForm.tsx": () => import("./assets/UpdatePasswordForm-DsWIBZOQ.js"), "./Pages/Profile/Partials/UpdateProfileInformationForm.tsx": () => import("./assets/UpdateProfileInformationForm-kxjjGinC.js"), "./Pages/Puppy/Index.tsx": () => import("./assets/Index-sW1FzsDO.js"), "./Pages/Puppy/Show.tsx": () => import("./assets/Show-BPrYfRda.js"), "./Pages/PuppyListing/Create.tsx": () => import("./assets/Create-BmY1-pvu.js"), "./Pages/PuppyListing/Edit.tsx": () => import("./assets/Edit-BKzuUnB6.js"), "./Pages/Seller/AllPuppies.tsx": () => import("./assets/AllPuppies-CkAMNwan.js"), "./Pages/Seller/Registration.tsx": () => import("./assets/Registration-fmVpYyMK.js"), "./Pages/Subscription/BillingConfirmation.tsx": () => import("./assets/BillingConfirmation-BUcs1fYV.js"), "./Pages/Subscription/Checkout.tsx": () => import("./assets/Checkout-BqezNYbX.js"), "./Pages/Subscription/CheckoutUpgrade.tsx": () => import("./assets/CheckoutUpgrade-3c7H0Ibw.js"), "./Pages/Subscription/Index.tsx": () => import("./assets/Index-D77apE4d.js"), "./Pages/Subscription/PaymentMethod.tsx": () => import("./assets/PaymentMethod-n5lKd0su.js"), "./Pages/TermsConditions.tsx": () => import("./assets/TermsConditions-CkZQfi6E.js") })
+      /* @__PURE__ */ Object.assign({ "./Pages/AboutUs.tsx": () => import("./assets/AboutUs-jPFxJFBO.js"), "./Pages/Auth/ConfirmPassword.tsx": () => import("./assets/ConfirmPassword-C3jcjHEn.js"), "./Pages/Auth/ForgotPassword.tsx": () => import("./assets/ForgotPassword-BNbbNzyi.js"), "./Pages/Auth/Login.tsx": () => import("./assets/Login-DxbJXvtI.js"), "./Pages/Auth/Register.tsx": () => import("./assets/Register-DIZ_ycPu.js"), "./Pages/Auth/RegisterBreeder.tsx": () => import("./assets/RegisterBreeder-tGmVLDsz.js"), "./Pages/Auth/RegisterSeller.tsx": () => import("./assets/RegisterSeller-Dr4sO_Mt.js"), "./Pages/Auth/ResetPassword.tsx": () => import("./assets/ResetPassword-DWMAzwKT.js"), "./Pages/Auth/VerifyEmail.tsx": () => import("./assets/VerifyEmail-B7m2ScRb.js"), "./Pages/Breed/Index.tsx": () => import("./assets/Index-V1gK-f82.js"), "./Pages/Breed/Registration.tsx": () => import("./assets/Registration-l0sNRNKZ.js"), "./Pages/Breed/Show.tsx": () => import("./assets/Show-DGtx04cZ.js"), "./Pages/BreederListing/Create.tsx": () => import("./assets/Create-BcHS_jfn.js"), "./Pages/BreederListing/Index.tsx": () => import("./assets/Index-Ccmhrz8L.js"), "./Pages/Breeders/Index.tsx": () => import("./assets/Index-CFlXFv5A.js"), "./Pages/Breeders/Registration.tsx": () => import("./assets/Registration-zC3TVceY.js"), "./Pages/Breeders/Show.tsx": () => import("./assets/Show-D_WNKh2H.js"), "./Pages/Chat/Index.tsx": () => import("./assets/Index-kd2VzFvQ.js"), "./Pages/Checkout/Success.tsx": () => import("./assets/Success-DMWoOZRR.js"), "./Pages/Compare/Index.tsx": () => import("./assets/Index-Bde2PIqJ.js"), "./Pages/ContactUs.tsx": () => import("./assets/ContactUs-TMDVNwSZ.js"), "./Pages/Dashboard.tsx": () => import("./assets/Dashboard-DsUVdK66.js"), "./Pages/Error.tsx": () => import("./assets/Error-CiHHJnh4.js"), "./Pages/Favorite/Index.tsx": () => import("./assets/Index-DpTnofOl.js"), "./Pages/Home/Index.tsx": () => import("./assets/Index-Ubfg3Kek.js"), "./Pages/Home/Sections/Banner.tsx": () => import("./assets/Banner-DJuwAO4-.js"), "./Pages/Media/Index.tsx": () => import("./assets/Index-BIIaHLJ2.js"), "./Pages/Plan/Breeder.tsx": () => import("./assets/Breeder-COT0JP0n.js"), "./Pages/Plan/Index.tsx": () => import("./assets/Index-BS78mrmc.js"), "./Pages/Plan/Upgrade.tsx": () => import("./assets/Upgrade-DvYVgVRs.js"), "./Pages/Post/Index.tsx": () => import("./assets/Index-DnTWb66R.js"), "./Pages/Post/Partials/PostCommentCard.tsx": () => import("./assets/PostCommentCard-C5LyY61Z.js"), "./Pages/Post/Partials/PostCommentForm.tsx": () => import("./assets/PostCommentForm-CPCOToLD.js"), "./Pages/Post/Show.tsx": () => import("./assets/Show-C8NWbYvW.js"), "./Pages/PrivacyPolicy.tsx": () => import("./assets/PrivacyPolicy-CNnTwyQA.js"), "./Pages/Profile/Edit.tsx": () => import("./assets/Edit-D5hY-7jC.js"), "./Pages/Profile/MyPuppies.tsx": () => import("./assets/MyPuppies-Pgq2EWVa.js"), "./Pages/Profile/MySubscription.tsx": () => import("./assets/MySubscription-Dmg9huBu.js"), "./Pages/Profile/Partials/AccountSettings/UserAvatar.tsx": () => import("./assets/UserAvatar-CaV01o4d.js"), "./Pages/Profile/Partials/AccountSettings/UserProfile.tsx": () => import("./assets/UserProfile-Bg4TLGMd.js"), "./Pages/Profile/Partials/DeleteUserForm.tsx": () => import("./assets/DeleteUserForm-Df2zgmnB.js"), "./Pages/Profile/Partials/SubscriptionCard.tsx": () => import("./assets/SubscriptionCard-BCstsyTB.js"), "./Pages/Profile/Partials/UpdatePasswordForm.tsx": () => import("./assets/UpdatePasswordForm-DzaTGfph.js"), "./Pages/Profile/Partials/UpdateProfileInformationForm.tsx": () => import("./assets/UpdateProfileInformationForm-RviV7Kxr.js"), "./Pages/Puppy/Index.tsx": () => import("./assets/Index-CaVUTrmQ.js"), "./Pages/Puppy/Show.tsx": () => import("./assets/Show-4ODjXKdu.js"), "./Pages/PuppyListing/Create.tsx": () => import("./assets/Create-DsWPmpFC.js"), "./Pages/PuppyListing/Edit.tsx": () => import("./assets/Edit-BTR9F9NO.js"), "./Pages/RefundRequest/Index.tsx": () => import("./assets/Index-SBjHNCuX.js"), "./Pages/Seller/AllPuppies.tsx": () => import("./assets/AllPuppies-C2Nx7fVH.js"), "./Pages/Seller/Registration.tsx": () => import("./assets/Registration-CZu0-gFH.js"), "./Pages/Subscription/BillingConfirmation.tsx": () => import("./assets/BillingConfirmation-BUcs1fYV.js"), "./Pages/Subscription/Checkout.tsx": () => import("./assets/Checkout-BqezNYbX.js"), "./Pages/Subscription/CheckoutUpgrade.tsx": () => import("./assets/CheckoutUpgrade-3c7H0Ibw.js"), "./Pages/Subscription/Index.tsx": () => import("./assets/Index-D77apE4d.js"), "./Pages/Subscription/PaymentMethod.tsx": () => import("./assets/PaymentMethod-n5lKd0su.js"), "./Pages/TermsConditions.tsx": () => import("./assets/TermsConditions-CkZQfi6E.js") })
     ),
     setup: ({ App, props }) => {
       return /* @__PURE__ */ jsxRuntimeExports.jsx(App, { ...props });
@@ -37291,9 +37291,9 @@ P(
 );
 export {
   Je as J,
+  React as R,
   Se as S,
   Te as T,
-  U,
   je as a,
   requireReact as b,
   commonjsGlobal as c,

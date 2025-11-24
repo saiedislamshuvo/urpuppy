@@ -82,6 +82,7 @@ class HandleInertiaRequests extends Middleware
             'isMobile' => $agent->isMobile(),
             'mapProvider' => config('services.map.provider', 'openstreetmap'),
             'mapboxAccessToken' => config('services.mapbox.access_token'),
+            'phoneVerificationRequired' => config('services.phone.verification_required', true),
             'settings' => [
                 'site_name' => $settings->site_name ?? '',
                 'site_logo' => $this->getImageUrl($settings->site_logo),

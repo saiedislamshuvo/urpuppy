@@ -48,7 +48,7 @@ class BreederController extends Controller
             'breeds',
             'media',
             'state',
-            'company_state',
+            // 'company_state',
         ]);
 
         if ($breed && $breed != 'undefined' && $breed != 'All') {
@@ -61,10 +61,10 @@ class BreederController extends Controller
             $query->where(function ($q) use ($state) {
                 $q->whereHas('state', function ($sq) use ($state) {
                     $sq->where('name', $state);
-                })
-                ->orWhereHas('company_state', function ($sq) use ($state) {
-                    $sq->where('name', $state);
                 });
+                // ->orWhereHas('company_state', function ($sq) use ($state) {
+                //     $sq->where('name', $state);
+                // });
             });
         }
 
@@ -214,7 +214,7 @@ class BreederController extends Controller
 
             $mediaProcessing = [];
 
-            if (isset($data['gallery'])) {
+            if (isset($data['gallery']) && !is_null($data['gallery'])) {
                 $mediaProcessing[] = function() use ($user, $data) {
                     // Separate files and URLs from the submitted data
                     $files = collect($data['gallery'])->filter(fn($item) => $item instanceof \Illuminate\Http\UploadedFile);
@@ -314,7 +314,6 @@ class BreederController extends Controller
         if ($slug == null) {
             return redirect()->back();
         }
-
         $userId = User::decodeSlug($slug);
         $cacheKey = "breeder_profile_{$userId}";
 
@@ -347,11 +346,11 @@ class BreederController extends Controller
         $breeder = $results['breeder'];
         $puppies = $results['puppies'];
 
-        if ($breeder?->breeder_plan === null) {
-            return redirect()->back()->with([
-                'message.error' => 'This user is not a breeder',
-            ])->setStatusCode(404);
-        }
+        // if ($breeder?->breeder_plan === null) {
+        //     return redirect()->back()->with([
+        //         'message.error' => 'This breeder is not available',
+        //     ])->setStatusCode(404);
+        // }
 
         return inertia('Breeders/Show', [
             'rating_count' => $breeder->comments->count(),

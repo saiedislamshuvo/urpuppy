@@ -75,6 +75,12 @@ class ReportResource extends Resource
                 Tables\Columns\TextColumn::make('user.full_name')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('reason')
+                    ->label('Reason')
+                    ->limit(50)
+                    ->tooltip(fn (Report $record): string => $record->reason)
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

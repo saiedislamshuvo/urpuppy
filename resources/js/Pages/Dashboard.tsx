@@ -150,40 +150,40 @@ export default function Dashboard({
                                     <table className="table mb-0" style={{ borderCollapse: 'collapse', border: 'none' }}>
                                         <thead>
                                             <tr>
-                                                <th style={{ border: '1px solid #e0e0e0', borderTop: 'none', borderLeft: 'none', borderBottom: '1px solid #e0e0e0', padding: '1rem', backgroundColor: '#f8f9fa', fontWeight: 600, minWidth: '200px' }}>Information</th>
-                                                <th style={{ border: '1px solid #e0e0e0', borderTop: 'none', borderRight: 'none', borderBottom: '1px solid #e0e0e0', padding: '1rem', backgroundColor: '#f8f9fa', fontWeight: 600, textAlign: 'center', minWidth: '200px' }}>Details</th>
+                                                <th style={{ border: '1px solid #e0e0e0', padding: '1rem', backgroundColor: '#f8f9fa', fontWeight: 600, minWidth: '200px' }}>Information</th>
+                                                <th style={{ border: '1px solid #e0e0e0', padding: '1rem', backgroundColor: '#f8f9fa', fontWeight: 600, textAlign: 'center', minWidth: '200px' }}>Details</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td style={{ border: '1px solid #e0e0e0', borderLeft: 'none', borderTop: 'none', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
+                                                <td style={{ border: '1px solid #e0e0e0', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
                                                     Plan Name
                                                 </td>
-                                                <td style={{ border: '1px solid #e0e0e0', borderRight: 'none', borderTop: 'none', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
+                                                <td style={{ border: '1px solid #e0e0e0', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
                                                     {subscription_report.plan_name}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td style={{ border: '1px solid #e0e0e0', borderLeft: 'none', borderTop: 'none', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
+                                                <td style={{ border: '1px solid #e0e0e0', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
                                                     Total Listings
                                                 </td>
-                                                <td style={{ border: '1px solid #e0e0e0', borderRight: 'none', borderTop: 'none', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
+                                                <td style={{ border: '1px solid #e0e0e0', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
                                                     {subscription_report.total_listings}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td style={{ border: '1px solid #e0e0e0', borderLeft: 'none', borderTop: 'none', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
+                                                <td style={{ border: '1px solid #e0e0e0', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
                                                     Listing Limit
                                                 </td>
-                                                <td style={{ border: '1px solid #e0e0e0', borderRight: 'none', borderTop: 'none', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
+                                                <td style={{ border: '1px solid #e0e0e0', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
                                                     {subscription_report.listing_limit === 0 ? 'Unlimited' : subscription_report.listing_limit}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td style={{ border: '1px solid #e0e0e0', borderLeft: 'none', borderTop: 'none', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
+                                                <td style={{ border: '1px solid #e0e0e0', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
                                                     Listings Remaining
                                                 </td>
-                                                <td style={{ border: '1px solid #e0e0e0', borderRight: 'none', borderTop: 'none', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
+                                                <td style={{ border: '1px solid #e0e0e0', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
                                                     {typeof subscription_report.listings_remaining === 'string'
                                                         ? subscription_report.listings_remaining
                                                         : subscription_report.listings_remaining}
@@ -191,29 +191,29 @@ export default function Dashboard({
                                             </tr>
                                             {subscription_report.next_billing_date && (
                                                 <tr>
-                                                    <td style={{ border: '1px solid #e0e0e0', borderLeft: 'none', borderTop: 'none', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
+                                                    <td style={{ border: '1px solid #e0e0e0', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
                                                         Next Billing Date
                                                     </td>
-                                                    <td style={{ border: '1px solid #e0e0e0', borderRight: 'none', borderTop: 'none', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
+                                                    <td style={{ border: '1px solid #e0e0e0', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
                                                         {subscription_report.next_billing_date}
                                                     </td>
                                                 </tr>
                                             )}
                                             {subscription_report.days_remaining !== null && (
                                                 <tr>
-                                                    <td style={{ border: '1px solid #e0e0e0', borderLeft: 'none', borderTop: 'none', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
+                                                    <td style={{ border: '1px solid #e0e0e0', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
                                                         Days Remaining
                                                     </td>
-                                                    <td style={{ border: '1px solid #e0e0e0', borderRight: 'none', borderTop: 'none', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
-                                                        {subscription_report.days_remaining} {subscription_report.days_remaining === 1 ? 'day' : 'days'}
+                                                    <td style={{ border: '1px solid #e0e0e0', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
+                                                        {Math.ceil(subscription_report.days_remaining)} {Math.ceil(subscription_report.days_remaining) === 1 ? 'day' : 'days'}
                                                     </td>
                                                 </tr>
                                             )}
                                             <tr>
-                                                <td style={{ border: '1px solid #e0e0e0', borderLeft: 'none', borderTop: 'none', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
+                                                <td style={{ border: '1px solid #e0e0e0', padding: '1rem', fontWeight: 500, backgroundColor: '#f8f9fa', verticalAlign: 'middle' }}>
                                                     Subscription Status
                                                 </td>
-                                                <td style={{ border: '1px solid #e0e0e0', borderRight: 'none', borderTop: 'none', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
+                                                <td style={{ border: '1px solid #e0e0e0', padding: '1rem', textAlign: 'center', verticalAlign: 'middle' }}>
                                                     <span className={`badge ${subscription_report.subscription_status === 'active' ? 'bg-success' : subscription_report.subscription_status === 'trialing' ? 'bg-info' : 'bg-warning'}`}>
                                                         {subscription_report.subscription_status.charAt(0).toUpperCase() + subscription_report.subscription_status.slice(1)}
                                                     </span>

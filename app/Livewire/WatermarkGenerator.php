@@ -39,6 +39,9 @@ class WatermarkGenerator extends Component
     // Media ID if editing existing media
     public $selectedMediaId = null;
     
+    // Bulk selection for watermarking multiple images
+    public $selectedMediaIds = [];
+    
     // Pagination
     protected int $perPage = 12;
 
@@ -97,6 +100,206 @@ class WatermarkGenerator extends Component
             $this->previewUrl = null; // Reset preview when selecting new media
             $this->message = null;
         }
+    }
+    
+    public function toggleBulkSelection($mediaId): void
+    {
+        if (in_array($mediaId, $this->selectedMediaIds)) {
+            // Remove from selection
+            $this->selectedMediaIds = array_values(array_diff($this->selectedMediaIds, [$mediaId]));
+        } else {
+            // Add to selection
+            $this->selectedMediaIds[] = $mediaId;
+        }
+    }
+    
+    public function selectAll(): void
+    {
+        $this->selectedMediaIds = $this->getImagesArray()->pluck('id')->toArray();
+    }
+    
+    public function deselectAll(): void
+    {
+        $this->selectedMediaIds = [];
+    }
+    
+    /**
+     * Get selected images data for display
+     */
+    public function getSelectedImagesData()
+    {
+        if (empty($this->selectedMediaIds)) {
+            return [];
+        }
+        
+        // Return all bulk selected images
+        return collect($this->selectedMediaIds)->map(function ($mediaId) {
+            $media = Media::find($mediaId);
+            if ($media) {
+                return [
+                    'id' => $media->id,
+                    'url' => $media->getUrl(),
+                    'name' => $media->name,
+                ];
+            }
+            return null;
+        })->filter()->values()->toArray();
+    }
+    
+    /**
+     * Apply watermark to multiple selected images
+     * @param array $watermarkedImages Array of [mediaId => base64Data] pairs
+     */
+    public function applyWatermarkToSelected($watermarkedImages)
+    {
+        if (empty($this->selectedMediaIds)) {
+            $this->message = 'Please select at least one image.';
+            $this->messageType = 'warning';
+            return;
+        }
+        
+        $this->isProcessing = true;
+        $this->message = null;
+        
+        $successCount = 0;
+        $errorCount = 0;
+        $user = Auth::user();
+        
+        if (!$user) {
+            $this->message = 'User not authenticated';
+            $this->messageType = 'error';
+            $this->isProcessing = false;
+            return;
+        }
+        
+        // Validate watermarked images array
+        if (!is_array($watermarkedImages) || empty($watermarkedImages)) {
+            $this->message = 'Invalid watermarked images data';
+            $this->messageType = 'error';
+            $this->isProcessing = false;
+            return;
+        }
+        
+        $disk = Storage::disk('public');
+        
+        foreach ($this->selectedMediaIds as $mediaId) {
+            try {
+                // Get the watermarked image data for this specific media ID
+                if (!isset($watermarkedImages[$mediaId])) {
+                    $errorCount++;
+                    \Log::warning('Watermarked image not found for media', ['media_id' => $mediaId]);
+                    continue;
+                }
+                
+                $base64Data = $watermarkedImages[$mediaId];
+                
+                // Decode base64 data for this specific image
+                $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Data));
+                
+                if (!$imageData) {
+                    $errorCount++;
+                    \Log::warning('Invalid image data for media', ['media_id' => $mediaId]);
+                    continue;
+                }
+                
+                $existingMedia = Media::find($mediaId);
+                
+                if (!$existingMedia) {
+                    $errorCount++;
+                    \Log::warning('Media not found for bulk watermark', ['media_id' => $mediaId]);
+                    continue;
+                }
+                
+                // Store all existing media attributes to preserve them
+                $oldAttributes = [
+                    'model_type' => $existingMedia->model_type,
+                    'model_id' => $existingMedia->model_id,
+                    'uuid' => $existingMedia->uuid,
+                    'collection_name' => $existingMedia->collection_name,
+                    'name' => $existingMedia->name,
+                    'file_name' => $existingMedia->file_name,
+                    'disk' => $existingMedia->disk,
+                    'conversions_disk' => $existingMedia->conversions_disk,
+                    'manipulations' => $existingMedia->manipulations,
+                    'custom_properties' => $existingMedia->custom_properties,
+                    'order_column' => $existingMedia->order_column,
+                    'created_at' => $existingMedia->created_at,
+                    'updated_at' => $existingMedia->updated_at,
+                ];
+                
+                // Get the owner model to add media to
+                $ownerModel = $existingMedia->model;
+                if (!$ownerModel) {
+                    $errorCount++;
+                    \Log::warning('Media owner model not found', ['media_id' => $mediaId]);
+                    continue;
+                }
+                
+                // Create a unique temp file for this media item with its own watermarked image
+                $mediaTempPath = sys_get_temp_dir() . '/' . uniqid('watermark_' . $mediaId . '_', true) . '.jpg';
+                file_put_contents($mediaTempPath, $imageData);
+                
+                // Delete the old media using Spatie (this removes files and conversions)
+                $oldMediaId = $existingMedia->id;
+                $existingMedia->delete();
+                
+                // Add the new watermarked file using Spatie's addMedia method
+                // This will automatically generate conversions from the watermarked file
+                $media = $ownerModel->addMedia($mediaTempPath)
+                    ->usingName($oldAttributes['name'])
+                    ->usingFileName($oldAttributes['file_name'])
+                    ->toMediaCollection($oldAttributes['collection_name']);
+                
+                // Update the new media record with all old attributes (except ID which can't be changed)
+                $media->update([
+                    'uuid' => $oldAttributes['uuid'],
+                    'disk' => $oldAttributes['disk'] ?? 'public',
+                    'conversions_disk' => $oldAttributes['conversions_disk'],
+                    'manipulations' => $oldAttributes['manipulations'],
+                    'custom_properties' => $oldAttributes['custom_properties'],
+                    'order_column' => $oldAttributes['order_column'],
+                    'created_at' => $oldAttributes['created_at'],
+                    'updated_at' => now(),
+                ]);
+                
+                // Clean up the media-specific temp file
+                @unlink($mediaTempPath);
+                
+                \Log::info('Bulk watermark: Media replaced using Spatie methods', [
+                    'old_media_id' => $oldMediaId,
+                    'new_media_id' => $media->id,
+                    'collection' => $oldAttributes['collection_name'],
+                ]);
+                
+                $successCount++;
+                
+            } catch (\Exception $e) {
+                $errorCount++;
+                \Log::error('Bulk watermark failed for media', [
+                    'media_id' => $mediaId,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
+        }
+        
+        // Clear selection after processing
+        $this->selectedMediaIds = [];
+        
+        // Clear cache
+        Cache::flush();
+        
+        // Set final message
+        if ($errorCount === 0) {
+            $this->message = "Successfully applied watermark to {$successCount} image(s).";
+            $this->messageType = 'success';
+        } else {
+            $this->message = "Applied watermark to {$successCount} image(s). {$errorCount} failed.";
+            $this->messageType = $successCount > 0 ? 'warning' : 'error';
+        }
+        
+        $this->isProcessing = false;
+        $this->dispatch('watermark-uploaded');
     }
     
     public function formatBytes($bytes, $precision = 2)

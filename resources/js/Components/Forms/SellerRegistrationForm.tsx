@@ -35,6 +35,7 @@ const SellerRegistrationForm = ({
   const user = usePage().props.auth.user;
   const mapProvider = usePage().props.mapProvider as string;
   const defaultLocation = usePage().props.defaultLocation as LocationData | null;
+  const phoneVerificationRequired = usePage().props.phoneVerificationRequired as boolean ?? true;
 
   // Determine if this is seller registration mode (no puppies yet)
   const isSellerRegistration = !puppy_count && !puppy_edit;
@@ -455,6 +456,8 @@ const SellerRegistrationForm = ({
                           phoneNumber={data.phone || (user as any).phone}
                           phoneType="phone"
                           isVerified={(user as any).phone_verified_at ? true : false}
+                          onPhoneChange={(phone) => setData('phone', phone)}
+                          skipVerification={!phoneVerificationRequired}
                         />
                       )}
                       {errors.phone && <InputError message={errors.phone} />}

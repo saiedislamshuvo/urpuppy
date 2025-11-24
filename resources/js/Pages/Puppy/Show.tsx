@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ImageSlider from '@/Components/ImageSlider';
 import PuppyCard from '@/Components/Puppy/Card';
 import Layout from '@/Layouts/Layout';
@@ -13,6 +13,7 @@ import { Head, Link } from '@inertiajs/react';
 import MetaTags from '@/Components/MetaTags';
 import Tooltip from '@/Components/Tooltip';
 import PuppyJsonLd from '@/Components/PuppyJsonLd';
+import ReportModal from '@/Components/ReportModal';
 
 const Show = ({ related_puppies, puppy, siblings, url }: {
   url: string
@@ -20,6 +21,7 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
   puppy: App.Data.PuppyData,
   siblings: App.Data.PuppyData[]
 }) => {
+  const [showReportModal, setShowReportModal] = useState(false);
 
   return (
     <Layout>
@@ -90,19 +92,19 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
                           </div>
 
                           <div className="col-12">
-                              <div className="d-flex align-items-center gap-2 mb-2">
-                                <img src="../images/svgs/icon-map-pin.svg" alt="map" width="20" height="20" />
-                                <p className="mb-0 ">{`${puppy?.city || ''}${(puppy?.city || '').length > 0 ? ', ' : ''}${puppy?.state || ''}`}</p>
-                              </div>
+                            <div className="d-flex align-items-center gap-2 mb-2">
+                              <img src="../images/svgs/icon-map-pin.svg" alt="map" width="20" height="20" />
+                              <p className="mb-0 ">{`${puppy?.city || ''}${(puppy?.city || '').length > 0 ? ', ' : ''}${puppy?.state || ''}`}</p>
                             </div>
-                            <div className="col-12">
-                              <div className="d-flex align-items-center gap-2 mb-2">
-                               <img loading="lazy" src="/images/svgs/icon-paws-dark.svg" alt="urpuppy-img" width="20" height="20" />
-                                <p className="mb-0">{puppy.breeds?.[0]?.name ?? ""}</p>
+                          </div>
+                          <div className="col-12">
+                            <div className="d-flex align-items-center gap-2 mb-2">
+                              <img loading="lazy" src="/images/svgs/icon-paws-dark.svg" alt="urpuppy-img" width="20" height="20" />
+                              <p className="mb-0">{puppy.breeds?.[0]?.name ?? ""}</p>
                             </div>
                           </div>
                           <div className="row mb-2">
-                          <div className="col-6">
+                            <div className="col-6">
                               <div className="d-flex align-items-center gap-2 mb-2">
                                 <img src="../images/svgs/icon-female.svg" alt="Female" width="18" height="18" />
                                 <p className="mb-0 text-capitalize">{puppy.gender}</p>
@@ -115,23 +117,23 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
                                 <p className="mb-0 ">{puppy.age}</p>
                               </div>
                             </div>
-                            </div>
+                          </div>
 
-                            <div className="row mb-2">
+                          <div className="row mb-2">
                             <div className="col-6">
                               <div className="d-flex align-items-center gap-2 mb-2">
                                 <img src="../images/svgs/icon-time.svg" alt="time" width="18" height="18" />
                                 <p className="mb-0 ">{puppy.published_at}</p>
                               </div>
                             </div>
-                            
+
                             <div className="col-6">
                               <div className="d-flex align-items-center gap-2 mb-2">
                                 <img src="../images/svgs/icon-eye.svg" alt="eye" width="18" height="18" />
                                 <p className="mb-0 ">{puppy.view_count} Views</p>
                               </div>
                             </div>
-                          </div> 
+                          </div>
 
                           <p className="mb-1 fs-2 fw-medium">Our price</p>
                           <h2 className="mb-4">{puppy.formatted_price}</h2>
@@ -157,20 +159,25 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
                             <img src="/images/svgs/icon-flag.svg" alt="flag" />
 
 
-                            <Link
+                            <button
+                              type="button"
+                              onClick={() => setShowReportModal(true)}
                               style={{
                                 background: 'transparent',
-                                border: 'none'
-
-                              }}
-                              href={`/report/${puppy.slug}`} method="post" data={{
-                                reason: 'report'
+                                border: 'none',
+                                padding: 0,
+                                cursor: 'pointer'
                               }}
                             >
                               <h6 className="mb-0 fs-2 fw-semibold text-muted text-decoration-underline">Report This Listing</h6>
-                            </Link>
+                            </button>
 
                           </div>
+                          <ReportModal
+                            show={showReportModal}
+                            onClose={() => setShowReportModal(false)}
+                            puppySlug={puppy.slug}
+                          />
                         </div>
                       </div>
                     </div>
@@ -205,7 +212,7 @@ const Show = ({ related_puppies, puppy, siblings, url }: {
                   </div>
 
                 }
-                
+
                 {
                   puppy.seller?.is_breeder &&
                   <div className="card position-relative overflow-hidden border">

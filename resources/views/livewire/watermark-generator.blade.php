@@ -30,22 +30,40 @@
 
         <!-- Image Comparison Section - Two Columns -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Selected Image Column -->
+            <!-- Selected Images Column -->
             <div>
-                @if($selectedMediaId && $originalImageUrl)
+                @php
+                    $selectedImages = $this->getSelectedImagesData();
+                @endphp
+                @if(!empty($selectedImages))
                     <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Original Image</label>
-                        <div class="relative">
-                            <img id="originalImage" src="{{ $originalImageUrl }}" alt="Selected" class="max-w-full h-auto rounded-md shadow-lg">
-                            <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                                Media ID: {{ $selectedMediaId }}
-                            </div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Selected Images ({{ count($selectedImages) }})
+                        </label>
+                        <div id="selectedImagesContainer" class="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+                            @foreach($selectedImages as $image)
+                                <div class="relative">
+                                    <img 
+                                        data-media-id="{{ $image['id'] }}"
+                                        src="{{ $image['url'] }}" 
+                                        alt="{{ $image['name'] }}" 
+                                        class="w-full h-auto object-cover rounded-md shadow-md border border-gray-200 dark:border-gray-700"
+                                    >
+                                    <div class="mt-1 text-xs text-gray-600 dark:text-gray-400 truncate" title="{{ $image['name'] }}">
+                                        {{ $image['name'] }}
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
+                        <!-- Hidden image for watermark generation (uses first selected) -->
+                        @if(!empty($selectedImages))
+                            <img id="originalImage" src="{{ $selectedImages[0]['url'] }}" alt="Selected" style="display: none;">
+                        @endif
                     </div>
                 @else
                     <div class="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
                         <p class="text-sm text-yellow-800 dark:text-yellow-200">
-                            Please select an image from the gallery below to generate a watermarked preview.
+                            Please select images from the gallery below to generate watermarked previews.
                         </p>
                     </div>
                 @endif
@@ -54,10 +72,9 @@
             <!-- Preview Column -->
             <div id="previewSection" style="display: none;">
                 <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Watermarked Preview</label>
-                    <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg">
-                        <canvas id="previewCanvas" class="max-w-full h-auto rounded-md shadow-lg" style="display: none;"></canvas>
-                        <img id="previewImage" class="max-w-full h-auto rounded-md shadow-lg" style="display: none;" alt="Watermarked Preview">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Watermarked Previews</label>
+                    <div id="previewImagesContainer" class="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+                        <!-- Preview images will be inserted here by JavaScript -->
                     </div>
                 </div>
             </div>
@@ -69,7 +86,7 @@
                 type="button" 
                 id="generatePreviewBtn"
                 class="fi-btn relative grid-flow-col items-center justify-center gap-1.5 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold outline-none transition duration-75 focus:ring-2 disabled:pointer-events-none disabled:opacity-70 fi-btn-color-primary fi-color-primary bg-primary-600 text-white hover:bg-primary-500 focus:ring-primary-500 dark:bg-primary-500 dark:hover:bg-primary-400 dark:focus:ring-primary-400"
-                @if(!$selectedMediaId) disabled @endif
+                @if(empty($selectedMediaIds)) disabled @endif
             >
                 Generate Preview
             </button>
@@ -80,7 +97,7 @@
                 class="fi-btn relative grid-flow-col items-center justify-center gap-1.5 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold outline-none transition duration-75 focus:ring-2 disabled:pointer-events-none disabled:opacity-70 fi-btn-color-primary fi-color-primary bg-primary-600 text-white hover:bg-primary-500 focus:ring-primary-500 dark:bg-primary-500 dark:hover:bg-primary-400 dark:focus:ring-primary-400"
                 style="display: none;"
             >
-                Upload Watermarked Image
+                <span id="uploadBtnText">Upload Watermarked Image</span>
             </button>
 
             <button 
@@ -104,35 +121,68 @@
 
     <!-- Image Gallery -->
     <div class="mt-8 pt-6">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Select Image from Gallery
-        </h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            Click on an image below to select it for watermark generation.
-        </p>
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    Select Image from Gallery
+                </h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Click on an image to preview, or use checkboxes for bulk selection.
+                </p>
+            </div>
+            @if(count($selectedMediaIds) > 0)
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ count($selectedMediaIds) }} selected
+                    </span>
+                    <button 
+                        wire:click="deselectAll"
+                        class="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                    >
+                        Clear
+                    </button>
+                </div>
+            @else
+                <button 
+                    wire:click="selectAll"
+                    class="px-4 py-2 text-sm bg-primary-500 text-white rounded hover:bg-primary-600"
+                >
+                    Select All
+                </button>
+            @endif
+        </div>
 
         @if($this->getImagesProperty()->count() > 0)
             <div class="masonry-gallery">
                 @foreach($this->getImagesArray() as $image)
                     <div 
-                        wire:click="selectMedia({{ $image['id'] }})"
-                        class="masonry-item relative group cursor-pointer rounded-lg overflow-hidden border-2 transition-all mb-4 break-inside-avoid
-                            {{ $selectedMediaId == $image['id'] ? 'border-primary-500 ring-2 ring-primary-500 dark:ring-primary-400' : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600' }}"
+                        class="masonry-item relative group rounded-lg overflow-hidden border-2 transition-all mb-4 break-inside-avoid
+                            {{ in_array($image['id'], $selectedMediaIds) ? 'border-blue-500 ring-2 ring-blue-500 dark:ring-blue-400' : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600' }}"
                     >
-                        <!-- Checkbox Overlay -->
-                        <div class="absolute top-2 left-2 z-10">
-                            <div class="w-6 h-6 rounded-full bg-white dark:bg-gray-800 shadow-md flex items-center justify-center
-                                {{ $selectedMediaId == $image['id'] ? 'bg-primary-500' : '' }}">
-                                @if($selectedMediaId == $image['id'])
+                        <!-- Bulk Selection Checkbox -->
+                        <div 
+                            class="absolute top-2 left-2 z-10"
+                            wire:click.stop="toggleBulkSelection({{ $image['id'] }})"
+                        >
+                            <div class="w-6 h-6 rounded bg-white dark:bg-gray-800 shadow-md flex items-center justify-center cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700
+                                {{ in_array($image['id'], $selectedMediaIds) ? 'bg-blue-500' : '' }}">
+                                @if(in_array($image['id'], $selectedMediaIds))
                                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                @else
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                 @endif
                             </div>
                         </div>
 
-                        <!-- Image -->
-                        <div class="bg-gray-100 dark:bg-gray-900">
+                        <!-- Image - clicking also toggles selection -->
+                        <div 
+                            class="bg-gray-100 dark:bg-gray-900 cursor-pointer"
+                            wire:click="toggleBulkSelection({{ $image['id'] }})"
+                        >
                             <img 
                                 src="{{ $image['url'] }}" 
                                 alt="{{ $image['name'] }}"
@@ -278,7 +328,7 @@
                         canvas.height = img.height;
                         ctx.drawImage(img, 0, 0);
                         
-                        const opacity = watermarkConfig.opacity ?? 0.3;
+                        const opacity = watermarkConfig.opacity ?? 0.6;
                         const fontSize = watermarkConfig.fontSize ?? Math.max(img.width, img.height) / 10;
                         const color = watermarkConfig.color ?? '#ffffff';
                         const position = watermarkConfig.position ?? 'tile';
@@ -305,34 +355,39 @@
                                 ctx.save();
                                 ctx.globalAlpha = opacity;
                                 
-                                // Calculate watermark size - fewer watermarks with more spacing
-                                // Target: 2-3 watermarks horizontally with generous spacing
+                                // Calculate watermark size - use original size calculation
                                 const targetCols = 2; // Average of 2-3 watermarks
                                 const padding = 0.15; // 15% padding from edges
                                 const availableWidth = img.width * (1 - padding * 2);
-                                const watermarkWidth = availableWidth / (targetCols + (targetCols - 1) * 1); // More spacing between watermarks
+                                const watermarkWidth = availableWidth / (targetCols + (targetCols - 1) * 1); // Original size calculation
                                 const watermarkAspect = watermarkImg.width / watermarkImg.height;
                                 const watermarkHeight = watermarkWidth / watermarkAspect;
                                 
                                 if (position === 'tile') {
-                                    // Tile with much more spacing - fewer watermarks overall
-                                    const spacingX = watermarkWidth * 2.5; // 2x spacing between watermarks horizontally (doubled)
-                                    const spacingY = watermarkHeight * 5; // 4x spacing between rows (more vertical space)
+                                    // Fixed pattern: max 4 rows, 3 watermarks per row, staggered
+                                    const maxRows = 4;
+                                    const watermarksPerRow = 3;
                                     
-                                    // Calculate how many rows would fit with normal spacing
-                                    const originalRows = Math.ceil(img.height / (watermarkHeight * 1.2));
-                                    // Remove 2 rows and distribute the remaining space
-                                    const targetRows = Math.max(1, originalRows - 2);
-                                    const adjustedSpacingY = img.height / (targetRows + 1); // Distribute space evenly
+                                    // Calculate spacing to evenly distribute 3 watermarks across image width with more gap
+                                    const padding = 0.0; // 10% padding from edges
+                                    const availableWidth = img.width * (1 - padding * 2);
+                                    // Increase horizontal spacing - use larger divisor for more gap
+                                    const spacingX = availableWidth / (watermarksPerRow - 0.5); // More gap between watermarks
+                                    const startX = img.width * padding; // Start position
                                     
-                                    // Calculate columns with more spacing
-                                    const cols = Math.max(2, Math.ceil(img.width / spacingX)); // At least 2 columns
+                                    // Calculate vertical spacing to evenly distribute rows
+                                    const availableHeight = img.height * (1 - padding * 2);
+                                    const spacingY = availableHeight / (maxRows + 1);
+                                    const startY = img.height * padding;
                                     
-                                    for (let row = 0; row < targetRows; row++) {
+                                    // Draw watermarks in staggered pattern
+                                    for (let row = 0; row < maxRows; row++) {
+                                        // Offset every other row (odd rows: row 1, 3, etc. - but 0-indexed so row 1, 3)
                                         const rowOffset = (row % 2 === 1) ? spacingX / 2 : 0;
-                                        const y = (row + 1) * adjustedSpacingY - watermarkHeight / 2; // Center vertically in the space
-                                        for (let col = 0; col < cols; col++) {
-                                            const x = col * spacingX + rowOffset;
+                                        const y = startY + (row + 1) * spacingY - watermarkHeight / 2;
+                                        
+                                        for (let col = 0; col < watermarksPerRow; col++) {
+                                            const x = startX + col * spacingX + spacingX / 2 + rowOffset - watermarkWidth / 2;
                                             if (x >= 0 && x + watermarkWidth <= img.width && y >= 0 && y + watermarkHeight <= img.height) {
                                                 ctx.drawImage(watermarkImg, x, y, watermarkWidth, watermarkHeight);
                                             }
@@ -384,27 +439,30 @@
                             const textWidth = ctx.measureText(text).width;
                             
                             if (position === 'tile') {
-                                // Calculate spacing based on text dimensions to prevent overlapping
-                                // Measure text height (approximate)
-                                const textMetrics = ctx.measureText(text);
-                                const textHeight = fontSize * 1.2; // Approximate text height
+                                // Fixed pattern: max 4 rows, 3 watermarks per row, staggered
+                                const maxRows = 4;
+                                const watermarksPerRow = 3;
                                 
-                                // Use the larger of width or height, with padding
-                                const spacingX = Math.max(textWidth * 1.8, fontSize * 3);
-                                const spacingY = Math.max(textHeight * 2, fontSize * 3);
+                                // Calculate spacing to evenly distribute 3 watermarks across image width with more gap
+                                const padding = 0.1; // 10% padding from edges
+                                const availableWidth = img.width * (1 - padding * 2);
+                                // Increase horizontal spacing - use larger divisor for more gap
+                                const spacingX = availableWidth / (watermarksPerRow - 0.5); // More gap between watermarks
+                                const startX = img.width * padding; // Start position
                                 
-                                const rows = Math.ceil(img.height / spacingY);
-                                const cols = Math.ceil(img.width / spacingX);
+                                // Calculate vertical spacing to evenly distribute rows
+                                const availableHeight = img.height * (1 - padding * 2);
+                                const spacingY = availableHeight / (maxRows + 1);
+                                const startY = img.height * padding;
                                 
-                                for (let row = 0; row < rows; row++) {
-                                    // Offset every other row to the left for better coverage
+                                // Draw watermarks in staggered pattern
+                                for (let row = 0; row < maxRows; row++) {
+                                    // Offset every other row (odd rows: row 1, 3, etc. - but 0-indexed so row 1, 3)
                                     const rowOffset = (row % 2 === 1) ? spacingX / 2 : 0;
+                                    const y = startY + (row + 1) * spacingY;
                                     
-                                    for (let col = 0; col < cols; col++) {
-                                        const x = col * spacingX + spacingX / 2 + rowOffset;
-                                        const y = row * spacingY + spacingY / 2;
-                                        
-                                        // Only draw if within image bounds
+                                    for (let col = 0; col < watermarksPerRow; col++) {
+                                        const x = startX + col * spacingX + spacingX / 2 + rowOffset;
                                         if (x >= 0 && x <= img.width && y >= 0 && y <= img.height) {
                                             ctx.fillText(text, x, y);
                                         }
@@ -444,9 +502,10 @@
             
             if (generateBtn) {
                 generateBtn.addEventListener('click', async function() {
-                    const originalImg = document.getElementById('originalImage');
-                    if (!originalImg || !originalImg.src) {
-                        alert('Please select an image from the gallery first.');
+                    // Get all selected images from the selected images box
+                    const selectedImageElements = document.querySelectorAll('#selectedImagesContainer img[data-media-id]');
+                    if (selectedImageElements.length === 0) {
+                        alert('Please select images from the gallery first.');
                         return;
                     }
                     
@@ -464,22 +523,71 @@
                             color: @js($color),
                         };
                         
-                        // Generate watermarked image
-                        const blob = await addWatermarkToImage(originalImg.src, watermarkConfig);
-                        watermarkedBlob = blob;
-                        originalImageUrl = originalImg.src;
+                        // Get preview container
+                        const previewContainer = document.getElementById('previewImagesContainer');
+                        previewContainer.innerHTML = ''; // Clear previous previews
                         
-                        // Display preview
-                        const url = URL.createObjectURL(blob);
-                        previewImage.src = url;
-                        previewImage.style.display = 'block';
-                        previewCanvas.style.display = 'none';
+                        // Generate watermarked images for all selected images
+                        const watermarkedBlobs = [];
+                        for (let i = 0; i < selectedImageElements.length; i++) {
+                            const imgElement = selectedImageElements[i];
+                            const imageUrl = imgElement.src;
+                            const mediaId = imgElement.getAttribute('data-media-id');
+                            
+                            if (!mediaId) {
+                                console.warn('Media ID not found for image:', imageUrl);
+                                continue;
+                            }
+                            
+                            try {
+                                // Generate watermarked image
+                                const blob = await addWatermarkToImage(imageUrl, watermarkConfig);
+                                // Store mediaId as string to match PHP array keys
+                                watermarkedBlobs.push({ blob, mediaId: String(mediaId), originalUrl: imageUrl });
+                                
+                                // Create preview image element
+                                const url = URL.createObjectURL(blob);
+                                const previewDiv = document.createElement('div');
+                                previewDiv.className = 'relative';
+                                const previewImg = document.createElement('img');
+                                previewImg.src = url;
+                                previewImg.className = 'w-full h-auto object-cover rounded-md shadow-md border border-gray-200 dark:border-gray-700';
+                                previewImg.alt = 'Watermarked Preview';
+                                previewDiv.appendChild(previewImg);
+                                previewContainer.appendChild(previewDiv);
+                            } catch (error) {
+                                console.error('Error generating watermark for image:', error);
+                            }
+                        }
+                        
+                        // Store first blob for single upload (backward compatibility)
+                        if (watermarkedBlobs.length > 0) {
+                            watermarkedBlob = watermarkedBlobs[0].blob;
+                            originalImageUrl = watermarkedBlobs[0].originalUrl;
+                        }
+                        
+                        // Store all blobs for bulk operations
+                        window.allWatermarkedBlobs = watermarkedBlobs;
+                        
+                        // Display preview section
                         previewSection.style.display = 'block';
                         uploadBtn.style.display = 'inline-flex';
                         downloadBtn.style.display = 'inline-flex';
+                        
+                        // Update upload button text based on selection
+                        const selectedIds = @js($selectedMediaIds);
+                        const hasBulkSelection = selectedIds && selectedIds.length > 0;
+                        const uploadBtnText = document.getElementById('uploadBtnText');
+                        if (uploadBtnText) {
+                            if (hasBulkSelection) {
+                                uploadBtnText.textContent = `Apply to ${selectedIds.length} Selected`;
+                            } else {
+                                uploadBtnText.textContent = 'Upload Watermarked Image';
+                            }
+                        }
                     } catch (error) {
-                        console.error('Error generating watermark:', error);
-                        alert('Failed to generate watermark: ' + error.message);
+                        console.error('Error generating watermarks:', error);
+                        alert('Failed to generate watermarks: ' + error.message);
                     } finally {
                         generateBtn.disabled = false;
                         generateBtn.textContent = 'Generate Preview';
@@ -506,43 +614,163 @@
             // Upload button - convert blob to base64 and send to Livewire
             if (uploadBtn) {
                 uploadBtn.addEventListener('click', async function() {
-                    if (!watermarkedBlob) {
-                        alert('Please generate a preview first.');
-                        return;
-                    }
+                    // Check if we have bulk selection
+                    const selectedIds = @js($selectedMediaIds);
+                    const hasBulkSelection = selectedIds && selectedIds.length > 0;
                     
-                    uploadBtn.disabled = true;
-                    uploadBtn.textContent = 'Uploading...';
-                    
-                    try {
-                        // Convert blob to base64
-                        const reader = new FileReader();
-                        reader.onloadend = function() {
-                            const base64Data = reader.result;
-                            const filename = 'watermarked-' + Date.now() + '.jpg';
+                    if (hasBulkSelection) {
+                        // Bulk upload - use applyWatermarkToSelected
+                        if (!watermarkedBlob && (!window.allWatermarkedBlobs || window.allWatermarkedBlobs.length === 0)) {
+                            alert('Please generate a preview first.');
+                            return;
+                        }
+                        
+                        uploadBtn.disabled = true;
+                        const uploadBtnText = document.getElementById('uploadBtnText');
+                        const originalText = uploadBtnText ? uploadBtnText.textContent : 'Upload Watermarked Image';
+                        if (uploadBtnText) uploadBtnText.textContent = 'Processing...';
+                        
+                        try {
+                            // Convert all watermarked blobs to base64 with their media IDs
+                            if (!window.allWatermarkedBlobs || window.allWatermarkedBlobs.length === 0) {
+                                alert('No watermarked images available. Please generate a preview first.');
+                                uploadBtn.disabled = false;
+                                if (uploadBtnText) uploadBtnText.textContent = originalText;
+                                return;
+                            }
                             
-                            // Call Livewire method with parameters
-                            @this.call('uploadWatermarkedFile', base64Data, filename);
-                        };
-                        reader.readAsDataURL(watermarkedBlob);
-                    } catch (error) {
-                        console.error('Error uploading watermark:', error);
-                        alert('Failed to upload: ' + error.message);
-                        uploadBtn.disabled = false;
-                        uploadBtn.textContent = 'Upload Watermarked Image';
+                            // Convert all blobs to base64 and create a map of mediaId => base64Data
+                            const watermarkedImages = {};
+                            let processedCount = 0;
+                            const totalCount = window.allWatermarkedBlobs.length;
+                            
+                            window.allWatermarkedBlobs.forEach((item) => {
+                                const reader = new FileReader();
+                                reader.onloadend = function() {
+                                    watermarkedImages[item.mediaId] = reader.result;
+                                    processedCount++;
+                                    
+                                    // When all images are processed, send to backend
+                                    if (processedCount === totalCount) {
+                                        @this.call('applyWatermarkToSelected', watermarkedImages);
+                                    }
+                                };
+                                reader.readAsDataURL(item.blob);
+                            });
+                        } catch (error) {
+                            console.error('Error applying bulk watermark:', error);
+                            alert('Failed to apply watermark: ' + error.message);
+                            uploadBtn.disabled = false;
+                            if (uploadBtnText) uploadBtnText.textContent = originalText;
+                        }
+                    } else {
+                        // No bulk selection, but should still work with selected images
+                        // Use bulk method if we have selected images, otherwise single
+                        const selectedImageElements = document.querySelectorAll('#selectedImagesContainer img[data-media-id]');
+                        if (selectedImageElements.length > 0) {
+                            // Use bulk method even for single image
+                            if (!watermarkedBlob && (!window.allWatermarkedBlobs || window.allWatermarkedBlobs.length === 0)) {
+                                alert('Please generate a preview first.');
+                                return;
+                            }
+                            
+                            uploadBtn.disabled = true;
+                            const uploadBtnText = document.getElementById('uploadBtnText');
+                            const originalText = uploadBtnText ? uploadBtnText.textContent : 'Upload Watermarked Image';
+                            if (uploadBtnText) uploadBtnText.textContent = 'Uploading...';
+                            
+                            try {
+                                // Convert all watermarked blobs to base64 with their media IDs
+                                if (!window.allWatermarkedBlobs || window.allWatermarkedBlobs.length === 0) {
+                                    alert('No watermarked images available. Please generate a preview first.');
+                                    uploadBtn.disabled = false;
+                                    if (uploadBtnText) uploadBtnText.textContent = originalText;
+                                    return;
+                                }
+                                
+                                // Convert all blobs to base64 and create a map of mediaId => base64Data
+                                const watermarkedImages = {};
+                                let processedCount = 0;
+                                const totalCount = window.allWatermarkedBlobs.length;
+                                
+                                window.allWatermarkedBlobs.forEach((item) => {
+                                    const reader = new FileReader();
+                                    reader.onloadend = function() {
+                                        watermarkedImages[item.mediaId] = reader.result;
+                                        processedCount++;
+                                        
+                                        // When all images are processed, send to backend
+                                        if (processedCount === totalCount) {
+                                            @this.call('applyWatermarkToSelected', watermarkedImages);
+                                        }
+                                    };
+                                    reader.readAsDataURL(item.blob);
+                                });
+                            } catch (error) {
+                                console.error('Error uploading watermark:', error);
+                                alert('Failed to upload: ' + error.message);
+                                uploadBtn.disabled = false;
+                                if (uploadBtnText) uploadBtnText.textContent = originalText;
+                            }
+                        } else {
+                            // Fallback to single upload if no selection
+                            if (!watermarkedBlob) {
+                                alert('Please generate a preview first.');
+                                return;
+                            }
+                            
+                            uploadBtn.disabled = true;
+                            const uploadBtnText = document.getElementById('uploadBtnText');
+                            const originalText = uploadBtnText ? uploadBtnText.textContent : 'Upload Watermarked Image';
+                            if (uploadBtnText) uploadBtnText.textContent = 'Uploading...';
+                            
+                            try {
+                                const reader = new FileReader();
+                                reader.onloadend = function() {
+                                    const base64Data = reader.result;
+                                    const filename = 'watermarked-' + Date.now() + '.jpg';
+                                    @this.call('uploadWatermarkedFile', base64Data, filename);
+                                };
+                                reader.readAsDataURL(watermarkedBlob);
+                            } catch (error) {
+                                console.error('Error uploading watermark:', error);
+                                alert('Failed to upload: ' + error.message);
+                                uploadBtn.disabled = false;
+                                if (uploadBtnText) uploadBtnText.textContent = originalText;
+                            }
+                        }
                     }
                 });
             }
             
-            // Listen for Livewire updates to reset state
+            
+            // Listen for Livewire updates to reset state and update button text
             document.addEventListener('livewire:init', () => {
                 Livewire.on('watermark-uploaded', () => {
                     watermarkedBlob = null;
+                    window.allWatermarkedBlobs = null;
                     previewSection.style.display = 'none';
                     uploadBtn.style.display = 'none';
                     downloadBtn.style.display = 'none';
                     uploadBtn.disabled = false;
-                    uploadBtn.textContent = 'Upload Watermarked Image';
+                    const uploadBtnText = document.getElementById('uploadBtnText');
+                    if (uploadBtnText) {
+                        uploadBtnText.textContent = 'Upload Watermarked Image';
+                    }
+                });
+                
+                // Update button text when selection changes
+                Livewire.hook('morph.updated', ({ el, component }) => {
+                    const selectedIds = @js($selectedMediaIds);
+                    const hasBulkSelection = selectedIds && selectedIds.length > 0;
+                    const uploadBtnText = document.getElementById('uploadBtnText');
+                    if (uploadBtnText && uploadBtn.style.display !== 'none') {
+                        if (hasBulkSelection) {
+                            uploadBtnText.textContent = `Apply to ${selectedIds.length} Selected`;
+                        } else {
+                            uploadBtnText.textContent = 'Upload Watermarked Image';
+                        }
+                    }
                 });
             });
         });

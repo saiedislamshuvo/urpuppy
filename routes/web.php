@@ -23,6 +23,7 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UpgradeCheckoutController;
 use App\Http\Controllers\UpgradePlanController;
+use App\Http\Controllers\RefundRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\EncryptHistoryMiddleware;
@@ -101,6 +102,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/profile/avatar', [ProfileController::class, 'destroyAvatar'])->name('profile.destroy.avatar');
     Route::get('/my-subscription', [ProfileController::class, 'subscription'])->name('profile.subscription');
+    
+    // Refund request routes
+    Route::get('/refund-request', [RefundRequestController::class, 'index'])->name('refund-request.index');
+    Route::post('/refund-request', [RefundRequestController::class, 'store'])->name('refund-request.store');
     
     // Media management routes
     Route::get('/my-media', [\App\Http\Controllers\MediaController::class, 'index'])->name('media.index');
