@@ -34,51 +34,130 @@ const addWatermarkToImage = async (file, watermark) => {
       const fontSize = watermark.fontSize ?? Math.max(img.width, img.height) / 20;
       const color = watermark.color ?? "#ffffff";
       const position = watermark.position ?? "tile";
-      if (watermark.text) {
+      const applyWatermark = (watermarkImg) => {
         ctx.save();
         ctx.globalAlpha = opacity;
-        ctx.fillStyle = color;
-        ctx.font = `bold ${fontSize}px Arial`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        const textWidth = ctx.measureText(watermark.text).width;
-        if (position === "tile") {
-          const spacing = textWidth * 1.5;
-          const rows = Math.ceil(img.height / spacing);
-          const cols = Math.ceil(img.width / spacing);
-          for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-              const x = col * spacing + spacing / 2;
-              const y = row * spacing + spacing / 2;
-              ctx.fillText(watermark.text, x, y);
+        if (watermark.imageUrl && watermarkImg) {
+          const targetCols = 2;
+          const padding = 0.15;
+          const availableWidth = img.width * (1 - padding * 2);
+          const watermarkWidth = availableWidth / (targetCols + (targetCols - 1) * 1);
+          const watermarkAspect = watermarkImg.width / watermarkImg.height;
+          const watermarkHeight = watermarkWidth / watermarkAspect;
+          if (position === "tile") {
+            const maxRows = 3;
+            const watermarksPerRow = 2;
+            const tilePadding = 0;
+            const tileAvailableWidth = img.width * (1 - tilePadding * 2);
+            const spacingX = tileAvailableWidth / (watermarksPerRow - 0.5);
+            const startX = img.width * tilePadding;
+            const tileAvailableHeight = img.height * (1 - tilePadding * 2);
+            const spacingY = tileAvailableHeight / (maxRows + 1);
+            const startY = img.height * tilePadding;
+            for (let row = 0; row < maxRows; row++) {
+              const rowOffset = row % 2 === 1 ? spacingX / 2 : 0;
+              const y = startY + (row + 1) * spacingY - watermarkHeight / 2;
+              for (let col = 0; col < watermarksPerRow; col++) {
+                const x = startX + col * spacingX + spacingX / 2 + rowOffset - watermarkWidth / 2;
+                if (x >= 0 && x + watermarkWidth <= img.width && y >= 0 && y + watermarkHeight <= img.height) {
+                  ctx.drawImage(watermarkImg, x, y, watermarkWidth, watermarkHeight);
+                }
+              }
             }
+          } else {
+            let x = 0;
+            let y = 0;
+            if (position === "center") {
+              x = (img.width - watermarkWidth) / 2;
+              y = (img.height - watermarkHeight) / 2;
+            } else {
+              if (position.includes("top")) y = 20;
+              if (position.includes("bottom")) y = img.height - watermarkHeight - 20;
+              if (position.includes("left")) x = 20;
+              if (position.includes("right")) x = img.width - watermarkWidth - 20;
+            }
+            ctx.drawImage(watermarkImg, x, y, watermarkWidth, watermarkHeight);
           }
-        } else {
-          let x = img.width / 2;
-          let y = img.height / 2;
-          if (position.includes("top")) y = fontSize * 1.5;
-          if (position.includes("bottom")) y = img.height - fontSize * 1.5;
-          if (position.includes("left")) x = textWidth / 2 + 20;
-          if (position.includes("right")) x = img.width - textWidth / 2 - 20;
-          ctx.fillText(watermark.text, x, y);
+        } else if (watermark.text) {
+          ctx.fillStyle = color;
+          ctx.font = `bold ${fontSize}px Arial`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          const textWidth = ctx.measureText(watermark.text).width;
+          if (position === "tile") {
+            const maxRows = 4;
+            const watermarksPerRow = 3;
+            const padding = 0.1;
+            const availableWidth = img.width * (1 - padding * 2);
+            const spacingX = availableWidth / (watermarksPerRow - 0.5);
+            const startX = img.width * padding;
+            const availableHeight = img.height * (1 - padding * 2);
+            const spacingY = availableHeight / (maxRows + 1);
+            const startY = img.height * padding;
+            for (let row = 0; row < maxRows; row++) {
+              const rowOffset = row % 2 === 1 ? spacingX / 2 : 0;
+              const y = startY + (row + 1) * spacingY;
+              for (let col = 0; col < watermarksPerRow; col++) {
+                const x = startX + col * spacingX + spacingX / 2 + rowOffset;
+                if (x >= 0 && x <= img.width && y >= 0 && y <= img.height) {
+                  ctx.fillText(watermark.text, x, y);
+                }
+              }
+            }
+          } else {
+            let x = img.width / 2;
+            let y = img.height / 2;
+            if (position.includes("top")) y = fontSize * 1.5;
+            if (position.includes("bottom")) y = img.height - fontSize * 1.5;
+            if (position.includes("left")) x = textWidth / 2 + 20;
+            if (position.includes("right")) x = img.width - textWidth / 2 - 20;
+            ctx.fillText(watermark.text, x, y);
+          }
         }
         ctx.restore();
-      }
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            const watermarkedFile = new File([blob], file.name, {
-              type: file.type,
-              lastModified: Date.now()
-            });
-            resolve(watermarkedFile);
+      };
+      if (watermark.imageUrl) {
+        const watermarkImg = new Image();
+        watermarkImg.crossOrigin = "anonymous";
+        watermarkImg.onload = () => {
+          applyWatermark(watermarkImg);
+          finishWatermarking();
+        };
+        watermarkImg.onerror = () => {
+          console.warn("Watermark image failed to load: " + watermark.imageUrl);
+          if (watermark.text) {
+            applyWatermark();
+            finishWatermarking();
           } else {
-            reject(new Error("Failed to create watermarked image"));
+            finishWatermarking();
           }
-        },
-        file.type,
-        0.92
-      );
+        };
+        const fullWatermarkUrl = watermark.imageUrl.startsWith("http") || watermark.imageUrl.startsWith("//") ? watermark.imageUrl : window.location.origin + watermark.imageUrl;
+        watermarkImg.src = fullWatermarkUrl;
+        return;
+      } else if (watermark.text) {
+        applyWatermark();
+        finishWatermarking();
+      } else {
+        finishWatermarking();
+      }
+      function finishWatermarking() {
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const watermarkedFile = new File([blob], file.name, {
+                type: file.type,
+                lastModified: Date.now()
+              });
+              resolve(watermarkedFile);
+            } else {
+              reject(new Error("Failed to create watermarked image"));
+            }
+          },
+          file.type,
+          0.92
+        );
+      }
     };
     img.onerror = () => reject(new Error("Failed to load image"));
     img.src = URL.createObjectURL(file);

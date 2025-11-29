@@ -1,6 +1,6 @@
 import { r as reactExports, S as Se, j as jsxRuntimeExports } from "../ssr.js";
 import { D as DashboardLayout } from "./DashboardLayout-gPtbtbBl.js";
-import { M as MediaUploadSection } from "./MediaUploadSection-D6Szuq5B.js";
+import { M as MediaUploadSection } from "./MediaUploadSection-BhpzLGo7.js";
 import { I as InputError } from "./InputError-BrGvvBAw.js";
 import "util";
 import "stream";
@@ -20,7 +20,7 @@ import "./Layout-DdG4gm-d.js";
 import "./Avatar-Bsv7zAP7.js";
 import "./index-DzrIk5T7.js";
 import "./MetaTags-D4JDM_I7.js";
-import "./GenericFileUpload-CnL5n1ZT.js";
+import "./GenericFileUpload-zkRDq7DY.js";
 import "./index-BQVxnAyW.js";
 import "./index-DgY4nH2N.js";
 import "./InputLabel-DAgP54zY.js";

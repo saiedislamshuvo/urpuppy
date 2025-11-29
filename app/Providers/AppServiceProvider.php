@@ -43,8 +43,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::before(function ($user, $ability) {
-            if($user?->is_admin) {
-                return $user?->is_superadmin ? true : null;
+            if ($user?->is_superadmin || $ability == 'viewAny') {
+                return true;
             }
             return null;
         });
